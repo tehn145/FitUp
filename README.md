@@ -4,7 +4,7 @@
 
 **Môn Học:** Phát triển ứng dụng trên thiết bị di dộng
 <br><br>
-**Dự án:** 🏋️‍♂️ FitUp "Ứng dụng giải pháp Fitness toàn diện."
+**Dự án:** 🏋️‍♂️ FitUp "Giải pháp Fitness toàn diện."
 <br><br>
 <img src="https://github.com/then145/FitUp/blob/main/assets/logoFitup.jpg" alt="Logo" width="800px" height="800px" />
 ---
