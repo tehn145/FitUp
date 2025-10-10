@@ -8,6 +8,28 @@
     android:background="@color/black"
     tools:context=".MainActivity">
 
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="410dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="340dp"
+        android:background="@drawable/bg_edtemail"
+        android:drawableLeft="@drawable/password"
+        android:drawablePadding="15dp"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="Enter your password"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="#A38E8E"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.684"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -126,4 +148,20 @@
         app:layout_constraintHorizontal_bias="0.70"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_ForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="504dp"
+        android:text="Forgot the password?"
+        android:textColor="#F44336"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
