@@ -3,6 +3,7 @@ package com.example.fitup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -50,6 +51,23 @@ public class IntroductionPage extends AppCompatActivity {
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
             }
         }).attach();
+
+        //Chỉnh margin giữa các dots
+        tabLayout.post(() -> {
+            ViewGroup tabs = (ViewGroup) tabLayout.getChildAt(0);
+            int marginInDp = 5;
+            float scale = getResources().getDisplayMetrics().density;
+            int marginInPx = (int) (marginInDp * scale + 0.5f);
+
+            for (int i = 0; i < tabs.getChildCount(); i++) {
+                View tab = tabs.getChildAt(i);
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                params.setMargins(marginInPx, 0, marginInPx, 0);
+                tab.requestLayout();
+            }
+        });
+
+
 
         btnJoinUs.setOnClickListener(new View.OnClickListener() {
             @Override

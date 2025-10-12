@@ -34,15 +34,15 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:cornerRadius="30dp"
-        app:iconPadding="-20dp"
+        app:iconPadding="-25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="24dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="65dp"
+        android:layout_height="13dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/btnJoinUs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
