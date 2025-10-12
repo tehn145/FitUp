@@ -21,25 +21,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Ánh xạ hai TextView
-        LinkTermsOfService = findViewById(R.id.LinkTermsOfService);
-        LinkPrivacyPolicy = findViewById(R.id.LinkPrivacyPolicy);
-
-
-        // Gạch chân và gán sự kiện mở link cho Terms of Service
-        LinkTermsOfService.setPaintFlags(LinkTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        LinkTermsOfService.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/terms"));
-            startActivity(intent);
-        });
-
-        // Gạch chân và gán sự kiện mở link cho Privacy Policy
-        LinkPrivacyPolicy.setPaintFlags(LinkPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        LinkPrivacyPolicy.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/privacy"));
-            startActivity(intent);
-        });
-
-
+//        LinkTermsOfService = findViewById(R.id.LinkTermsOfService);
+//        LinkPrivacyPolicy = findViewById(R.id.LinkPrivacyPolicy);
+//
+//
+//        // Gạch chân và gán sự kiện mở link cho Terms of Service
+//        LinkTermsOfService.setPaintFlags(LinkTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//        LinkTermsOfService.setOnClickListener(v -> {
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/terms"));
+//            startActivity(intent);
+//        });
+//
+//        // Gạch chân và gán sự kiện mở link cho Privacy Policy
+//        LinkPrivacyPolicy.setPaintFlags(LinkPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//        LinkPrivacyPolicy.setOnClickListener(v -> {
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/privacy"));
+//            startActivity(intent);
+//        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

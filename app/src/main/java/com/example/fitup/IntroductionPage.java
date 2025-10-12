@@ -1,8 +1,10 @@
 package com.example.fitup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -19,12 +21,12 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IntroductionPage extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private OnboardingAdapter adapter;
     private Button btnJoinUs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,9 @@ public class IntroductionPage extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                //tab.setIcon(R.drawable.tab_selector);
+                View tabView = getLayoutInflater().inflate(R.layout.custom_tab_dot, null);
+                tab.setCustomView(tabView);
             }
         }).attach();
 
@@ -64,5 +69,17 @@ public class IntroductionPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
+//
+//        for (int i=0; i<slidingTabStrip.getChildCount()-1; i++) {
+//            View v = slidingTabStrip.getChildAt(i);
+//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+//            params.rightMargin = 25;
+//        }
+    }
+
+    public static float dpToPx(Context context, float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
     }
 }

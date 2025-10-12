@@ -14,11 +14,11 @@
         <activity
             android:name=".OTPcode"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".IntroductionPage"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".IntroductionPage"
-            android:exported="false" />
-        <activity
-            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
