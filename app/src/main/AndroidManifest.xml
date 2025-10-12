@@ -11,10 +11,14 @@
         android:roundIcon="@mipmap/logofitup_rmbg"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
+
 <!--        <activity-->
-<!--            android:name=".CreateAccount"-->
+<!--            android:name=".SelectRole"-->
 <!--            android:exported="false" />-->
 
+        <activity
+            android:name=".CreateAccount"
+            android:exported="false" />
         <activity
             android:name=".OTPcode"
             android:exported="false" />
@@ -30,7 +34,7 @@
 
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
-<!--        </activity> -->
+<!--        </activity>-->
 
         <!-- Test Giao Dien OTP -->
         <!-- <activity -->
@@ -43,15 +47,28 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
 
-         <activity
-         android:name=".CreateAccount"
-         android:exported="true"
-         android:theme="@style/Base.Theme.FitUp">
-         <intent-filter>
-         <action android:name="android.intent.action.MAIN" />
-         <category android:name="android.intent.category.LAUNCHER" />
-         </intent-filter>
-         </activity>
+        <!-- Test Giao Dien CreateAccount -->
+        <!-- <activity -->
+        <!-- android:name=".CreateAccount" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+
+        <!--Test Giao Dien SelectRole-->
+        <activity
+            android:name=".SelectRole"
+            android:exported="true"
+            android:theme="@style/Base.Theme.FitUp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".MainActivity"
