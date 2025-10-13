@@ -14,9 +14,12 @@
         <activity
             android:name=".OTPcode"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".IntroductionPage"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="false" />
         <activity
             android:name=".IntroductionPage"
             android:exported="true"
@@ -40,9 +43,9 @@
 <!--        </activity>-->
 
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="false" />-->
     </application>
 
 </manifest>
