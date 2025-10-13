@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                             if (result != null && !result.isEmpty()) {
                                 pwdEdt.setVisibility(View.VISIBLE);
                             } else {
-                                //g
                                 Intent intent = new Intent(MainActivity.this, Register.class);
                                 intent.putExtra("email", emailText);
                                 startActivity(intent);
