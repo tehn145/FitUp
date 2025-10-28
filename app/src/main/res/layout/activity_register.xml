@@ -228,7 +228,7 @@
 
                         android:fontFamily="sans-serif"
                         android:hint="Enter your password"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPassword"
                         android:textColor="@color/white"
                         android:textColorHint="#777777"
                         android:padding="5dp"
@@ -239,7 +239,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Password must be 8 or more characters with uppercase, lowercase, numbers, and special characters"
-                    android:textColor="#FF6666"
+                    android:textColor="@color/gray_dark"
                     android:textSize="15dp"
                     android:layout_marginLeft="1dp"
                     android:layout_marginTop="4dp" />
@@ -271,7 +271,7 @@
 
                         android:fontFamily="sans-serif"
                         android:hint="Enter your password"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPassword"
                         android:textColor="@color/white"
                         android:textColorHint="#777777"
                         android:padding="5dp"

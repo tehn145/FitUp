@@ -37,25 +37,6 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Ánh xạ hai TextView
-//        LinkTermsOfService = findViewById(R.id.LinkTermsOfService);
-//        LinkPrivacyPolicy = findViewById(R.id.LinkPrivacyPolicy);
-//
-//
-//        // Gạch chân và gán sự kiện mở link cho Terms of Service
-//        LinkTermsOfService.setPaintFlags(LinkTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//        LinkTermsOfService.setOnClickListener(v -> {
-//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/terms"));
-//            startActivity(intent);
-//        });
-//
-//        // Gạch chân và gán sự kiện mở link cho Privacy Policy
-//        LinkPrivacyPolicy.setPaintFlags(LinkPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//        LinkPrivacyPolicy.setOnClickListener(v -> {
-//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://fitso.com/privacy"));
-//            startActivity(intent);
-//        });
-
         btnContinue.setOnClickListener(v -> {
             String emailText = email.getText().toString().trim();
 
@@ -69,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            // Sẽ hiển thị ô password nếu như đã có
+            // tài khoản trên DB, không thì sẽ
+            // chuyển hướng tới activity register
             if (pwdEdt.getVisibility() == View.VISIBLE) {
                 String passwordText = pwd.getText().toString().trim();
 
