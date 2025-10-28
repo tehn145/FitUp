@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,8 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
 <!--        <activity-->
-<!--            android:name=".Primary_goal"-->
+<!--            android:name=".Location_access"-->
 <!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".Primary_goal" -->
+        <!-- android:exported="false" /> -->
         <!-- <activity -->
         <!-- android:name=".Fitness_Level" -->
         <!-- android:exported="false" /> -->
@@ -119,10 +125,20 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+        <!-- Test Giao Dien Fitness_level -->
+        <!-- <activity -->
+        <!-- android:name=".Fitness_Level" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
 
-        <!--Test Giao Dien Fitness_level-->
+        <!--Test Giao Dien Primary_goal-->
 <!--        <activity-->
-<!--            android:name=".Fitness_Level"-->
+<!--            android:name=".Primary_goal"-->
 <!--            android:exported="true"-->
 <!--            android:theme="@style/Base.Theme.FitUp">-->
 <!--            <intent-filter>-->
@@ -133,7 +149,7 @@
 <!--        </activity>-->
 
         <activity
-            android:name=".Primary_goal"
+            android:name=".Location_access"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
