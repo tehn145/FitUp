@@ -12,8 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
 <!--        <activity-->
-<!--            android:name=".scroll_weight"-->
+<!--            android:name=".Primary_goal"-->
 <!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".Fitness_Level" -->
+        <!-- android:exported="false" /> -->
+        <!-- <activity -->
+        <!-- android:name=".scroll_weight" -->
+        <!-- android:exported="false" /> -->
         <!-- <activity -->
         <!-- android:name=".pick_your_height" -->
         <!-- android:exported="false" /> -->
@@ -93,10 +99,30 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+        <!-- Test Giao Dien pick_your_height -->
+        <!-- <activity -->
+        <!-- android:name=".pick_your_height" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <!-- Test Giao Dien scroll_weight -->
+        <!-- <activity -->
+        <!-- android:name=".scroll_weight" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
 
-        <!--Test Giao Dien pick_your_height-->
+        <!--Test Giao Dien Fitness_level-->
 <!--        <activity-->
-<!--            android:name=".pick_your_height"-->
+<!--            android:name=".Fitness_Level"-->
 <!--            android:exported="true"-->
 <!--            android:theme="@style/Base.Theme.FitUp">-->
 <!--            <intent-filter>-->
@@ -106,17 +132,16 @@
 <!--            </intent-filter>-->
 <!--        </activity>-->
 
-                <activity
-                    android:name=".scroll_weight"
-                    android:exported="true"
-                    android:theme="@style/Base.Theme.FitUp">
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".Primary_goal"
+            android:exported="true"
+            android:theme="@style/Base.Theme.FitUp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                        <category android:name="android.intent.category.LAUNCHER" />
-                    </intent-filter>
-                </activity>
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
