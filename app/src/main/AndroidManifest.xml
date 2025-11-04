@@ -15,8 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
 <!--        <activity-->
-<!--            android:name=".Location_access"-->
+<!--            android:name=".congrats"-->
 <!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".Location_access" -->
+        <!-- android:exported="false" /> -->
         <!-- <activity -->
         <!-- android:name=".Primary_goal" -->
         <!-- android:exported="false" /> -->
@@ -135,10 +138,19 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-
-        <!--Test Giao Dien Primary_goal-->
+        <!-- Test Giao Dien Primary_goal -->
+        <!-- <activity -->
+        <!-- android:name=".Primary_goal" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <!--Test Giao Dien Locaction Access-->
 <!--        <activity-->
-<!--            android:name=".Primary_goal"-->
+<!--            android:name=".Location_access"-->
 <!--            android:exported="true"-->
 <!--            android:theme="@style/Base.Theme.FitUp">-->
 <!--            <intent-filter>-->
@@ -149,7 +161,7 @@
 <!--        </activity>-->
 
         <activity
-            android:name=".Location_access"
+            android:name=".congrats"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
