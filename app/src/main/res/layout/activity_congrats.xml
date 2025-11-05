@@ -105,6 +105,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/imageView19"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:layout_marginStart="76dp"
@@ -156,19 +157,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/avatar"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="116dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/defaultavt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/CircularImageView"
-        app:strokeColor="#FF6A00" />
 
     <TextView
         android:id="@+id/txtCongrats"
@@ -189,7 +177,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="568dp"
-        android:text="You are now a FitSo Members!"
+        android:text="You are now a FitUp Members!"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -268,6 +256,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Avatar -->
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:background="@drawable/circle"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:scaleType="centerCrop"
+                android:src="@drawable/defaultavt" />
+
+            <!-- Border -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/avatar_border" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

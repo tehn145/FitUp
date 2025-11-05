@@ -14,9 +14,15 @@
         android:roundIcon="@mipmap/logofitup_rmbg"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
-<!--        <activity-->
-<!--            android:name=".congrats"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <!-- <activity -->
+        <!-- android:name=".activity_profile" -->
+        <!-- android:exported="false" /> -->
+        <!-- <activity -->
+        <!-- android:name=".congrats" -->
+        <!-- android:exported="false" /> -->
         <!-- <activity -->
         <!-- android:name=".Location_access" -->
         <!-- android:exported="false" /> -->
@@ -148,20 +154,28 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <!--Test Giao Dien Locaction Access-->
-<!--        <activity-->
-<!--            android:name=".Location_access"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Base.Theme.FitUp">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
+        <!-- Test Giao Dien Locaction Access -->
+        <!-- <activity -->
+        <!-- android:name=".Location_access" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <!-- Test Giao Dien Congrats -->
+        <!-- <activity -->
+        <!-- android:name=".congrats" -->
+        <!-- android:exported="true" -->
+        <!-- android:theme="@style/Base.Theme.FitUp"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
-            android:name=".congrats"
+            android:name=".activity_profile"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
