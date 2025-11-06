@@ -14,10 +14,11 @@
         android:roundIcon="@mipmap/logofitup_rmbg"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <!-- <activity -->
+<!--        <activity-->
+<!--            android:name=".activity_settings"-->
+<!--            android:exported="false" />-->
+
+         <!-- <activity -->
         <!-- android:name=".activity_profile" -->
         <!-- android:exported="false" /> -->
         <!-- <activity -->
@@ -55,7 +56,8 @@
             android:exported="false" />
         <activity
             android:name=".IntroductionPage"
-            android:exported="false" /> <!-- <activity -->
+            android:exported="false" />
+        <!-- <activity -->
         <!-- android:name=".SplashActivity" -->
         <!-- android:exported="true" -->
         <!-- android:theme="@style/Base.Theme.FitUp"> -->
@@ -174,8 +176,20 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+        <!--Test Giao Dien profile-->
+<!--        <activity-->
+<!--            android:name=".activity_profile"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Base.Theme.FitUp">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
         <activity
-            android:name=".activity_profile"
+            android:name=".activity_settings"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
