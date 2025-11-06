@@ -1,7 +1,5 @@
 # FitUp - NT118.Q13
-
 ## Nhóm 8  
-
 **Môn Học:** Phát triển ứng dụng trên thiết bị di dộng
 <br><br>
 **Dự án:** 🏋️‍♂️ FitUp "Giải pháp Fitness toàn diện."
