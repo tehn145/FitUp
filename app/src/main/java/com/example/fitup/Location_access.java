@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 import android.Manifest;
+import android.content.Intent; // Import the Intent class
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -24,10 +25,11 @@ public class Location_access extends AppCompatActivity {
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission Granted! Setup complete.", Toast.LENGTH_SHORT).show();
                     goToNextScreen();
                 } else {
-                    Toast.makeText(this, "Permission Denied.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission Denied. Some features may be limited.", Toast.LENGTH_SHORT).show();
+                    goToNextScreen();
                 }
             });
     @Override
@@ -48,7 +50,6 @@ public class Location_access extends AppCompatActivity {
                     Toast.makeText(Location_access.this, "Permission already granted.", Toast.LENGTH_SHORT).show();
                     goToNextScreen();
                 } else {
-                    // Nếu chưa có, kích hoạt Trình khởi chạy (Launcher) để hỏi
                     requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
                 }
             }
@@ -62,6 +63,11 @@ public class Location_access extends AppCompatActivity {
     }
 
     private void goToNextScreen() {
+        Intent intent = new Intent(Location_access.this, congrats.class);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
         finish();
     }
 }

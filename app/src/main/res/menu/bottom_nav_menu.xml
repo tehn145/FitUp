@@ -9,8 +9,8 @@
         android:icon="@drawable/compass" />
     <item
         android:id="@+id/nav_search"
-        android:title="Search"
-        android:icon="@drawable/sparkle" />
+        android:title=""
+        android:icon="@null" />
     <item
         android:id="@+id/nav_messages"
         android:title="Messages"

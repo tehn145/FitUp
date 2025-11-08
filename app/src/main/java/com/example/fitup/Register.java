@@ -83,13 +83,14 @@ public class Register extends AppCompatActivity {
                         userData.put("email", email);
                         userData.put("name", name);
                         userData.put("phone", phone);
+                        userData.put("gem", (int)5);
 
                         db.collection("users").document(uid)
                                 .set(userData)
                                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "User stored!"))
                                 .addOnFailureListener(e -> Log.e("Firestore", "Error storing user", e));
 
-                        startActivity(new Intent(Register.this, IntroductionPage.class));
+                        startActivity(new Intent(Register.this, SelectRole.class));
                         finish();
                     });
         });

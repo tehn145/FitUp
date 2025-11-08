@@ -3,6 +3,7 @@ package com.example.fitup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,9 +18,20 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.BuildConfig;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.LocalCacheSettings;
+import com.google.firebase.firestore.MemoryCacheSettings;
+import com.google.firebase.firestore.PersistentCacheSettings;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class IntroductionPage extends AppCompatActivity {
     private ViewPager2 viewPager;
@@ -30,6 +42,40 @@ public class IntroductionPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //
+        Log.w("DebugMode", String.valueOf(BuildConfig.DEBUG));
+        if (true) {
+            try {
+                String host = "10.0.2.2"; // Use 10.0.2.2 for Android Emulator, not 127.0.0.1
+
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                FirebaseFunctions functions = FirebaseFunctions.getInstance();
+
+                // Point all services to the local emulators
+                auth.useEmulator(host, 9099);
+                firestore.useEmulator(host, 8080);
+                storage.useEmulator(host, 9199);
+                functions.useEmulator(host, 5001);
+
+                FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder(firestore.getFirestoreSettings())
+                        .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+                        .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+                                .build())
+                        .build();
+
+                FirebaseFirestore.getInstance().setFirestoreSettings(settings);
+
+                Log.d("EmulatorConfig", "Successfully connected to Firebase Emulators.");
+
+            } catch (IllegalStateException e) {
+                Log.w("EmulatorConfig", "Failed to connect to emulators. They may have been initialized elsewhere.", e);
+            }
+        } else Log.w("EmulatorConfig", "Not running in debug mode. Skipping emulator configuration.");
+        //
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_introduction_page);
 

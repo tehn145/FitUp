@@ -256,7 +256,7 @@
                     android:layout_width="33dp"
                     android:layout_height="33dp"
                     android:src="@drawable/ic_fitupgem"
-                    android:tint="@color/white"
+                    app:tint="@color/white"
                     app:layout_constraintBottom_toTopOf="@id/txtFitGemValue"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.062"
@@ -413,4 +413,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
