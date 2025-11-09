@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btn_back"
+            android:id="@+id/imgv_btn_BackToSettings"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/back1"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_Messages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Settings"
@@ -88,8 +88,8 @@
 
                 <ImageView
                     android:id="@+id/icon_logout"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_logout"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -116,7 +116,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/help"
+                android:id="@+id/row_change_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
@@ -128,8 +128,8 @@
 
                 <ImageView
                     android:id="@+id/icon_information"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_inforamation"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -177,8 +177,8 @@
 
                 <ImageView
                     android:id="@+id/icon_policy"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_lock"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -241,8 +241,8 @@
 
                 <ImageView
                     android:id="@+id/icon_document"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_document"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -288,10 +288,10 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/row_change_language" />
+                app:layout_constraintTop_toBottomOf="@+id/row_email" />
 
             <TextView
-                android:id="@+id/tv_header_general"
+                android:id="@+id/tv_header_Messages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
@@ -305,7 +305,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/row_manage_account"
+                android:id="@+id/row_phone_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
@@ -313,12 +313,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_header_general">
+                app:layout_constraintTop_toBottomOf="@id/tv_header_Messages">
 
                 <ImageView
                     android:id="@+id/icon_manage_account"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_username2"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -341,7 +341,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/icon_back2"
+                    android:id="@+id/open_fragmentManageAccount"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="368dp"
@@ -366,10 +366,10 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/row_manage_account" />
+                app:layout_constraintTop_toBottomOf="@id/row_phone_number" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/row_change_language"
+                android:id="@+id/row_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
@@ -380,8 +380,8 @@
 
                 <ImageView
                     android:id="@+id/icon_change_language"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_globe"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -390,6 +390,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
+                    android:id="@+id/textView21"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -414,6 +415,21 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
 
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11dp"
+                    android:gravity="center_vertical"
+                    android:text="English (US)"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/icon_back1"
+                    app:layout_constraintHorizontal_bias="0.832"
+                    app:layout_constraintStart_toStartOf="@+id/icon_change_language"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -428,8 +444,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/Help">
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_sendfb"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -508,5 +524,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
