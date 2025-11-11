@@ -1,46 +1,81 @@
 package com.example.fitup;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class scroll_weight extends AppCompatActivity {
-    NumberPicker weightPicker;
-    MaterialButton continueButton;
+    private NumberPicker pickerWeight;
+    private MaterialButton btnContinue;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private static final String TAG = "ScrollWeightActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_scroll_weight);
 
-        weightPicker = findViewById(R.id.pickerHeight);
-        continueButton = findViewById(R.id.btnContinue);
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-        setupWeightPicker();
+        pickerWeight = findViewById(R.id.pickerHeight);
+        btnContinue = findViewById(R.id.btnContinue);
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedWeight = weightPicker.getValue();
+        initWeightPicker();
 
-                Toast.makeText(scroll_weight.this, "Cân nặng đã chọn: " + selectedWeight + " KG", Toast.LENGTH_SHORT).show();
-            }
-        });
+        btnContinue.setOnClickListener(v -> saveWeightAndProceed());
     }
-    private void setupWeightPicker() {
-        weightPicker.setMinValue(20);
-        weightPicker.setMaxValue(200);
-        weightPicker.setValue(60);
-        weightPicker.setWrapSelectorWheel(true);
+
+    private void initWeightPicker() {
+        pickerWeight.setMinValue(30);
+        pickerWeight.setMaxValue(200);
+        pickerWeight.setValue(70);
+        pickerWeight.setWrapSelectorWheel(false);
+    }
+
+    private void saveWeightAndProceed() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "Error: No user logged in. Redirecting.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
+        int weight = pickerWeight.getValue();
+
+        String userId = currentUser.getUid();
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("weight", weight); // Saving as a number
+
+        db.collection("users").document(userId).set(userData, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User weight saved successfully!");
+
+                    Intent intent = new Intent(scroll_weight.this, Fitness_Level.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error updating document", e);
+                    Toast.makeText(scroll_weight.this, "Failed to save weight. Please try again.", Toast.LENGTH_SHORT).show();
+                });
     }
 }

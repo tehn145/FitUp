@@ -5,78 +5,56 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".congrats"
-    android:background="@color/black">
+    android:background="@color/black"
+    tools:context=".congrats">
 
+    <!-- Decorative Circles (Confetti) - Constrained to edges for responsiveness -->
     <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="72dp"
         android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.36"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="15dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="248dp"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="160dp"
         android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.886"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="48dp"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="228dp"
         android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="300dp"
+        android:src="@drawable/orange_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView6"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginTop="116dp"
+        android:layout_marginEnd="68dp"
         android:src="@drawable/orange_circle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.829"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="380dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="347dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.626"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView3"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:layout_marginTop="200dp"
@@ -89,118 +67,101 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="312dp"
+        android:layout_marginEnd="76dp"
         android:src="@drawable/orange_circle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.808"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="72dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Centered Content Block -->
 
-    <ImageView
-        android:id="@+id/imageView19"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="160dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginTop="228dp"
-        android:src="@drawable/orange_circle"
+    <!-- Avatar with Border -->
+    <FrameLayout
+        android:id="@+id/avatar_layout"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtCongrats"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.098"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintVertical_chainStyle="packed">
 
-    <ImageView
-        android:id="@+id/imageView11"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginTop="300dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.134"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!-- Avatar Image -->
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
+            android:scaleType="centerCrop"
+            android:src="@drawable/defaultavt" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="340dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.307"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!-- Border -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/avatar_border" />
+    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:layout_marginTop="380dp"
-        android:src="@drawable/orange_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.202"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
+    <!-- Congratulations Text -->
     <TextView
         android:id="@+id/txtCongrats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="412dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
         android:text="Congratulations!"
         android:textColor="#FFFFFF"
-        android:textSize="48sp"
+        android:textSize="40sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/txtName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/avatar_layout" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtCongrats"
+        tools:text="Huỳnh Minh Hiếu" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="568dp"
-        android:text="You are now a FitUp Members!"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:text="You are now a FitUp Member!"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/txtName" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="644dp"
+        android:layout_marginTop="24dp"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/txtInfo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/textView9">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/ic_fitupgem" />
 
         <TextView
@@ -213,83 +174,33 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Informational Text -->
     <TextView
         android:id="@+id/txtInfo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="736dp"
-        android:padding="20dp"
-        android:text="Find your trainer, get expert guidance, and stay motivated with FitSo!"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="24dp"
+        android:text="Find your trainer, get expert guidance, and stay motivated with FitUp!"
         android:textAlignment="center"
         android:textColor="#CCCCCC"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/btnStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:text="Huỳnh Minh Hiếu"
-        android:textColor="#FFFFFF"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <!-- Start Journey Button -->
     <Button
         android:id="@+id/btnStart"
         android:layout_width="0dp"
         android:layout_height="55dp"
+        android:layout_margin="16dp"
         android:backgroundTint="@color/backgroungbtncontinue"
         android:text="Start Your Journey"
         android:textColor="@color/textcolorbtncontinue"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="110dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <FrameLayout
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <!-- Avatar -->
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:background="@drawable/circle"
-                android:clipToOutline="true"
-                android:outlineProvider="background"
-                android:scaleType="centerCrop"
-                android:src="@drawable/defaultavt" />
-
-            <!-- Border -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/avatar_border" />
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

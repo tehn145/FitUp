@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +15,7 @@
         android:roundIcon="@mipmap/logofitup_rmbg"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
+<<<<<<< HEAD
         <activity
             android:name=".activity_messages"
             android:exported="false" />
@@ -47,6 +49,41 @@
         <!-- <activity -->
         <!-- android:name=".SelectGender" -->
         <!-- android:exported="false" /> -->
+=======
+<!--        <activity-->
+<!--            android:name=".activity_settings"-->
+<!--            android:exported="false" />-->
+        <activity
+            android:name=".MainView"
+            android:exported="false" />
+        <activity
+         android:name=".activity_profile"
+         android:exported="false" />
+         <activity
+         android:name=".congrats"
+         android:exported="false" />
+         <activity
+         android:name=".Location_access"
+         android:exported="false" />
+         <activity
+         android:name=".Primary_goal"
+         android:exported="false" />
+         <activity
+         android:name=".Fitness_Level"
+         android:exported="false" />
+         <activity
+         android:name=".scroll_weight"
+         android:exported="false" />
+         <activity
+         android:name=".pick_your_height"
+         android:exported="false" />
+         <activity
+         android:name=".pick_your_birthday"
+         android:exported="false" />
+         <activity
+         android:name=".SelectGender"
+         android:exported="false" />
+>>>>>>> nguyen
         <activity
             android:name=".SelectRole"
             android:exported="false" />
@@ -57,6 +94,7 @@
             android:name=".OTPcode"
             android:exported="false" />
         <activity
+<<<<<<< HEAD
             android:name=".IntroductionPage"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".SplashActivity" -->
@@ -187,8 +225,23 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+=======
+            android:name=".Register"
+            android:exported="false" />
+
+>>>>>>> nguyen
         <activity
-            android:name=".activity_settings"
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".IntroductionPage"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
