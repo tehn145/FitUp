@@ -92,7 +92,7 @@ public class IntroductionPage extends AppCompatActivity {
         btnJoinUs = findViewById(R.id.btnJoinUs);
 
         List<OnboardingItem> onboardingItems = new ArrayList<>();
-        onboardingItems.add(new OnboardingItem("Welcome to FitSo", "The ultimate app for booking your personal fitness trainer! Connect with expert trainers and achieve your goals.", R.drawable.image1));
+        onboardingItems.add(new OnboardingItem("Welcome to FitUp", "The ultimate app for booking your personal fitness trainer! Connect with expert trainers and achieve your goals.", R.drawable.image1));
         onboardingItems.add(new OnboardingItem("Track Your Progress", "Your journey to a healthier, fitter you starts here. Book sessions with top fitness trainers and tailor your workouts to fit your lifestyle and goals.", R.drawable.image2));
         onboardingItems.add(new OnboardingItem("Achieve Your Goals", "Connect with top fitness trainers, personalize your workout plans, and achieve your health and wellness goals with ease !", R.drawable.image3));
 
