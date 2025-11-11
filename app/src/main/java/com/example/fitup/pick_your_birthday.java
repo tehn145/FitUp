@@ -122,7 +122,7 @@ public class pick_your_birthday extends AppCompatActivity {
         db.collection("users").document(userId).set(userData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "User birthday saved successfully!");
-                    Toast.makeText(pick_your_birthday.this, "Birthday Saved!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(pick_your_birthday.this, "Birthday Saved!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, pick_your_height.class));
                     finish();
                 })

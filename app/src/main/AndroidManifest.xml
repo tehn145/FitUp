@@ -62,6 +62,16 @@
             android:exported="false" />
 
         <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".IntroductionPage"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">

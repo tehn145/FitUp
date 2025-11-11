@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Style for the square avatar slots -->
+    <style name="AvatarSlotStyle" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:background">@drawable/bg_edtemail</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Style for the '+' icon inside the avatar slots -->
+    <style name="AvatarAddIconStyle" parent="">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:src">@drawable/add</item>
+        <item name="android:tint">#AFAFAF</item>
+    </style>
+
+    <!-- Style for section titles like "Personal Information" -->
+    <style name="SectionTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

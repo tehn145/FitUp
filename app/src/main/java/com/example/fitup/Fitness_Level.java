@@ -125,7 +125,7 @@ public class Fitness_Level extends AppCompatActivity {
         db.collection("users").document(userId).set(userData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "User fitness level saved successfully!");
-                    Toast.makeText(Fitness_Level.this, "Profile setup complete!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Fitness_Level.this, "Profile setup complete!", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(Fitness_Level.this, Primary_goal.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

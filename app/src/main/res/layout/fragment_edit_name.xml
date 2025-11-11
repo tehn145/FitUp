@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:background="@drawable/bg_bottom_sheet_rounded_top">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Your Name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etEditName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Enter your full name"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"/>
+
+    <Button
+        android:id="@+id/btnSaveName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Save"
+        android:textSize="18dp"
+        android:backgroundTint="@color/orange_dark"/>
+
+</LinearLayout>

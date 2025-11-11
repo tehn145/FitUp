@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
     android:gravity="center_vertical"
@@ -12,7 +13,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/trainer"
-        android:tint="@color/white"
+        app:tint="@color/white"
         android:scaleType="centerCrop"
         android:backgroundTint="@color/black_soft"
         android:padding="15px"
@@ -31,6 +32,7 @@
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
         <TextView
+            android:id="@+id/txtRank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ranked Trainer"
@@ -40,8 +42,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtRank"
-        android:text="Top 1"
+        android:id="@+id/tvTrainerGem"
+        android:text="0 Gem"
         android:textColor="@android:color/white"
         android:background="@drawable/bg_otp_box"
         android:paddingHorizontal="8dp"

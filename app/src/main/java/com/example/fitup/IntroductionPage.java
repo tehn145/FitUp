@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.BuildConfig;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.LocalCacheSettings;
@@ -38,23 +39,22 @@ public class IntroductionPage extends AppCompatActivity {
     private TabLayout tabLayout;
     private OnboardingAdapter adapter;
     private Button btnJoinUs;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //
         Log.w("DebugMode", String.valueOf(BuildConfig.DEBUG));
         if (true) {
             try {
-                String host = "10.0.2.2"; // Use 10.0.2.2 for Android Emulator, not 127.0.0.1
+                String host = "10.0.2.2";
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 FirebaseFunctions functions = FirebaseFunctions.getInstance();
 
-                // Point all services to the local emulators
                 auth.useEmulator(host, 9099);
                 firestore.useEmulator(host, 8080);
                 storage.useEmulator(host, 9199);
@@ -74,7 +74,15 @@ public class IntroductionPage extends AppCompatActivity {
                 Log.w("EmulatorConfig", "Failed to connect to emulators. They may have been initialized elsewhere.", e);
             }
         } else Log.w("EmulatorConfig", "Not running in debug mode. Skipping emulator configuration.");
-        //
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(IntroductionPage.this, MainView.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_introduction_page);
@@ -82,27 +90,23 @@ public class IntroductionPage extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         btnJoinUs = findViewById(R.id.btnJoinUs);
-        //Data cho từng trang
+
         List<OnboardingItem> onboardingItems = new ArrayList<>();
         onboardingItems.add(new OnboardingItem("Welcome to FitSo", "The ultimate app for booking your personal fitness trainer! Connect with expert trainers and achieve your goals.", R.drawable.image1));
         onboardingItems.add(new OnboardingItem("Track Your Progress", "Your journey to a healthier, fitter you starts here. Book sessions with top fitness trainers and tailor your workouts to fit your lifestyle and goals.", R.drawable.image2));
         onboardingItems.add(new OnboardingItem("Achieve Your Goals", "Connect with top fitness trainers, personalize your workout plans, and achieve your health and wellness goals with ease !", R.drawable.image3));
 
-        //Khởi tạo và gán adapter cho ViewPager2
         adapter = new OnboardingAdapter(onboardingItems);
         viewPager.setAdapter(adapter);
 
-        //Kết nối TabLayout với ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                //tab.setIcon(R.drawable.tab_selector);
                 View tabView = getLayoutInflater().inflate(R.layout.custom_tab_dot, null);
                 tab.setCustomView(tabView);
             }
         }).attach();
 
-        //Chỉnh margin giữa các dots
         tabLayout.post(() -> {
             ViewGroup tabs = (ViewGroup) tabLayout.getChildAt(0);
             int marginInDp = 5;
@@ -133,13 +137,6 @@ public class IntroductionPage extends AppCompatActivity {
             return insets;
         });
 
-//        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
-//
-//        for (int i=0; i<slidingTabStrip.getChildCount()-1; i++) {
-//            View v = slidingTabStrip.getChildAt(i);
-//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-//            params.rightMargin = 25;
-//        }
     }
 
     public static float dpToPx(Context context, float dp) {

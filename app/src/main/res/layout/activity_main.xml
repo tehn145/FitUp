@@ -100,7 +100,7 @@
 
             android:fontFamily="sans-serif"
             android:hint="Enter your password"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:textColor="@color/gray"
             android:textColorHint="#A38E8E"
             android:padding="5dp"

@@ -134,7 +134,7 @@ public class Primary_goal extends AppCompatActivity {
         db.collection("users").document(userId).set(userData, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "User primary goal saved successfully!");
-                    Toast.makeText(Primary_goal.this, "Profile setup complete!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Primary_goal.this, "Profile setup complete!", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(Primary_goal.this, Location_access.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

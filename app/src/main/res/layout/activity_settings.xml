@@ -42,7 +42,6 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- ScrollView: Contains all the settings items -->
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
@@ -53,13 +52,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_layout">
 
-        <!-- All items are now in a single, vertically chained ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- "GENERAL" Section -->
             <TextView
                 android:id="@+id/general_header"
                 android:layout_width="wrap_content"
@@ -72,8 +69,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Manage Account Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:clickable="true"
                 android:id="@+id/manage_account_row"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -114,7 +111,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- "HELP" Section -->
             <TextView
                 android:id="@+id/help_header"
                 android:layout_width="wrap_content"
@@ -126,9 +122,9 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/manage_account_row" />
 
-            <!-- Help Center Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/help_center_row"
                 android:layout_width="0dp"
@@ -137,6 +133,7 @@
                 android:paddingVertical="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/help_header">
 
                 <ImageView
@@ -170,7 +167,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Send Feedback Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/feedback_row"
                 android:layout_width="0dp"
@@ -179,6 +175,7 @@
                 android:paddingVertical="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/help_center_row">
 
                 <ImageView
@@ -200,6 +197,7 @@
                     android:textSize="19sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/icon_feedback"
+
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -212,7 +210,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- "SUPPORT & LEGAL" Section -->
             <TextView
                 android:id="@+id/support_legal_header"
                 android:layout_width="wrap_content"
@@ -226,7 +223,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/feedback_row" />
 
-            <!-- Term of Service Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/terms_row"
                 android:layout_width="0dp"
@@ -268,7 +264,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Privacy Policy Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/privacy_row"
                 android:layout_width="0dp"
@@ -310,8 +305,8 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Logout Row -->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:clickable="true"
                 android:id="@+id/logout_row"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -344,7 +339,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Footer Section -->
             <ImageView
                 android:id="@+id/fitup_logo"
                 android:layout_width="70dp"
