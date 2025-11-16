@@ -343,6 +343,8 @@ public class HomeFragment extends Fragment {
         String avatarUrl = snapshot.getString("avatarUrl");
         Number gemCount = snapshot.getLong("gem");
 
+        Log.i(TAG, "avatarUrl: " + avatarUrl);
+
         if (name != null && !name.isEmpty()) {
             tvUserName.setText(name);
         } else {
