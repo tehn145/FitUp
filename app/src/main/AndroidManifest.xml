@@ -4,54 +4,92 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
-
-        <!-- SplashActivity chạy đầu -->
+        <activity
+            android:name=".privacypolicyactivity"
+            android:exported="false" />
+        <activity
+            android:name=".termsofservice"
+            android:exported="false" /> <!-- SplashActivity chạy đầu -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- IntroductionPage không còn MAIN/LAUNCHER -->
+        </activity> <!-- IntroductionPage không còn MAIN/LAUNCHER -->
         <activity
             android:name=".IntroductionPage"
             android:exported="false"
             android:theme="@style/Base.Theme.FitUp" />
-
-        <activity android:name=".MainView" android:exported="false" />
-        <activity android:name=".activity_profile" android:exported="false" />
-        <activity android:name=".congrats" android:exported="false" />
-        <activity android:name=".Location_access" android:exported="false" />
-        <activity android:name=".Primary_goal" android:exported="false" />
-        <activity android:name=".Fitness_Level" android:exported="false" />
-        <activity android:name=".scroll_weight" android:exported="false" />
-        <activity android:name=".pick_your_height" android:exported="false" />
-        <activity android:name=".pick_your_birthday" android:exported="false" />
-        <activity android:name=".SelectGender" android:exported="false" />
-        <activity android:name=".SelectRole" android:exported="false" />
-        <activity android:name=".CreateAccount" android:exported="false" />
-        <activity android:name=".OTPcode" android:exported="false" />
-        <activity android:name=".Register" android:exported="false" />
-        <activity android:name=".EditProfileActivity" android:exported="false" />
-        <activity android:name=".ManageAccountActivity" android:exported="false" />
-        <activity android:name=".SettingsActivity" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="false" />
-
+        <activity
+            android:name=".MainView"
+            android:exported="false" />
+        <activity
+            android:name=".activity_profile"
+            android:exported="false" />
+        <activity
+            android:name=".congrats"
+            android:exported="false" />
+        <activity
+            android:name=".Location_access"
+            android:exported="false" />
+        <activity
+            android:name=".Primary_goal"
+            android:exported="false" />
+        <activity
+            android:name=".Fitness_Level"
+            android:exported="false" />
+        <activity
+            android:name=".scroll_weight"
+            android:exported="false" />
+        <activity
+            android:name=".pick_your_height"
+            android:exported="false" />
+        <activity
+            android:name=".pick_your_birthday"
+            android:exported="false" />
+        <activity
+            android:name=".SelectGender"
+            android:exported="false" />
+        <activity
+            android:name=".SelectRole"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAccount"
+            android:exported="false" />
+        <activity
+            android:name=".OTPcode"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

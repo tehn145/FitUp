@@ -94,6 +94,17 @@ public class EditProfileActivity extends AppCompatActivity {
         rowWeight = findViewById(R.id.rowWeight);
         rowHeight = findViewById(R.id.rowHeight);
 
+        setRowIcon(rowName, R.drawable.ic_username2);
+        setRowIcon(rowLocation, R.drawable.ic_location2);
+        setRowIcon(rowGender, R.drawable.ic_gender);
+        setRowIcon(rowBirthday, R.drawable.ic_calendar);
+
+        setRowIcon(rowFitnessGoal, R.drawable.ic_goal);
+        setRowIcon(rowFitnessLevel, R.drawable.ic_level);
+
+        setRowIcon(rowWeight, R.drawable.ic_person);
+        setRowIcon(rowHeight, R.drawable.ic_person);
+
         // Back button
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish()); // Go back to the previous activity
@@ -270,4 +281,10 @@ public class EditProfileActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
     }
+
+    private void setRowIcon(View row, int iconRes) {
+        ImageView iv = row.findViewById(R.id.ivIcon);
+        iv.setImageResource(iconRes);
+    }
+
 }
