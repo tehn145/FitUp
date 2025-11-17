@@ -193,9 +193,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void populateUiWithData(DocumentSnapshot snapshot) {
         // Set Avatar
-        String avatarUrl = snapshot.getString("avatarUrl");
+        String avatarUrl = snapshot.getString("avatar");
         if (avatarUrl != null && !avatarUrl.isEmpty()) {
-            Glide.with(this).load(avatarUrl).circleCrop().into(ivAvatar);
+            Glide.with(this)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
+                    .circleCrop()
+                    .into(ivAvatar);
         } else {
             ivAvatar.setImageResource(R.drawable.user); // Default avatar
         }

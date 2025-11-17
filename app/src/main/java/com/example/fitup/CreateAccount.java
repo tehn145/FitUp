@@ -88,7 +88,7 @@ public class CreateAccount extends AppCompatActivity {
                             uploadImageAndSaveUser(uid, email, name, phone);
                         } else {
                             // No image was selected, just save the user data without an avatar URL.
-                            saveUserData(uid, email, name, phone);
+                            saveUserData(uid, email, name, phone, "");
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -109,29 +109,31 @@ public class CreateAccount extends AppCompatActivity {
         avatarRef.putFile(selectedImageUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     avatarRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        saveUserData(uid, email, name, phone);
+                        saveUserData(uid, email, name, phone, uri.toString());  // ✔ LƯU URL
                     }).addOnFailureListener(e -> {
                         Log.e(TAG, "Failed to get download URL", e);
-                        saveUserData(uid, email, name, phone);
+                        saveUserData(uid, email, name, phone, ""); // ✔ LƯU RỖNG
                     });
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to upload image", e);
-                    saveUserData(uid, email, name, phone);
+                    saveUserData(uid, email, name, phone, ""); // ✔ LƯU RỖNG
                 });
     }
 
-    private void saveUserData(String uid, String email, String name, String phone) {
+
+    private void saveUserData(String uid, String email, String name, String phone, String avatarUrl) {
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
         userData.put("name", name);
         userData.put("phone", phone);
         userData.put("gem", 5);
+        userData.put("avatar", avatarUrl);   // 👈 THÊM VÀO ĐÂY
 
         db.collection("users").document(uid)
                 .set(userData)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "User data successfully stored in Firestore!");
+                    Log.d(TAG, "User data saved!");
                     startActivity(new Intent(CreateAccount.this, SelectRole.class));
                     finish();
                 })
@@ -140,6 +142,7 @@ public class CreateAccount extends AppCompatActivity {
                     Toast.makeText(this, "Failed to save profile details.", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
 
     private void openGallery() {

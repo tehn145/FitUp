@@ -42,6 +42,11 @@ public class MainView extends AppCompatActivity {
                     selectedFragment = new ProfileFragment();
                     isComingFromRight = false;
                 }
+            } else if (itemId == R.id.nav_messages) {
+                if (!(currentFragment instanceof MessageFragment)) {
+                    selectedFragment = new MessageFragment();
+                    isComingFromRight = false;
+                }
             }
 
             if (selectedFragment != null) {
@@ -51,6 +56,7 @@ public class MainView extends AppCompatActivity {
 
             return true;
         });
+
     }
 
     private void loadFragment(Fragment fragment, boolean isComingFromRight) {

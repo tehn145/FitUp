@@ -123,41 +123,41 @@ public class ProfileFragment extends Fragment {
     private void populateUiWithData(DocumentSnapshot snapshot) {
         if (getContext() == null) return;
 
+        // Name
         String name = snapshot.getString("name");
         if(tvProfileName != null) tvProfileName.setText(name != null ? name : "No Name");
 
-        String avatarUrl = snapshot.getString("avatarUrl");
+        // Avatar
+        String avatarUrl = snapshot.getString("avatar"); // chắc chắn đúng key Firestore
         if(ivProfileAvatar != null) {
             Glide.with(getContext())
                     .load(avatarUrl)
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
-                    .circleCrop()
+                    .placeholder(R.drawable.user) // hình mặc định khi load
+                    .error(R.drawable.user)       // hình mặc định khi lỗi
+                    .circleCrop()                 // bo tròn ảnh
                     .into(ivProfileAvatar);
         }
 
+        // Gems
         Long gems = snapshot.getLong("gem");
-        if(tvGemsCount != null) tvGemsCount.setText(String.format(Locale.getDefault(), "%d", gems != null ? gems : 0L));
+        if(tvGemsCount != null) tvGemsCount.setText(String.valueOf(gems != null ? gems : 0L));
 
+        // Connections
         int connectionsSize = 0;
         Object connectionsObj = snapshot.get("connections");
-        if (connectionsObj instanceof List) {
-            connectionsSize = ((List<?>) connectionsObj).size();
-        }
+        if (connectionsObj instanceof List) connectionsSize = ((List<?>) connectionsObj).size();
         if(tvConnectionsCount != null) tvConnectionsCount.setText(String.valueOf(connectionsSize));
 
+        // Followers
         int followersSize = 0;
         Object followersObj = snapshot.get("followers");
-        if (followersObj instanceof List) {
-            followersSize = ((List<?>) followersObj).size();
-        }
+        if (followersObj instanceof List) followersSize = ((List<?>) followersObj).size();
         if(tvFollowersCount != null) tvFollowersCount.setText(String.valueOf(followersSize));
 
+        // Following
         int followingSize = 0;
         Object followingObj = snapshot.get("following");
-        if (followingObj instanceof List) {
-            followingSize = ((List<?>) followingObj).size();
-        }
+        if (followingObj instanceof List) followingSize = ((List<?>) followingObj).size();
         if(tvFollowingCount != null) tvFollowingCount.setText(String.valueOf(followingSize));
     }
 }
