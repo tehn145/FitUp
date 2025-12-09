@@ -319,7 +319,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
+    //fix sau
     private void loadAndListenForUserData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
@@ -339,7 +339,7 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
-
+    //fix sau
     private void updateUI(DocumentSnapshot snapshot) {
         String name = snapshot.getString("name");
         String avatarUrl = snapshot.getString("avatar");
