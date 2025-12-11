@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map_container"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/map_placeholder_layout" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/black_soft"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMyNetwork"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:text="My Network"
+                android:textAllCaps="false"
+                android:textColor="#CCCCCC"
+                android:textStyle="bold"
+                app:rippleColor="@color/black_soft" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnForYou"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:text="For You"
+                android:textAllCaps="false"
+                android:textColor="#CCCCCC"
+                android:textStyle="bold"
+                app:rippleColor="#4DFFFFFF" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNearbyTrainers"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FF6A00"
+                android:paddingHorizontal="16dp"
+                android:text="Nearby Trainers"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <FrameLayout
+        android:id="@+id/avatars_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="96dp"
+        android:paddingBottom="16dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/user"
+            app:civ_border_color="#FF6A00"
+            app:civ_border_width="2dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/defaultavt"
+            app:civ_border_color="#FF6A00"
+            app:civ_border_width="2dp" />
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
