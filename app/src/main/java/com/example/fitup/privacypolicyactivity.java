@@ -26,7 +26,7 @@ public class privacypolicyactivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("https://fitsohub.com/en/privacy-policy");
-
+        //se viet lai sau
         btn_back_policy.setOnClickListener(v -> finish());
     }
 }

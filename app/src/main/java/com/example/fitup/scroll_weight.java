@@ -56,7 +56,7 @@ public class scroll_weight extends AppCompatActivity {
             finish();
             return;
         }
-
+    //fix sau
         int weight = pickerWeight.getValue();
 
         String userId = currentUser.getUid();
