@@ -74,3 +74,4 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
         }
     }
 }
+//fix sau
