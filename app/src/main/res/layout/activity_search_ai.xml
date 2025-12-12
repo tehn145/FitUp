@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <!-- This ScrollView makes the content adaptable to different screen sizes -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btnAnalyze"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tv_matching_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Matching"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/tv_matching_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingExtra="4dp"
+                android:text="Let AI find the perfect trainer for you. Just describe your needs and see the magic!"
+                android:textColor="#E0E0E0"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_matching_title" />
+
+            <!-- AI Query Input Box -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/query_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="#1E1E2C"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_matching_description">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/et_ai_query"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="top|start"
+                        android:hint="I'm looking for a gym trainer to help me reach my fitness goals."
+                        android:inputType="textMultiLine"
+                        android:minHeight="120dp"
+                        android:padding="16dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="#99FFFFFF"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/btnGetAiHelp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Get AI Help"
+                        android:textAllCaps="false"
+                        android:textColor="#A17CFF"
+                        app:icon="@drawable/ic_person"
+                        app:iconTint="#A17CFF"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Filter Chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_filters"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:chipSpacingHorizontal="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/query_card">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_gym_trainers"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Gym Trainers"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_weight_loss"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Weight Loss Experts"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_price"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Under 500K/session"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_yoga"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Yoga &amp; Mindfulness"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_high_rated"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="High-Rated Trainers"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_near_me"
+                    style="@style/FilterChip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Near Me"
+                    app:chipIcon="@drawable/ic_sendfb" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Advanced Filters Toggle -->
+            <TextView
+                android:id="@+id/tv_advanced_filters"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawablePadding="8dp"
+                android:text="Advanced Filters"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:drawableTint="@color/white"
+                app:layout_constraintEnd_toStartOf="@id/switch_advanced_filters"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chip_group_filters" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_advanced_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_advanced_filters"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_advanced_filters" />
+
+            <!-- Workout Buddy Toggle -->
+            <TextView
+                android:id="@+id/tv_workout_buddy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Find a Workout Buddy instead?"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/switch_workout_buddy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_advanced_filters" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_workout_buddy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_workout_buddy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_workout_buddy" />
+
+            <TextView
+                android:id="@+id/tv_buddy_search_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Some filters will be adjusted for workout buddy search."
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_workout_buddy"
+                tools:visibility="visible"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Analyze & Match Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAnalyze"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#FF6A00"
+        android:text="Analyze &amp; Match"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
