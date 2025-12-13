@@ -81,6 +81,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+<!--                    //asdasd-->
                     <Button
                         android:id="@+id/btnGetAiHelp"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
