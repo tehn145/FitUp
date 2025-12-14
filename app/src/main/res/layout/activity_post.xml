@@ -60,8 +60,7 @@
             <FrameLayout
                 android:id="@+id/media_upload_area"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="75dp"
+                android:layout_height="650dp"
                 android:layout_marginHorizontal="16dp"
                 android:background="@drawable/bg_dashed_border"
                 app:layout_constraintDimensionRatio="1:1"
@@ -69,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+            <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

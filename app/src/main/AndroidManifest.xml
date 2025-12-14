@@ -75,9 +75,9 @@
         <activity
             android:name=".OTPcode"
             android:exported="false" />
-        <activity
-            android:name=".Register"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".Register"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
