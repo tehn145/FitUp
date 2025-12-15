@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".activity_profile">
+
+    <!-- Main content that scrolls -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- My Avatar Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Avatar"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Centered and Circular Avatar View -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/user"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:strokeColor="#444"
+                app:strokeWidth="1dp"/>
+
+
+            <!-- Horizontal Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="#333333"/>
+
+            <!-- Personal Information Section -->
+            <TextView
+                style="@style/SectionTitle"
+                android:text="Personal Information" />
+
+            <!-- Reusable rows for personal info -->
+            <include layout="@layout/include_profile_row" android:id="@+id/rowName"/>
+            <include layout="@layout/include_profile_row" android:id="@+id/rowLocation"/>
+            <include layout="@layout/include_profile_row" android:id="@+id/rowGender"/>
+            <include layout="@layout/include_profile_row" android:id="@+id/rowBirthday"/>
+
+            <!-- Horizontal Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#333333"/>
+
+            <!-- Fitness Details Section -->
+            <TextView
+                style="@style/SectionTitle"
+                android:text="Fitness Goal" />
+            <include layout="@layout/include_profile_row" android:id="@+id/rowFitnessGoal"/>
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_marginTop="24dp"
+                android:text="Fitness Level" />
+            <include layout="@layout/include_profile_row" android:id="@+id/rowFitnessLevel"/>
+
+            <!-- Horizontal Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#333333"/>
+
+            <!-- Body Measurements Section -->
+            <TextView
+                style="@style/SectionTitle"
+                android:text="Body Measurements" />
+
+            <include layout="@layout/include_profile_row" android:id="@+id/rowWeight"/>
+            <include layout="@layout/include_profile_row" android:id="@+id/rowHeight"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Header Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1C1C1C"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/black_soft">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Edit Profile"
+                android:textColor="@android:color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/standard_bottom_sheet"
+        style="@style/Widget.Material3.BottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

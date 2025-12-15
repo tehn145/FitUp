@@ -1,0 +1,368 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/black"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="15dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_height="match_parent"
+                android:layout_width="45dp"
+                android:layout_marginRight="5dp"
+                android:id="@+id/btnUser"
+                android:src="@drawable/user"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="User Name"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="18sp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/icGem"
+                        android:layout_width="16dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_fitupgem"
+                        app:tint="@color/orange"
+                        app:layout_constraintBottom_toTopOf="@id/txtFitGemValue"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.062"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        android:layout_marginRight="5dp"
+                        app:layout_constraintVertical_chainStyle="packed" />
+                    <TextView
+                        android:id="@+id/tvUserGemCount"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="0 FitGem"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:layout_marginRight="15dp"
+                android:id="@+id/btnSearch"
+                android:src="@drawable/search"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white"/>
+
+            <ImageButton
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:scaleType="centerInside"
+                android:id="@+id/btnAdd"
+                android:src="@drawable/add"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_height="5dp"
+            android:layout_width="match_parent"
+            android:background="@color/gray_dark"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#101010">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/banner_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginTop="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:cardBackgroundColor="#222">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/banner_fitness1"/>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/banner_view"
+                    app:layout_constraintBottom_toTopOf="@id/top_trainer_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/top_trainer_view"
+                    android:text="Top Trainers"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/banner_view"
+                    app:layout_constraintBottom_toTopOf="@id/recyclerTopTrainers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trainer_see_more"
+                    android:text="See more"
+                    android:clickable="true"
+                    android:focusable="auto"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textAllCaps="false"
+                    android:visibility="invisible"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top_trainer_view"
+                    android:id="@+id/recyclerTopTrainers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginTop="8dp"/>
+
+
+                <LinearLayout
+                    android:id="@+id/quick_discover_layout"
+                    android:layout_marginTop="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/black_translucent"
+                    android:background="@drawable/bg_edtemail"
+                    android:orientation="vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerTopTrainers">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Quick Discover"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="1">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:tint="@color/orange"
+                                android:src="@drawable/location"
+                                android:scaleType="centerInside"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Near you"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2sp"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="1">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:tint="@color/orange"
+                                android:src="@drawable/chatting"
+                                android:scaleType="centerInside"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Messages"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2sp"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="1">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:tint="@color/orange"
+                                android:src="@drawable/compass"
+                                android:scaleType="centerInside"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Connections"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2sp"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="1">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:tint="@color/orange"
+                                android:src="@drawable/trainer"
+                                android:scaleType="centerInside"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Community"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2sp"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_today_challenge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/quick_discover_layout"
+                    android:text="Today challenge"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:id="@+id/Today_challenge_box"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_today_challenge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:backgroundTint="@color/black_translucent"
+                    android:background="@drawable/bg_edtemail"
+                    android:padding="12dp"
+                    android:layout_marginTop="16sp"
+                    android:layout_marginBottom="80dp"
+                    app:cardCornerRadius="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Daily Challenge"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:divider="@drawable/bg_rcorner"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:id="@+id/tvChallenge1"
+                            android:background="@drawable/bg_edtemail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="3 sets x 15 reps - Crunch"
+                            android:textColor="@android:color/white"
+                            android:paddingVertical="6dp"/>
+
+                        <TextView
+                            android:id="@+id/tvChallenge2"
+                            android:layout_marginTop="5sp"
+                            android:background="@drawable/bg_edtemail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="3 sets x 12 reps - Leg Raises"
+                            android:textColor="@android:color/white"
+                            android:paddingVertical="6dp"/>
+
+                        <TextView
+                            android:id="@+id/tvChallenge3"
+                            android:layout_marginTop="5sp"
+                            android:background="@drawable/bg_edtemail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="3 sets x 30 giây - Plank"
+                            android:textColor="@android:color/white"
+                            android:paddingVertical="6dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

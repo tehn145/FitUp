@@ -10,6 +10,15 @@
     android:padding="24dp"
     tools:context=".OTPcode">
 
+    <ImageButton
+        android:id="@+id/imgbtnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back1" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -20,41 +29,38 @@
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_OTPcode"
-        android:layout_width="387dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="184dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:text="Enter the verification code we just sent to your email 23****77@gm.uit.edu.vn"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <LinearLayout
         android:id="@+id/otpContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="290dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tv_OTPcode">
 
         <EditText
             android:id="@+id/edtOtp1"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -64,9 +70,9 @@
 
         <EditText
             android:id="@+id/edtOtp2"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -76,9 +82,9 @@
 
         <EditText
             android:id="@+id/edtOtp3"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -88,9 +94,9 @@
 
         <EditText
             android:id="@+id/edtOtp4"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -100,9 +106,9 @@
 
         <EditText
             android:id="@+id/edtOtp5"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -112,9 +118,9 @@
 
         <EditText
             android:id="@+id/edtOtp6"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:layout_margin="6dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
             android:background="@drawable/bg_otp_box"
             android:gravity="center"
             android:inputType="number"
@@ -129,39 +135,25 @@
         android:id="@+id/tv_Resend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="432dp"
+        android:layout_marginTop="32dp"
         android:text="Resend OTP in 04:30"
         android:textColor="#F44336"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/otpContainer" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSubmit"
-        android:layout_width="387dp"
+        android:layout_width="0dp"
         android:layout_height="72dp"
-        android:layout_marginTop="644dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#858585"
         android:text="Submit"
         android:textColor="#090909"
-        android:textSize="21dp"
+        android:textSize="21sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/imgbtnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back1" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
