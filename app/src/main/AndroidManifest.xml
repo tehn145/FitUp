@@ -16,14 +16,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
+<!--        <activity-->
+<!--            android:name=".ConnectionsActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".privacypolicyactivity"
             android:exported="false" />
         <activity
             android:name=".termsofservice"
             android:exported="false" /> <!-- SplashActivity chạy đầu -->
+<!--        <activity-->
+<!--            android:name=".SplashActivity"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Base.Theme.FitUp">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity> &lt;!&ndash; IntroductionPage không còn MAIN/LAUNCHER &ndash;&gt;-->
+
         <activity
-            android:name=".SplashActivity"
+            android:name=".ConnectionsActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
@@ -78,9 +92,9 @@
         <activity
             android:name=".FindUserActivity"
             android:exported="false" />
-        <!--        <activity-->
-<!--            android:name=".Register"-->
-<!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".Register" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
