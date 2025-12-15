@@ -107,6 +107,7 @@ public class Fitness_Level extends AppCompatActivity {
         }
 
         buttonContinue.setEnabled(true);
+        // asdasdasdasd
     }
 
     private void saveLevelAndProceed() {

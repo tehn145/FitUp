@@ -28,4 +28,13 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="FilterChip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="android:textColor">@color/white</item>
+        <item name="chipBackgroundColor">#2A2A3A</item>
+        <item name="chipStrokeColor">#888888</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipIconTint">@color/white</item>
+        <item name="android:checkable">true</item>
+    </style>
 </resources>

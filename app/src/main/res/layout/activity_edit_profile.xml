@@ -38,6 +38,8 @@
                 android:background="@color/white"
                 android:padding="2dp"
                 android:scaleType="centerCrop"
+                android:clickable="true"
+                android:focusable="false"
                 android:src="@drawable/defaultavt"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                 app:strokeColor="#444"

@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,12 +53,24 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
             holder.tvTrainerSpecialty.setText("General Fitness");
         }
 
-        // Load avatar using Glide
         Glide.with(context)
-                .load(trainer.getAvatarUrl())
+                .load(trainer.getAvatar())
                 .placeholder(R.drawable.user)
                 .error(R.drawable.user)
                 .circleCrop()
+                .listener(new RequestListener<Drawable>() {
+
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.ivTrainerAvatar.setImageTintList(null);
+                        return false;
+                    }
+                })
                 .into(holder.ivTrainerAvatar);
     }
 

@@ -34,6 +34,8 @@ android {
 
 dependencies {
 
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation(libs.appcompat)
@@ -48,11 +50,11 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.functions)
     implementation(libs.firebase.storage)
+    implementation(libs.transport.api)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("com.google.android.material:material:1.11.0")
 //    implementation("com.google.android.material:material:1.12.0")
 //    implementation("androidx.appcompat:appcompat:1.6.1")
 //    implementation("com.kevalpatel2106:ruler-picker:1.2")
