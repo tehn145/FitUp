@@ -1,11 +1,14 @@
 package com.example.fitup;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
-    // TextView LinkTermsOfService, LinkPrivacyPolicy;
+    TextView LinkTermsOfService, LinkPrivacyPolicy;
 
     Button btnContinue;
     EditText email, pwd;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        LinkTermsOfService = findViewById(R.id.LinkTermsOfService);
+        LinkPrivacyPolicy = findViewById(R.id.LinkPrivacyPolicy);
         btnContinue = findViewById(R.id.btnContinue);
         email = findViewById(R.id.editEmail);
         pwd = findViewById(R.id.editPwd);
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             if (result != null && !result.isEmpty()) {
                                 pwdEdt.setVisibility(View.VISIBLE);
                             } else {
-                                Intent intent = new Intent(MainActivity.this, Register.class);
+                                Intent intent = new Intent(MainActivity.this, CreateAccount.class);
                                 intent.putExtra("email", emailText);
                                 startActivity(intent);
                                 finish();
@@ -97,6 +102,24 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         });
+
+        LinkTermsOfService.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://fitsohub.com/en/term-policy"));
+            startActivity(intent);
+        });
+
+        LinkPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://fitsohub.com/en/privacy-policy"));
+                startActivity(intent);
+            }
+        });
+
+        LinkTermsOfService.setPaintFlags(LinkTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        LinkPrivacyPolicy.setPaintFlags(LinkPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

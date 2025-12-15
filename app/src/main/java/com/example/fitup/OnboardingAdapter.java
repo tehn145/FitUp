@@ -36,7 +36,6 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
         return onboardingItems.size();
     }
 
-    // Lớp ViewHolder
     static class OnboardingViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imgv_Background;

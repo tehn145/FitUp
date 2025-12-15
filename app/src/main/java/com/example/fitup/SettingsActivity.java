@@ -18,6 +18,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private ImageView btnBack;
     private ConstraintLayout manageAccountRow;
+    private ConstraintLayout termsrow;
+    private ConstraintLayout privacyrow;
     private ConstraintLayout logoutRow;
 
     @Override
@@ -30,6 +32,9 @@ public class SettingsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
         manageAccountRow = findViewById(R.id.manage_account_row);
         logoutRow = findViewById(R.id.logout_row);
+        termsrow = findViewById(R.id.terms_row);
+        privacyrow = findViewById(R.id.privacy_row);
+
 
         setupClickListeners();
     }
@@ -42,6 +47,22 @@ public class SettingsActivity extends AppCompatActivity {
         manageAccountRow.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsActivity.this, ManageAccountActivity.class);
             startActivity(intent);
+        });
+
+        termsrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, termsofservice.class);
+                startActivity(intent);
+            }
+        });
+
+        privacyrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, privacypolicyactivity.class);
+                startActivity(intent);
+            }
         });
 
         logoutRow.setOnClickListener(v -> {

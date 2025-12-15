@@ -39,7 +39,7 @@ public class SelectRole extends AppCompatActivity {
 
         cardTrainer = findViewById(R.id.card_trainer);
         cardClient = findViewById(R.id.card_client);
-        continueButton = findViewById(R.id.continueButton);
+        continueButton = findViewById(R.id.continueButton2);
 
         cardTrainer.setOnClickListener(v -> selectRole("trainer"));
         cardClient.setOnClickListener(v -> selectRole("client"));

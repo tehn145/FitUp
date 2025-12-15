@@ -5,7 +5,7 @@ public class Trainer {
     private String avatarUrl;
     private String primaryGoal;
     private long gem;
-
+    //Them thuoc tinh vi tri...
     public Trainer() {}
 
     public Trainer(String name, String avatarUrl, String primaryGoal, long gem) {

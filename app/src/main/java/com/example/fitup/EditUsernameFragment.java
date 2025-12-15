@@ -18,7 +18,7 @@ public class EditUsernameFragment extends Fragment {
         // It should contain an EditText and a "Save" button.
         return inflater.inflate(R.layout.fragment_edit_name, container, false);
     }
-
+    //fix sau
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -9,35 +9,43 @@
     android:paddingHorizontal="24dp"
     tools:context=".CreateAccount">
 
-    <!-- Nút quay lại -->
-    <ImageView
-        android:id="@+id/imgbtn_Back"
-        android:layout_width="wrap_content"
+    <!-- Nút quay lại --> <!--        android:paddingTop="10dp"-->
+    <RelativeLayout
+        android:id="@+id/layoutcontaincreateaccount"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="24dp"
-        android:src="@drawable/back1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@android:color/white" />
+        android:layout_marginTop="45dp"
+        >
 
+        <!-- Nút Back -->
+        <ImageView
+            android:id="@+id/imgbtn_Back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/back1"
+            app:tint="@android:color/white" />
 
-    <TextView
-        android:id="@+id/tvCreateAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="24dp"
-        android:text="Create an Account"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!-- Tiêu đề nằm giữa -->
+        <TextView
+            android:id="@+id/tvCreateAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Create an Account"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/continueButton"
+        android:id="@+id/continueButton2"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginBottom="24dp"
@@ -59,8 +67,8 @@
         android:layout_marginBottom="16dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/tvCreateAccount"
-        app:layout_constraintBottom_toTopOf="@id/continueButton"
+        app:layout_constraintTop_toBottomOf="@id/layoutcontaincreateaccount"
+        app:layout_constraintBottom_toTopOf="@id/continueButton2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -69,13 +77,14 @@
             android:layout_height="wrap_content">
 
 
-            <EditText
-                android:id="@+id/edtEmail5"
-                android:layout_width="430dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword2Re"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginTop="25dp"
                 android:background="@drawable/bg_edtemail"
                 android:drawableLeft="@drawable/ic_password"
+                android:drawableRight="@drawable/ic_invisible"
                 android:drawablePadding="15dp"
                 android:ems="10"
                 android:fontFamily="sans-serif"
@@ -87,17 +96,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10"
-                android:drawableRight="@drawable/ic_invisible"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-            <EditText
-                android:id="@+id/edtEmail4"
-                android:layout_width="430dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword2"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/bg_edtemail"
                 android:drawableLeft="@drawable/ic_password"
+                android:drawableRight="@drawable/ic_invisible"
                 android:drawablePadding="15dp"
                 android:ems="10"
                 android:fontFamily="sans-serif"
@@ -109,19 +117,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtEmail3"
-                android:drawableRight="@drawable/ic_invisible"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/edtPhone2" />
 
-            <EditText
-                android:id="@+id/edtEmail3"
-                android:layout_width="430dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPhone2"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/bg_edtemail"
                 android:ems="10"
                 android:fontFamily="sans-serif"
-                android:hint="Enter your name"
+                android:hint="Enter your phone"
                 android:inputType="textPersonName"
                 android:paddingLeft="100dp"
                 android:textColor="@color/white"
@@ -130,14 +136,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtEmail2"
+                app:layout_constraintTop_toBottomOf="@+id/edtName2"
 
 
                 />
 
-            <EditText
-                android:id="@+id/edtEmail2"
-                android:layout_width="430dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtName2"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_edtemail"
@@ -155,39 +161,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgv_EditImageIcon2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@android:color/holo_orange_dark"
-                android:src="@drawable/edit"
-                app:layout_constraintBottom_toBottomOf="@id/profileImage"
-                app:layout_constraintEnd_toEndOf="@id/profileImage"
-                app:shapeAppearanceOverlay="@style/CircularImageViewForEditImage" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profileImage"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_marginTop="10dp"
+            <ImageButton
+                android:id="@+id/imgavt"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/image_rounded_corner"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
                 android:src="@drawable/defaultavt"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/CircularImageView"
                 app:strokeColor="@color/white"
                 tools:ignore="MissingConstraints" />
 
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgv_EditImageIcon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@android:color/holo_orange_dark"
-                android:src="@drawable/edit"
-                app:layout_constraintBottom_toBottomOf="@id/profileImage"
-                app:layout_constraintEnd_toEndOf="@id/profileImage"
-                app:shapeAppearanceOverlay="@style/CircularImageViewForEditImage" />
+            <ImageButton
+                android:id="@+id/edtPfp2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_image"
+                app:layout_constraintBottom_toBottomOf="@id/imgavt"
+                app:layout_constraintEnd_toEndOf="@id/imgavt"
+                android:tint="@color/orange_dark"
+                />
 
             <TextView
                 android:id="@+id/changeEmailButton"
@@ -201,7 +199,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.955"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profileImage" />
+                app:layout_constraintTop_toBottomOf="@id/imgavt" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -215,7 +213,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.02"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+                app:layout_constraintTop_toBottomOf="@+id/imgavt" />
 
             <View
                 android:id="@+id/ViewLine"
@@ -226,10 +224,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintTop_toBottomOf="@+id/tvEmail2" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/tvEmail2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="84dp"
@@ -240,16 +238,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.027"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+                app:layout_constraintTop_toBottomOf="@+id/imgavt" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgv_greentick"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="252dp"
+                android:layout_marginTop="248dp"
                 android:src="@drawable/ic_tick"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.756"
+                app:layout_constraintHorizontal_bias="0.743"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -276,10 +274,10 @@
                 android:text="VN +84 |"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="@+id/edtEmail3"
+                app:layout_constraintEnd_toEndOf="@+id/edtPhone2"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/edtEmail3"
-                app:layout_constraintTop_toTopOf="@+id/edtEmail3" />
+                app:layout_constraintStart_toStartOf="@+id/edtPhone2"
+                app:layout_constraintTop_toTopOf="@+id/edtPhone2" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -292,7 +290,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtEmail4" />
+                app:layout_constraintTop_toBottomOf="@+id/edtPassword2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

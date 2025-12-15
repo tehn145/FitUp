@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,8 @@ public class HomeFragment extends Fragment {
     private ListenerRegistration userListener;
     private ListenerRegistration trainersListener; // Listener for top trainers
 
-    private ImageButton btnUser;
+    private ImageView btnUser;
+
     private TextView tvUserName, tvUserGemCount;
 
     private RecyclerView recyclerTopTrainers;
@@ -317,7 +319,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
+    //fix sau
     private void loadAndListenForUserData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
@@ -337,11 +339,13 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
-
+    //fix sau
     private void updateUI(DocumentSnapshot snapshot) {
         String name = snapshot.getString("name");
-        String avatarUrl = snapshot.getString("avatarUrl");
+        String avatarUrl = snapshot.getString("avatar");
         Number gemCount = snapshot.getLong("gem");
+
+        Log.i(TAG, "avatarUrl: " + avatarUrl);
 
         if (name != null && !name.isEmpty()) {
             tvUserName.setText(name);
@@ -356,7 +360,7 @@ public class HomeFragment extends Fragment {
         }
 
         if (avatarUrl != null && !avatarUrl.isEmpty() && getContext() != null) {
-            Glide.with(getContext())
+            Glide.with(requireContext())
                     .load(avatarUrl)
                     .placeholder(R.drawable.user)
                     .error(R.drawable.user)

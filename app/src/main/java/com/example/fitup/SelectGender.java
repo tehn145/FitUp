@@ -37,7 +37,7 @@ public class SelectGender extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         genderToggleGroup = findViewById(R.id.genderToggleGroup);
-        continueButton = findViewById(R.id.continueButton);
+        continueButton = findViewById(R.id.continueButton2);
 
         genderToggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {

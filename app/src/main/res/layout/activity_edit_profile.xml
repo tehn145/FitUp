@@ -38,7 +38,7 @@
                 android:background="@color/white"
                 android:padding="2dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@drawable/defaultavt"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                 app:strokeColor="#444"
                 app:strokeWidth="1dp"/>
@@ -57,10 +57,29 @@
                 android:text="Personal Information" />
 
             <!-- Reusable rows for personal info -->
-            <include layout="@layout/include_profile_row" android:id="@+id/rowName"/>
-            <include layout="@layout/include_profile_row" android:id="@+id/rowLocation"/>
-            <include layout="@layout/include_profile_row" android:id="@+id/rowGender"/>
-            <include layout="@layout/include_profile_row" android:id="@+id/rowBirthday"/>
+            <include
+                android:id="@+id/rowName"
+                layout="@layout/include_profile_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowGender"
+                layout="@layout/include_profile_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowLocation"
+                layout="@layout/include_profile_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/rowBirthday"
+                layout="@layout/include_profile_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <!-- Horizontal Divider -->
             <View
@@ -105,7 +124,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#1C1C1C"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        android:layout_marginTop="45dp"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_edit_profile"
