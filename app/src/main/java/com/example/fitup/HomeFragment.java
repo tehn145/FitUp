@@ -1,5 +1,6 @@
 package com.example.fitup;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class HomeFragment extends Fragment {
     private ListenerRegistration trainersListener; // Listener for top trainers
 
     private ImageView btnUser;
+    private ImageView btnAdd; // Added this line
 
     private TextView tvUserName, tvUserGemCount;
 
@@ -75,6 +77,7 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         btnUser = view.findViewById(R.id.btnUser);
+        btnAdd = view.findViewById(R.id.btnAdd); // Added this line
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserGemCount = view.findViewById(R.id.tvUserGemCount);
 
@@ -92,6 +95,12 @@ public class HomeFragment extends Fragment {
         recyclerTopTrainers.setAdapter(trainerAdapter);
 
         todayDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Set up the click listener for the new button
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FindUserActivity.class);
+            startActivity(intent);
+        });
 
         setupChallengeListeners();
     }
@@ -165,6 +174,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchDailyChallenge() {
+        if (mAuth.getCurrentUser() == null) return; // Added null check
         DocumentReference progressDocRef = db.collection("users").document(mAuth.getUid())
                 .collection("daily_progress").document(todayDateString);
 
@@ -311,6 +321,11 @@ public class HomeFragment extends Fragment {
                 trainerList.clear();
                 for (DocumentSnapshot document : snapshots.getDocuments()) {
                     Trainer trainer = document.toObject(Trainer.class);
+
+                    if (document.contains("avatar")) {
+                        trainer.setAvatarUrl(document.getString("avatar"));
+                    }
+
                     if (trainer != null) {
                         trainerList.add(trainer);
                     }

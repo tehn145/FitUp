@@ -75,7 +75,10 @@
         <activity
             android:name=".OTPcode"
             android:exported="false" />
-<!--        <activity-->
+        <activity
+            android:name=".FindUserActivity"
+            android:exported="false" />
+        <!--        <activity-->
 <!--            android:name=".Register"-->
 <!--            android:exported="false" />-->
         <activity
