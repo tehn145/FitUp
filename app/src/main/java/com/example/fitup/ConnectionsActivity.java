@@ -20,19 +20,15 @@ public class ConnectionsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_connections);
 
-        // 1. Ánh xạ View
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager = findViewById(R.id.view_pager);
 
-        // 2. Thiết lập Adapter cho ViewPager2
         ConnectionsPagerAdapter pagerAdapter = new ConnectionsPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 
-        // 3. KẾT NỐI TAB LAYOUT VỚI VIEW PAGER (TabLayoutMediator)
-        // Dùng TabLayoutMediator để đồng bộ hóa hành động vuốt và tên Tab.
+
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {
-                    // Đặt tên Tab
                     tab.setText(pagerAdapter.getTabTitle(position));
                 }
         ).attach();
