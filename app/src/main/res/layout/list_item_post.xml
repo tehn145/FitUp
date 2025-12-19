@@ -33,18 +33,35 @@
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar"
         tools:text="User Name" />
 
-    <!-- Post Image (Optional) -->
-    <ImageView
-        android:id="@+id/iv_post_image"
-        android:layout_width="0dp"
+    <!-- Post Image (Wrapped in CardView for rounded corners) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_post_image_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
+
+        app:layout_constrainedWidth="true"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintWidth_max="380dp"
+        app:layout_constraintHeight_max="400dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_user_avatar"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toBottomOf="@id/iv_user_avatar">
+
+        <ImageView
+            android:id="@+id/iv_post_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Post Description -->
     <TextView
@@ -58,7 +75,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_post_image"
+        app:layout_constraintTop_toBottomOf="@id/cv_post_image_container"
         tools:text="This is the description of the post. It can be a few lines long and will wrap as needed. #fitness #motivation" />
 
     <!-- Action Buttons (Likes & Comments) -->
@@ -79,7 +96,7 @@
             android:layout_height="wrap_content"
             android:text="125"
             android:textColor="@color/gray"
-            app:icon="@drawable/ic_person"
+            app:icon="@drawable/ic_like"
             app:iconTint="@color/gray" />
 
         <com.google.android.material.button.MaterialButton
@@ -90,7 +107,7 @@
             android:layout_marginStart="16dp"
             android:text="32"
             android:textColor="@color/gray"
-            app:icon="@drawable/ic_map_placeholder"
+            app:icon="@drawable/ic_comment"
             app:iconTint="@color/gray" />
 
     </LinearLayout>

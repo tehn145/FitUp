@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Add Photos / Video"
+                        android:text="Add Photo"
                         android:textColor="#FF6A00"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="(Add up to 5 photos or 1 video)"
+                        android:text="(Add your photo here)"
                         android:textColor="@color/gray"
                         android:textSize="14sp" />
 

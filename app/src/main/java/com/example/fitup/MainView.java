@@ -37,6 +37,10 @@ public class MainView extends AppCompatActivity {
                     selectedFragment = new HomeFragment();
                     isComingFromRight = true;
                 }
+            } else if (itemId == R.id.nav_discover) {
+                selectedFragment = new DiscoveryFragment();
+                isComingFromRight = false;
+
             } else if (itemId == R.id.nav_profile) {
                 if (!(currentFragment instanceof ProfileFragment)) {
                     selectedFragment = new ProfileFragment();
