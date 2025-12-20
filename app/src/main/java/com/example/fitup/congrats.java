@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.TextView; // Import TextView
+import android.widget.ImageView; // 1. Import ImageView
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-// Import Firebase components
+// Import Glide
+import com.bumptech.glide.Glide; // 2. Import Glide
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +29,9 @@ public class congrats extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+
     private TextView txtCongrats;
+    private ImageView imgAvatar; // 3. Khai báo biến ImageView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +43,10 @@ public class congrats extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         txtCongrats = findViewById(R.id.txtCongrats);
+        imgAvatar = findViewById(R.id.imgAvatar); // 4. Ánh xạ ID từ layout (Đảm bảo trong XML có id này)
 
-        loadUserName();
+        // Gọi hàm load dữ liệu
+        loadUserData();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -56,13 +63,12 @@ public class congrats extends AppCompatActivity {
     }
 
     /**
-     * Fetches the current user's data from Firestore and updates the TextView.
+     * Lấy dữ liệu user (Tên + Avatar) từ Firestore
      */
-    private void loadUserName() {
+    private void loadUserData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Log.w(TAG, "No user is logged in. Cannot fetch name.");
-            // Optionally set a default text if no user is found
+            Log.w(TAG, "No user is logged in.");
             txtCongrats.setText("Congratulations!");
             return;
         }
@@ -74,16 +80,28 @@ public class congrats extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
-                    // Get the "name" field from the document
+                    // --- XỬ LÝ TÊN ---
                     String userName = document.getString("name");
-
-                    // Check if the name exists and update the TextView
                     if (userName != null && !userName.isEmpty()) {
                         txtCongrats.setText("Congratulations, " + userName + "!");
                     } else {
-                        // Fallback if the name field is empty or doesn't exist
                         txtCongrats.setText("Congratulations!");
                     }
+
+                    // --- XỬ LÝ ẢNH AVATAR (Mới thêm vào) ---
+                    String avatarUrl = document.getString("avatar");
+
+                    // Kiểm tra nếu có link ảnh thì load, nếu không có thì bỏ qua (hoặc set ảnh mặc định)
+                    if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                        Glide.with(congrats.this)
+                                .load(avatarUrl)
+                                .circleCrop() // Tuỳ chọn: Cắt ảnh thành hình tròn
+                                .into(imgAvatar);
+                    } else {
+                        // (Tuỳ chọn) Set ảnh mặc định nếu user chưa có avatar
+                        // imgAvatar.setImageResource(R.drawable.default_avatar);
+                    }
+
                 } else {
                     Log.d(TAG, "No such document");
                     txtCongrats.setText("Congratulations!");
@@ -94,7 +112,7 @@ public class congrats extends AppCompatActivity {
             }
         });
     }
-    //fix
+
     private void goToHomeScreen() {
         Intent intent = new Intent(congrats.this, MainView.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

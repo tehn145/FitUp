@@ -50,32 +50,46 @@ public class SelectRole extends AppCompatActivity {
             }
         });
     }
-
     private void selectRole(String role) {
         selectedRole = role;
 
-        cardTrainer.setStrokeColor(Color.TRANSPARENT);
-        cardTrainer.setCardBackgroundColor(ContextCompat.getColor(this, R.color.white));
 
-        cardClient.setStrokeColor(Color.TRANSPARENT);
-        cardClient.setCardBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        int selectedColor = Color.parseColor("#424242"); // Light Gray
+        int defaultColor = ContextCompat.getColor(this, R.color.white);
 
-        int highlightColor = ContextCompat.getColor(this, R.color.gray);
+        // 2. Kiểm tra role để set màu nền (Background)
         if ("trainer".equals(role)) {
-            cardTrainer.setStrokeColor(highlightColor);
+            // Chọn Trainer: Trainer xám, Client trắng
+            cardTrainer.setCardBackgroundColor(selectedColor);
+            cardClient.setCardBackgroundColor(defaultColor);
+
+            // (Tuỳ chọn) Nếu muốn viền cũng mất đi hoặc hiện rõ hơn
+            cardTrainer.setStrokeWidth(0);
+            cardClient.setStrokeWidth(2); // Giữ viền cho cái chưa chọn nếu muốn
+
         } else if ("client".equals(role)) {
-            cardClient.setStrokeColor(highlightColor);
+            // Chọn Client: Client xám, Trainer trắng
+            cardClient.setCardBackgroundColor(selectedColor);
+            cardTrainer.setCardBackgroundColor(defaultColor);
+
+            // (Tuỳ chọn)
+            cardClient.setStrokeWidth(0);
+            cardTrainer.setStrokeWidth(2);
         }
 
+        // 3. Kích hoạt nút Continue
         continueButton.setEnabled(true);
+        // Đảm bảo nút hiện rõ (nếu XML đã set backgroundTint thì dòng này có thể không cần thiết, nhưng giữ lại cho chắc)
         continueButton.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
     }
+    // --------------------------
 
     private void saveRoleAndProceed() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, "Error: No user logged in.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, MainActivity.class));
+            // Nếu lỗi user, có thể đẩy về trang login thay vì MainView
+            // startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
@@ -91,7 +105,6 @@ public class SelectRole extends AppCompatActivity {
 
                     Intent intent = new Intent(SelectRole.this, SelectGender.class);
                     startActivity(intent);
-
                 })
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Error writing document", e);

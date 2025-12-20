@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".FollowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConnectionsActivity"
+            android:exported="false" />
+        <activity
             android:name=".privacypolicyactivity"
             android:exported="false" />
         <activity
@@ -98,6 +104,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>

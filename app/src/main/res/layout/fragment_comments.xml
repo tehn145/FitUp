@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="500dp"
     android:background="@drawable/bg_bottom_sheet_rounded_top"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:layout_marginTop="45dp"
+    >
 
     <!-- Header Section -->
     <TextView
