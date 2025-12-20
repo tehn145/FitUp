@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">FitUp</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="mapbox_access_token"  translatable="false" ignore="UnusedResources">pk.eyJ1IjoidHJhc2h5am9lIiwiYSI6ImNtamJrMHVieDAxdXUzY3B6a3d2MDRidmYifQ.Sl-wDlz7-JnmW-8pUvTqcg</string>
+    <string name="mapbox_access_token" ignore="UnusedResources" translatable="false">pk.eyJ1IjoidHJhc2h5am9lIiwiYSI6ImNtamJrMHVieDAxdXUzY3B6a3d2MDRidmYifQ.Sl-wDlz7-JnmW-8pUvTqcg</string>
 </resources>

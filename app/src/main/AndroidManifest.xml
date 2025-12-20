@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".TrainerProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".FollowActivity"
             android:exported="false" />
         <activity
@@ -84,14 +90,11 @@
         <activity
             android:name=".FindUserActivity"
             android:exported="false" />
-
         <activity
             android:name=".PostActivity"
-            android:exported="false" />
-
-        <!--        <activity-->
-<!--            android:name=".Register"-->
-<!--            android:exported="false" />-->
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Register" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -104,7 +107,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>
