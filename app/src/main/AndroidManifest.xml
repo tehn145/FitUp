@@ -16,44 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
-<!--        <activity-->
-<!--            android:name=".FollowActivity"-->
-<!--            android:exported="false" />-->
-        <!-- <activity -->
-        <!-- android:name=".ConnectionsActivity" -->
-        <!-- android:exported="false" /> -->
         <activity
             android:name=".privacypolicyactivity"
             android:exported="false" />
         <activity
             android:name=".termsofservice"
-            android:exported="false" />
-
-        <!-- SplashActivity chạy đầu -->
-        <!-- <activity -->
-        <!-- android:name=".SplashActivity" -->
-        <!-- android:exported="true" -->
-        <!-- android:theme="@style/Base.Theme.FitUp"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> &lt;!&ndash; IntroductionPage không còn MAIN/LAUNCHER &ndash;&gt; -->
-
-        <!--Test UI thôi-->
-<!--        <activity-->
-<!--            android:name=".ConnectionsActivity"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Base.Theme.FitUp">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
+            android:exported="false" /> <!-- SplashActivity chạy đầu -->
         <activity
-            android:name=".FollowActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.FitUp">
             <intent-filter>
@@ -61,9 +31,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- IntroductionPage không còn MAIN/LAUNCHER -->
+        </activity> <!-- IntroductionPage không còn MAIN/LAUNCHER -->
         <activity
             android:name=".IntroductionPage"
             android:exported="false"
@@ -109,9 +77,15 @@
             android:exported="false" />
         <activity
             android:name=".FindUserActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".Register" -->
-        <!-- android:exported="false" /> -->
+            android:exported="false" />
+
+        <activity
+            android:name=".PostActivity"
+            android:exported="false" />
+
+        <!--        <activity-->
+<!--            android:name=".Register"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />

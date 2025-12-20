@@ -255,7 +255,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         updateRow(rowName, "Name", snapshot.getString("name"));
         updateRow(rowGender, "Gender", capitalizeFirstLetter(snapshot.getString("gender")));
-        updateRow(rowFitnessGoal, "Fitness Goal", capitalizeFirstLetter(snapshot.getString("fitnessGoal")));
+        updateRow(rowFitnessGoal, "Fitness Goal", capitalizeFirstLetter(snapshot.getString("primaryGoal")));
         updateRow(rowFitnessLevel, "Fitness Level", capitalizeFirstLetter(snapshot.getString("fitnessLevel")));
 
         GeoPoint location = snapshot.getGeoPoint("location");

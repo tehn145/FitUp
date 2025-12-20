@@ -50,7 +50,8 @@ public class HomeFragment extends Fragment {
     private ListenerRegistration trainersListener; // Listener for top trainers
 
     private ImageView btnUser;
-    private ImageView btnAdd; // Added this line
+    private ImageView btnSearch;
+    private ImageView btnAdd;
 
     private TextView tvUserName, tvUserGemCount;
 
@@ -77,7 +78,8 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         btnUser = view.findViewById(R.id.btnUser);
-        btnAdd = view.findViewById(R.id.btnAdd); // Added this line
+        btnSearch = view.findViewById(R.id.btnSearch);
+        btnAdd = view.findViewById(R.id.btnAdd);
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserGemCount = view.findViewById(R.id.tvUserGemCount);
 
@@ -96,9 +98,13 @@ public class HomeFragment extends Fragment {
 
         todayDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        // Set up the click listener for the new button
-        btnAdd.setOnClickListener(v -> {
+        btnSearch.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FindUserActivity.class);
+            startActivity(intent);
+        });
+
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PostActivity.class);
             startActivity(intent);
         });
 

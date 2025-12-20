@@ -34,6 +34,7 @@ android {
 
 dependencies {
 
+    implementation("com.mapbox.maps:android-ndk27:11.17.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
