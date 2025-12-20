@@ -1,83 +1,132 @@
 package com.example.fitup;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PendingRequestFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class PendingRequestFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView rvIncoming, rvOutgoing;
+    private PendingRequestAdapter incomingAdapter, outgoingAdapter;
+    private List<ConnectionRequest> incomingList, outgoingList;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public PendingRequestFragment() {}
 
-    public PendingRequestFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment_pending_request.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PendingRequestFragment newInstance(String param1, String param2) {
-        PendingRequestFragment fragment = new PendingRequestFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_pending_request, container, false);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        rvIncoming = view.findViewById(R.id.rvIncomingRequests);
+        rvIncoming.setLayoutManager(new LinearLayoutManager(getContext()));
+        incomingList = new ArrayList<>();
+        incomingAdapter = new PendingRequestAdapter(getContext(), incomingList, PendingRequestAdapter.TYPE_INCOMING, request -> {
+            acceptRequest(request);
+        });
+        rvIncoming.setAdapter(incomingAdapter);
+
+        rvOutgoing = view.findViewById(R.id.rvOutgoingRequests);
+        rvOutgoing.setLayoutManager(new LinearLayoutManager(getContext()));
+        outgoingList = new ArrayList<>();
+        outgoingAdapter = new PendingRequestAdapter(getContext(), outgoingList, PendingRequestAdapter.TYPE_OUTGOING, null); // No action for outgoing
+        rvOutgoing.setAdapter(outgoingAdapter);
+
+        loadIncomingRequests();
+        loadOutgoingRequests();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Ánh xạ layout đã tạo cho Pending Request (fragment_pending_request.xml)
-        View view = inflater.inflate(R.layout.fragment_pending_request, container, false);
+    private void loadIncomingRequests() {
+        if (mAuth.getCurrentUser() == null) return;
+        String myUid = mAuth.getCurrentUser().getUid();
 
-        // 1. Ánh xạ và thiết lập RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.pending_recycler_view);
+        db.collection("connect_requests")
+                .whereEqualTo("toUid", myUid)
+                .whereEqualTo("status", "pending")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null) {
+                        incomingList.clear();
+                        incomingAdapter.notifyDataSetChanged();
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            ConnectionRequest req = doc.toObject(ConnectionRequest.class);
+                            if (req != null) {
+                                fetchUserInfo(req, req.getFromUid(), incomingList, incomingAdapter);
+                            }
+                        }
+                    }
+                });
+    }
 
-        // BẮT BUỘC: Thiết lập Layout Manager (ví dụ: cuộn dọc)
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    private void loadOutgoingRequests() {
+        if (mAuth.getCurrentUser() == null) return;
+        String myUid = mAuth.getCurrentUser().getUid();
 
-        // (Tùy chọn) Ánh xạ các TextView tiêu đề nếu có
-        // Ví dụ: TextView headerTitle = view.findViewById(R.id.header_title);
-        // headerTitle.setText("New Connection Requests");
+        db.collection("connect_requests")
+                .whereEqualTo("fromUid", myUid)
+                .whereEqualTo("status", "pending")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null) {
+                        outgoingList.clear();
+                        outgoingAdapter.notifyDataSetChanged();
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            ConnectionRequest req = doc.toObject(ConnectionRequest.class);
+                            if (req != null) {
+                                fetchUserInfo(req, req.getToUid(), outgoingList, outgoingAdapter);
+                            }
+                        }
+                    }
+                });
+    }
 
-        // *** Tại đây, bạn sẽ gắn Adapter và dữ liệu cho Pending Request ***
-        // List<User> pendingUsers = ...; // Dữ liệu yêu cầu đang chờ
-        // PendingRequestAdapter adapter = new PendingRequestAdapter(pendingUsers);
-        // recyclerView.setAdapter(adapter);
+    private void fetchUserInfo(ConnectionRequest req, String targetUid, List<ConnectionRequest> list, PendingRequestAdapter adapter) {
+        db.collection("users").document(targetUid).get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        req.setSenderName(document.getString("name"));
+                        req.setSenderAvatar(document.getString("avatar"));
+                        req.setSenderRole(document.getString("role"));
 
-        return view;
+                        list.add(req);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    private void acceptRequest(ConnectionRequest request) {
+        db.collection("connect_requests")
+                .whereEqualTo("fromUid", request.getFromUid())
+                .whereEqualTo("toUid", mAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    for(DocumentSnapshot doc : snapshots) {
+                        doc.getReference().update("status", "accepted")
+                                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Connected!", Toast.LENGTH_SHORT).show());
+                    }
+                });
     }
 }

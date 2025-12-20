@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_back"
+                android:src="@drawable/back1"
                 app:tint="@color/white" />
 
             <TextView

@@ -47,7 +47,7 @@
         android:id="@+id/ivNext"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:src="@drawable/arrow1"
+        android:src="@drawable/back2"
         android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
