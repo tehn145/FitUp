@@ -1,4 +1,4 @@
 package com.example.fitup;
 
-public class FitGem {
+public class FitGem_new {
 }
