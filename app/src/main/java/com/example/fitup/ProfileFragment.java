@@ -184,7 +184,7 @@ public class ProfileFragment extends Fragment {
                     }
                 });
     }
-
+//commit
     private void loadAndListenForUserData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
