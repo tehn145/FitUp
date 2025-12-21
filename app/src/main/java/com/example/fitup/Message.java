@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 public class Message {
+<<<<<<< HEAD
     private String senderId;
     private String receiverId;
     private String text;
