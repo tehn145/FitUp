@@ -22,6 +22,7 @@ import com.google.firebase.BuildConfig;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.LocalCacheSettings;
@@ -54,11 +55,13 @@ public class IntroductionPage extends AppCompatActivity {
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 FirebaseFunctions functions = FirebaseFunctions.getInstance();
+                FirebaseDatabase database = com.google.firebase.database.FirebaseDatabase.getInstance(); // Added
 
                 auth.useEmulator(host, 9099);
                 firestore.useEmulator(host, 8080);
                 storage.useEmulator(host, 9199);
                 functions.useEmulator(host, 5001);
+                database.useEmulator(host, 9000);
 
                 FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder(firestore.getFirestoreSettings())
                         .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())

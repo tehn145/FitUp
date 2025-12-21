@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentActivity; // Import needed
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -74,11 +76,35 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 .error(R.drawable.defaultavt)
                 .into(holder.ivAvatar);
 
+        holder.ivAvatar.setOnClickListener(v -> {
+            String authorId = comment.getUserId();
+            if (authorId == null) return;
+
+            FirebaseFirestore.getInstance().collection("users").document(authorId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String role = documentSnapshot.getString("role");
+                            Intent intent;
+
+                            if ("trainer".equalsIgnoreCase(role)) {
+                                intent = new Intent(context, TrainerProfileActivity.class);
+                            } else {
+                                intent = new Intent(context, UserProfileActivity.class);
+                            }
+
+                            intent.putExtra("targetUserId", authorId);
+                            context.startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Error fetching profile", Toast.LENGTH_SHORT).show();
+                    });
+        });
+
         // --- OPTIONS MENU LOGIC ---
         holder.btnOptions.setOnClickListener(v -> {
             // We need the context to be a FragmentActivity to show the BottomSheet
             if (context instanceof FragmentActivity) {
-                // We need 3 things:
                 // 1. postId (parent doc)
                 // 2. commentId (specific doc to delete) - **See note below**
                 // 3. userId (author of comment, for permission check)
@@ -86,7 +112,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 // NOTE: You need to ensure your Comment object has the Firestore Document ID.
                 // Since your model might not have it, we often set it manually when fetching.
                 // Assuming comment.getCommentId() exists or you handle it.
-                // If not, see step 2 below.
 
                 String commentId = comment.getCommentId(); // You might need to add this to your model
 

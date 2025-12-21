@@ -77,6 +77,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 .circleCrop()
                 .into(holder.ivAvatar);
 
+        holder.ivAvatar.setOnClickListener(v -> {
+            String authorId = post.getUserId();
+            if (authorId == null) return;
+
+            db.collection("users").document(authorId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String role = documentSnapshot.getString("role");
+                            android.content.Intent intent;
+
+                            // Check if the user is a trainer
+                            if ("trainer".equalsIgnoreCase(role)) {
+                                intent = new android.content.Intent(context, TrainerProfileActivity.class);
+                            } else {
+                                intent = new android.content.Intent(context, UserProfileActivity.class);
+                            }
+
+                            intent.putExtra("targetUserId", authorId);
+                            context.startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Error fetching profile", Toast.LENGTH_SHORT).show();
+                    });
+        });
+
         // Load Post Image
         if (post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
             holder.ivPostImage.setVisibility(View.VISIBLE);

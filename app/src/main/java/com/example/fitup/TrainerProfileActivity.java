@@ -144,18 +144,64 @@ public class TrainerProfileActivity extends AppCompatActivity {
         db.collection("users").document(uid).get().addOnSuccessListener(document -> {
             if (isFinishing()) return;
             if (document.exists()) {
+                // Name
                 String name = document.getString("name");
-                String avatar = document.getString("avatar");
-                tvName.setText(name != null ? name : "Unknown");
-                tvUsername.setText("@" + uid.substring(0, 6));
-                tvLocation.setText("Ho Chi Minh City");
+                tvName.setText(name != null ? name : "Unknown Trainer");
 
+                // Avatar
+                String avatar = document.getString("avatar");
                 if (avatar != null && !avatar.isEmpty()) {
-                    Glide.with(this).load(avatar).centerCrop().into(imgCover);
+                    Glide.with(this)
+                            .load(avatar)
+                            .placeholder(R.drawable.defaultavt) // Ensure you have a placeholder
+                            .error(R.drawable.defaultavt)
+                            .centerCrop()
+                            .into(imgCover);
+                } else {
+                    imgCover.setImageResource(R.drawable.defaultavt);
+                }
+
+                String username = targetUserId;
+                if (username != null && !username.isEmpty()) {
+                    tvUsername.setText("@" + username);
+                } else {
+                    // Fallback if no username set
+                    tvUsername.setText("@trainer");
+                }
+
+                // Title / Fitness Goal (e.g., "Bodybuilding Coach" or primary goal)
+                String primaryGoal = document.getString("primaryGoal");
+                if (primaryGoal != null && !primaryGoal.isEmpty()) {
+                    // Capitalize first letter
+                    String formattedGoal = primaryGoal.substring(0, 1).toUpperCase() + primaryGoal.substring(1);
+                    tvTitle.setText(formattedGoal + " Coach");
+                } else {
+                    tvTitle.setText("Fitness Trainer");
+                }
+
+                // Location
+                String locationName = document.getString("locationName");
+                if (locationName != null && !locationName.isEmpty()) {
+                    tvLocation.setText(locationName);
+                } else {
+                    // If no name is saved, check for coordinates or default
+                    tvLocation.setText("Location not specified");
+                }
+
+                // About / Bio
+                String aboutMe = document.getString("aboutMe");
+                if (aboutMe != null && !aboutMe.isEmpty()) {
+                    tvAbout.setText(aboutMe);
+                } else {
+                    tvAbout.setText("No bio available for this trainer.");
                 }
             }
+        }).addOnFailureListener(e -> {
+            Log.e("TrainerProfile", "Error loading trainer data", e);
+            Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
         });
     }
+
 
     private void loadTrainerPosts(String uid) {
         db.collection("posts")

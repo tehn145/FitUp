@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:background="@drawable/bg_bottom_sheet_rounded_top">
+
+    <!-- Centered the title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit About Me"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- Made the input field taller (higher in height) -->
+    <EditText
+        android:id="@+id/etEditAboutMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Write something about yourself..."
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        android:inputType="textMultiLine|textCapSentences"
+        android:minLines="6"
+        android:maxLines="10"
+        android:gravity="top|start"
+        android:scrollbars="vertical"/>
+
+    <Button
+        android:id="@+id/btnSaveAboutMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Save"
+        android:textSize="18sp"
+        android:backgroundTint="@color/orange_dark"/>
+
+</LinearLayout>
