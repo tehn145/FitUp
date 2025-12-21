@@ -113,6 +113,35 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), SettingsActivity.class);
             startActivity(intent);
         });
+
+        ivProfileAvatar.setOnClickListener(v -> {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                // Fetch the user's role from Firestore before redirecting
+                db.collection("users").document(currentUser.getUid()).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                String role = documentSnapshot.getString("role");
+                                Intent intent;
+
+                                // Check if the user is a trainer
+                                if ("trainer".equalsIgnoreCase(role)) {
+                                    intent = new Intent(getActivity(), TrainerProfileActivity.class);
+                                } else {
+                                    intent = new Intent(getActivity(), UserProfileActivity.class);
+                                }
+
+                                intent.putExtra("targetUserId", currentUser.getUid());
+                                startActivity(intent);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show();
+                        });
+            } else {
+                Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

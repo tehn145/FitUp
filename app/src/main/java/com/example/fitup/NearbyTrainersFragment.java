@@ -1,5 +1,6 @@
 package com.example.fitup;
 
+import android.content.Intent; // Import Intent
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast; // Import Toast
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,7 +89,8 @@ public class NearbyTrainersFragment extends Fragment {
 
                 // Add markers
                 String myAvatarUrl = document.getString("avatar");
-                addAvatarMarker(userPoint, myAvatarUrl);
+                // Pass current userId for click handling
+                addAvatarMarker(userPoint, myAvatarUrl, userId);
                 loadNearbyTrainers();
             }
         }).addOnFailureListener(e -> Log.e(TAG, "Error fetching user location", e));
@@ -96,19 +99,22 @@ public class NearbyTrainersFragment extends Fragment {
     private void loadNearbyTrainers() {
         db.collection("users").limit(20).get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                //if (doc.getId().equals(mAuth.getCurrentUser().getUid())) continue;
+                // Optional: skip current user if you don't want duplicate marker logic
+                // if (doc.getId().equals(mAuth.getCurrentUser().getUid())) continue;
 
                 GeoPoint gp = doc.getGeoPoint("location");
                 if (gp != null) {
                     Point trainerPoint = Point.fromLngLat(gp.getLongitude(), gp.getLatitude());
                     String avatarUrl = doc.getString("avatar");
-                    addAvatarMarker(trainerPoint, avatarUrl);
+                    // Pass the trainer's userId (doc.getId())
+                    addAvatarMarker(trainerPoint, avatarUrl, doc.getId());
                 }
             }
         });
     }
 
-    private void addAvatarMarker(Point position, String imageUrl) {
+    // Updated method signature to accept userId
+    private void addAvatarMarker(Point position, String imageUrl, String targetUserId) {
         // 1. Create the Annotation Options
         ViewAnnotationOptions options = new ViewAnnotationOptions.Builder()
                 .annotatedFeature(AnnotatedFeature.valueOf(position))
@@ -125,8 +131,31 @@ public class NearbyTrainersFragment extends Fragment {
                     .load(imageUrl)
                     .placeholder(R.drawable.defaultavt)
                     .into(markerImg);
+
+            // 4. Set Click Listener for redirection
+            markerImg.setOnClickListener(v -> {
+                if (targetUserId == null) return;
+
+                db.collection("users").document(targetUserId).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                String role = documentSnapshot.getString("role");
+                                Intent intent;
+
+                                if ("trainer".equalsIgnoreCase(role)) {
+                                    intent = new Intent(getContext(), TrainerProfileActivity.class);
+                                } else {
+                                    intent = new Intent(getContext(), UserProfileActivity.class);
+                                }
+
+                                intent.putExtra("targetUserId", targetUserId);
+                                startActivity(intent);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show();
+                        });
+            });
         }
     }
-
-    // You no longer need the createBitmapFromView() helper function with this approach
 }

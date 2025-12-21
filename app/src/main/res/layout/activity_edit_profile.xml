@@ -83,11 +83,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <!-- Horizontal Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
+                android:background="#333333"/>
+
+            <!-- ADDED: About Me Section -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_marginTop="24dp"
+                android:text="About Me" />
+
+            <include
+                android:id="@+id/rowAboutMe"
+                layout="@layout/include_profile_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
                 android:background="#333333"/>
 
             <!-- Fitness Details Section -->
@@ -102,20 +119,39 @@
                 android:text="Fitness Level" />
             <include layout="@layout/include_profile_row" android:id="@+id/rowFitnessLevel"/>
 
-            <!-- Horizontal Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:background="#333333"/>
 
-            <!-- Body Measurements Section -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_marginTop="24dp"
+                android:text="Availability" />
+
+            <include
+                layout="@layout/include_profile_row"
+                android:id="@+id/rowAvailability"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="#333333"/>
+
             <TextView
                 style="@style/SectionTitle"
                 android:text="Body Measurements" />
 
             <include layout="@layout/include_profile_row" android:id="@+id/rowWeight"/>
             <include layout="@layout/include_profile_row" android:id="@+id/rowHeight"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="#333333"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

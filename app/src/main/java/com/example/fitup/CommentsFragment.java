@@ -86,8 +86,9 @@ public class CommentsFragment extends BottomSheetDialogFragment {
 
             // FIX 1: Use the correct internal ID from the Material library
             // Look up the ID dynamically to avoid R class issues
-            int designBottomSheetId = getResources().getIdentifier("design_bottom_sheet", "id", "com.google.android.material");
-            android.widget.FrameLayout bottomSheet = bottomSheetDialog.findViewById(designBottomSheetId);
+            FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);            if (bottomSheet != null) {
+                bottomSheet.setBackgroundResource(android.R.color.transparent);
+            }
 
             if (bottomSheet != null) {
                 // Remove default background
@@ -122,7 +123,7 @@ public class CommentsFragment extends BottomSheetDialogFragment {
         rvComments = view.findViewById(R.id.rv_comments);
 
         commentList = new ArrayList<>();
-        commentAdapter = new CommentAdapter(getContext(), commentList);
+        commentAdapter = new CommentAdapter(getContext(), commentList, postId);
 
         rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
         rvComments.setAdapter(commentAdapter);
@@ -164,6 +165,12 @@ public class CommentsFragment extends BottomSheetDialogFragment {
                             for (DocumentSnapshot doc : snapshots.getDocuments()) {
                                 try {
                                     Comment comment = doc.toObject(Comment.class);
+
+                                    if (comment != null) {
+                                        comment.setCommentId(doc.getId());
+                                        //commentList.add(comment);
+                                    }
+
                                     String oldName = comment.getUsername();
 
                                     if (comment.getUserId() != null) {

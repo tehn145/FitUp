@@ -42,6 +42,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
             Glide.with(context)
                     .load(user.getAvatar())
                     .placeholder(R.drawable.user)
+                    .circleCrop()
                     .into(holder.ivAvatar);
         } else {
             holder.ivAvatar.setImageResource(R.drawable.user);

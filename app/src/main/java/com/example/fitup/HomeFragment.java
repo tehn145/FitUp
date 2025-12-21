@@ -126,14 +126,30 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         btnUser.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
-                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
-                intent.putExtra("targetUserId", currentUser.getUid());
-                startActivity(intent);
+                db.collection("users").document(currentUser.getUid()).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                String role = documentSnapshot.getString("role");
+                                Intent intent;
+
+                                if ("trainer".equalsIgnoreCase(role)) {
+                                    intent = new Intent(getActivity(), TrainerProfileActivity.class);
+                                } else {
+                                    intent = new Intent(getActivity(), UserProfileActivity.class);
+                                }
+
+                                intent.putExtra("targetUserId", currentUser.getUid());
+                                startActivity(intent);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show();
+                        });
             } else {
                 Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
-
             }
         });
+
 
         btnSearch.setOnClickListener(v -> startActivity(new Intent(getActivity(), FindUserActivity.class)));
         btnAdd.setOnClickListener(v -> startActivity(new Intent(getActivity(), PostActivity.class)));
@@ -238,6 +254,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) return;
                     if (snapshots != null) {
+
                         trainerList.clear();
                         for (DocumentSnapshot doc : snapshots.getDocuments()) {
                             Trainer trainer = doc.toObject(Trainer.class);
@@ -258,9 +275,15 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                                 if (doc.contains("avatar")) {
                                     trainer.setAvatarUrl(doc.getString("avatar"));
                                 }
+
+                                // Fetch location name and set default if missing
+                                String locationName = doc.getString("locationName");
+                                trainer.setLocationName(locationName != null && !locationName.isEmpty() ? locationName : "Unspecified Location");
+
                                 trainerList.add(trainer);
                             }
                         }
+
                         trainerAdapter.notifyDataSetChanged();
                     }
                 });

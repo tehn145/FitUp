@@ -52,7 +52,7 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
 
         holder.tvTrainerName.setText(trainer.getName());
         holder.tvTrainerGem.setText(String.valueOf(trainer.getGem()));
-        holder.tvLocation.setText("Ho Chi Minh, Vietnam");
+        holder.tvLocation.setText(trainer.getLocationName());
 
         Glide.with(context)
                 .load(trainer.getAvatar())

@@ -50,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView ivAvatar;
     private View rowName, rowLocation, rowGender, rowBirthday;
     private View rowFitnessGoal, rowFitnessLevel, rowWeight, rowHeight;
-
+    private View rowAboutMe, rowAvailability;
     // Bottom Sheet
     private FrameLayout standardBottomSheet;
     private BottomSheetBehavior<FrameLayout> standardBottomSheetBehavior;
@@ -104,6 +104,8 @@ public class EditProfileActivity extends AppCompatActivity {
         rowFitnessLevel = findViewById(R.id.rowFitnessLevel);
         rowWeight = findViewById(R.id.rowWeight);
         rowHeight = findViewById(R.id.rowHeight);
+        rowAboutMe = findViewById(R.id.rowAboutMe);
+        rowAvailability = findViewById(R.id.rowAvailability);
 
         setRowIcon(rowName, R.drawable.ic_username2);
         setRowIcon(rowLocation, R.drawable.ic_location2);
@@ -161,6 +163,8 @@ public class EditProfileActivity extends AppCompatActivity {
         rowFitnessGoal.setOnClickListener(v -> showEditFragment(new EditFGoalFragment(), "Edit Fitness Goal"));
         rowFitnessLevel.setOnClickListener(v -> showEditFragment(new EditFLevelFragment(), "Edit Fitness Level"));
         rowGender.setOnClickListener(v -> showEditFragment(new EditGenderFragment(), "Edit Gender"));
+        rowAboutMe.setOnClickListener(v -> showEditFragment(new EditAboutMeFragment(), "Edit About Me"));
+        rowAvailability.setOnClickListener(v -> showEditFragment(new EditAvailabilityFragment(), "Edit Availability"));
     }
 
     private void openGallery() {
@@ -244,8 +248,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String avatarUrl = snapshot.getString("avatar");
         if (avatarUrl != null && !avatarUrl.isEmpty()) {
             Glide.with(this)
-                    .load(avatarUrl)
-                    .placeholder(R.drawable.user)
+                    .load(avatarUrl).placeholder(R.drawable.user)
                     .error(R.drawable.user)
                     .circleCrop()
                     .into(ivAvatar);
@@ -257,14 +260,64 @@ public class EditProfileActivity extends AppCompatActivity {
         updateRow(rowGender, "Gender", capitalizeFirstLetter(snapshot.getString("gender")));
         updateRow(rowFitnessGoal, "Fitness Goal", capitalizeFirstLetter(snapshot.getString("primaryGoal")));
         updateRow(rowFitnessLevel, "Fitness Level", capitalizeFirstLetter(snapshot.getString("fitnessLevel")));
+        updateRow(rowAboutMe, "About Me", snapshot.getString("aboutMe"));
+        updateRow(rowAvailability, "Availability", snapshot.getString("availability"));
 
         GeoPoint location = snapshot.getGeoPoint("location");
-        String locationString = "Not set";
-        if (location != null) {
-            locationString = String.format(Locale.US, "Lat: %.4f, Lon: %.4f",
+        String storedLocationName = snapshot.getString("locationName"); // Check if we already saved the name
+
+        if (storedLocationName != null && !storedLocationName.isEmpty()) {
+            updateRow(rowLocation, "Location", storedLocationName);
+        } else if (location != null) {
+
+            // Set coordinates as temporary placeholder
+            String coordFallback = String.format(Locale.US, "Lat: %.2f, Lon: %.2f",
                     location.getLatitude(), location.getLongitude());
+            updateRow(rowLocation, "Location", coordFallback);
+
+            new Thread(() -> {
+                try {
+                    android.location.Geocoder geocoder = new android.location.Geocoder(this, Locale.getDefault());
+                    java.util.List<android.location.Address> addresses =
+                            geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+                    if (addresses != null && !addresses.isEmpty()) {
+                        android.location.Address address = addresses.get(0);
+
+                        // Try to get City, fallback to State/Region if City is null
+                        String city = address.getLocality();
+                        if (city == null) city = address.getSubAdminArea();
+                        if (city == null) city = address.getAdminArea();
+
+                        String country = address.getCountryName();
+
+                        String finalLocationName;
+                        if (city != null && country != null) {
+                            finalLocationName = city + ", " + country;
+                        } else if (country != null) {
+                            finalLocationName = country;
+                        } else {
+                            finalLocationName = coordFallback;
+                        }
+
+                        // SAVE to Firestore so we don't need to geocode next time
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String nameToSave = finalLocationName; // effectively final for lambda
+                            db.collection("users").document(user.getUid())
+                                    .update("locationName", nameToSave)
+                                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Location name saved to Firestore: " + nameToSave))
+                                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save location name", e));
+                        }
+                    }
+                } catch (java.io.IOException e) {
+                    Log.e(TAG, "Geocoder failed: " + e.getMessage());
+                }
+            }).start();
+        } else {
+            updateRow(rowLocation, "Location", "Not set");
         }
-        updateRow(rowLocation, "Location", locationString);
+        // --- UPDATED LOCATION LOGIC END ---
 
         Number weight = snapshot.getLong("weight");
         Number height = snapshot.getLong("height");
@@ -280,6 +333,7 @@ public class EditProfileActivity extends AppCompatActivity {
             updateRow(rowBirthday, "Birthday", null);
         }
     }
+
 
     private String capitalizeFirstLetter(String str) {
         if (str == null || str.isEmpty()) {
