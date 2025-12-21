@@ -43,12 +43,14 @@
 
     <TextView
         android:id="@+id/tv_no_comments"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="There's nothing here! :("
         android:textColor="@color/gray"
         android:textSize="16sp"
         android:visibility="gone"
+        android:layout_marginVertical="75dp"
         app:layout_constraintBottom_toTopOf="@id/layout_comment_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -9,6 +9,14 @@ public class Comment {
     private String avatarUrl;
     private Timestamp timestamp;
 
+    @com.google.firebase.firestore.Exclude
+    private String commentId;
+
+    @com.google.firebase.firestore.Exclude
+    public String getCommentId() { return commentId; }
+    @com.google.firebase.firestore.Exclude
+    public void setCommentId(String commentId) { this.commentId = commentId; }
+
     // Required empty public constructor for Firestore
     public Comment() { }
 

@@ -1,9 +1,12 @@
-package com.example.fitup;import android.content.Context;
+package com.example.fitup;
+
+import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton; // Import Added
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,50 +85,48 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.ivPostImage.setVisibility(View.GONE);
         }
 
-        // --- LIKE LOGIC ---
+        // --- OPTIONS MENU LOGIC (New) ---
+        holder.btnOptions.setOnClickListener(v -> {
+            if (context instanceof FragmentActivity && post.getPostId() != null) {
+                // Pass postId and the author's userId to check permission
+                // Assuming your Post class has a getUserId() method.
+                PostOptionsFragment optionsFragment = PostOptionsFragment.newInstance(post.getPostId(), post.getUserId());
+                optionsFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "PostOptionsFragment");
+            }
+        });
+
         if (currentUser != null && post.getPostId() != null) {
             String postId = post.getPostId();
             String userId = currentUser.getUid();
 
-            // Reference to the subcollection
             DocumentReference postRef = db.collection("posts").document(postId);
             DocumentReference likeRef = postRef.collection("likes").document(userId);
 
-            // 1. INITIAL STATE CHECK: Check if user already liked this post to set initial color
-            // This runs when the list first loads
+            // 1. INITIAL STATE CHECK
             likeRef.get().addOnSuccessListener(snapshot -> {
                 if (snapshot.exists()) {
-                    // SET ORANGE (Liked)
                     holder.tvLikes.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(context.getResources().getColor(android.R.color.holo_orange_dark)));
                     holder.tvLikes.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
-                    holder.tvLikes.setTag(true); // Tag as liked
+                    holder.tvLikes.setTag(true);
                 } else {
-                    // SET WHITE (Unliked)
                     holder.tvLikes.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(context.getResources().getColor(android.R.color.white)));
                     holder.tvLikes.setTextColor(context.getResources().getColor(android.R.color.white));
-                    holder.tvLikes.setTag(false); // Tag as unliked
+                    holder.tvLikes.setTag(false);
                 }
             });
 
-            // 2. CLICK LISTENER
+            // 2. LIKE CLICK LISTENER
             holder.tvLikes.setOnClickListener(v -> {
-                // Disable temporarily to prevent spamming
                 holder.tvLikes.setEnabled(false);
-
-                // Check current state from Tag (default to false if null)
                 boolean currentlyLiked = holder.tvLikes.getTag() != null && (boolean) holder.tvLikes.getTag();
 
                 db.runTransaction((Transaction.Function<Void>) transaction -> {
-                    // We don't strictly need to read inside the transaction for the logic switch
-                    // if we trust the UI state, but reading ensures data consistency.
                     DocumentSnapshot likeSnapshot = transaction.get(likeRef);
 
                     if (likeSnapshot.exists()) {
-                        // UNLIKE operation
                         transaction.delete(likeRef);
                         transaction.update(postRef, "likeCount", FieldValue.increment(-1));
                     } else {
-                        // LIKE operation
                         Map<String, Object> likeData = new HashMap<>();
                         likeData.put("timestamp", FieldValue.serverTimestamp());
                         transaction.set(likeRef, likeData);
@@ -133,32 +134,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     }
                     return null;
                 }).addOnSuccessListener(aVoid -> {
-                    // Transaction successful
                     holder.tvLikes.setEnabled(true);
-
-                    // Toggle the state based on what we just did
                     boolean newLikedState = !currentlyLiked;
                     holder.tvLikes.setTag(newLikedState);
 
-                    // Update Count visually based on the operation we just performed
                     int currentCount = post.getLikeCount();
                     if (newLikedState) {
-                        // We just Liked: +1
                         post.setLikeCount(currentCount + 1);
-
-                        // Change Color to ORANGE
                         holder.tvLikes.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(context.getResources().getColor(android.R.color.holo_orange_dark)));
                         holder.tvLikes.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
                     } else {
-                        // We just Unliked: -1
                         post.setLikeCount(Math.max(0, currentCount - 1));
-
-                        // Change Color to WHITE
                         holder.tvLikes.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(context.getResources().getColor(android.R.color.white)));
                         holder.tvLikes.setTextColor(context.getResources().getColor(android.R.color.white));
                     }
-
-                    // Set text from the model, not by parsing the previous text value
                     holder.tvLikes.setText(String.valueOf(post.getLikeCount()));
 
                 }).addOnFailureListener(e -> {
@@ -169,9 +158,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             });
         }
 
+        // COMMENT LOGIC
         holder.tvComments.setOnClickListener(v -> {
             if (context instanceof FragmentActivity && post.getPostId() != null) {
                 CommentsFragment commentsFragment = CommentsFragment.newInstance(post.getPostId());
+                // Optional: Apply style for rounded corners if defined
+                // commentsFragment.setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetDialogTheme);
                 commentsFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "CommentsFragment");
             }
         });
@@ -183,7 +175,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public void updatePosts(List<Post> newPosts) {
-        Log.d("DEBUG_ADAPTER", "Updating adapter with " + newPosts.size() + " items");
         this.postList.clear();
         this.postList.addAll(newPosts);
         notifyDataSetChanged();
@@ -192,18 +183,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public static class PostViewHolder extends RecyclerView.ViewHolder {
         ImageView ivAvatar, ivPostImage;
         TextView tvUserName, tvContent, tvLikes, tvComments;
+        ImageButton btnOptions; // Added
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Ensure these IDs match your list_item_post.xml
             ivAvatar = itemView.findViewById(R.id.iv_user_avatar);
             ivPostImage = itemView.findViewById(R.id.iv_post_image);
             tvUserName = itemView.findViewById(R.id.tv_user_name);
             tvContent = itemView.findViewById(R.id.tv_post_description);
-
-            // Reusing existing IDs from your provided code
             tvLikes = itemView.findViewById(R.id.btn_like);
             tvComments = itemView.findViewById(R.id.btn_comment);
+            btnOptions = itemView.findViewById(R.id.btn_options); // Bind Added
         }
     }
 }
