@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,10 +32,10 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
 
-    private ImageView ivProfileAvatar, btnBack;
+    private ImageView ivProfileAvatar;
     private TextView tvProfileName, tvProfileId;
     private TextView tvGemsCount, tvConnectionsCount, tvFollowersCount, tvFollowingCount;
-    // --- THÊM BIẾN MỚI ---
+    private TextView labelConnections;
     private TextView txtRequestCount;
 
     private LinearLayout btnEditProfile;
@@ -46,11 +47,13 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
     private ListenerRegistration userListener;
-
     private ListenerRegistration requestCountListener;
+    private ListenerRegistration connOutListener;
+    private ListenerRegistration connInListener;
 
-    private androidx.constraintlayout.widget.ConstraintLayout cardConnection;
+    private ConstraintLayout cardConnection;
 
     @Nullable
     @Override
@@ -69,10 +72,11 @@ public class ProfileFragment extends Fragment {
         tvProfileName = view.findViewById(R.id.txtName);
         tvProfileId = view.findViewById(R.id.txtUsername);
         tvGemsCount = view.findViewById(R.id.txtFitGemValue);
+
         tvConnectionsCount = view.findViewById(R.id.connectionCount);
         tvFollowersCount = view.findViewById(R.id.followerCount);
         tvFollowingCount = view.findViewById(R.id.followingCount);
-
+        labelConnections = view.findViewById(R.id.textView14);
         txtRequestCount = view.findViewById(R.id.txtRequestCount);
 
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
@@ -83,6 +87,13 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ConnectionsActivity.class);
             startActivity(intent);
         });
+
+        View.OnClickListener openConnections = v -> {
+            Intent intent = new Intent(getActivity(), ConnectionsActivity.class);
+            startActivity(intent);
+        };
+        tvConnectionsCount.setOnClickListener(openConnections);
+        if(labelConnections != null) labelConnections.setOnClickListener(openConnections);
 
         rvMyPosts = view.findViewById(R.id.rvMyPosts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -110,17 +121,46 @@ public class ProfileFragment extends Fragment {
         loadAndListenForUserData();
         loadMyPosts();
         listenForPendingRequests();
+        loadCounters();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (userListener != null) {
-            userListener.remove();
-        }
-        if (requestCountListener != null) {
-            requestCountListener.remove();
-        }
+        if (userListener != null) userListener.remove();
+        if (requestCountListener != null) requestCountListener.remove();
+        if (connOutListener != null) connOutListener.remove();
+        if (connInListener != null) connInListener.remove();
+    }
+
+    private void loadCounters() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+        String uid = currentUser.getUid();
+
+        connOutListener = db.collection("connect_requests")
+                .whereEqualTo("fromUid", uid)
+                .whereEqualTo("status", "accepted")
+                .addSnapshotListener((snapshots1, e1) -> {
+                    if (e1 != null) return;
+                    int count1 = (snapshots1 != null) ? snapshots1.size() : 0;
+
+                    connInListener = db.collection("connect_requests")
+                            .whereEqualTo("toUid", uid)
+                            .whereEqualTo("status", "accepted")
+                            .addSnapshotListener((snapshots2, e2) -> {
+                                if (e2 != null) return;
+                                int count2 = (snapshots2 != null) ? snapshots2.size() : 0;
+
+                                int total = count1 + count2;
+                                if (tvConnectionsCount != null) {
+                                    tvConnectionsCount.setText(String.valueOf(total));
+                                }
+                            });
+                });
+
+        if (tvFollowersCount != null) tvFollowersCount.setText("0");
+        if (tvFollowingCount != null) tvFollowingCount.setText("0");
     }
 
     private void listenForPendingRequests() {
@@ -154,7 +194,6 @@ public class ProfileFragment extends Fragment {
         }
 
         String userId = currentUser.getUid();
-        if(tvProfileId != null) tvProfileId.setText(String.format("ID: %s", userId.substring(0, 6)));
 
         userListener = db.collection("users").document(userId)
                 .addSnapshotListener((snapshot, e) -> {
@@ -178,21 +217,26 @@ public class ProfileFragment extends Fragment {
         if(tvProfileName != null) tvProfileName.setText(name != null ? name : "No Name");
 
         String username = snapshot.getString("username");
-        if(tvProfileId != null && username != null) tvProfileId.setText("@" + username);
+        if(tvProfileId != null) {
+            if (username != null && !username.isEmpty()) {
+                tvProfileId.setText("@" + username);
+            } else {
+                tvProfileId.setText("ID: " + snapshot.getId().substring(0, 6));
+            }
+        }
 
         String avatarUrl = snapshot.getString("avatar");
-        if(ivProfileAvatar != null && avatarUrl != null) {
+        if(ivProfileAvatar != null) {
             Glide.with(getContext())
                     .load(avatarUrl)
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
+                    .placeholder(R.drawable.defaultavt)
+                    .error(R.drawable.defaultavt)
                     .circleCrop()
                     .into(ivProfileAvatar);
         }
 
         Long gems = snapshot.getLong("gem");
         if(tvGemsCount != null) tvGemsCount.setText(String.valueOf(gems != null ? gems : 0L));
-
     }
 
     private void loadMyPosts() {

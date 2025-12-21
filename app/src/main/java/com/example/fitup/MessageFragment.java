@@ -1,64 +1,92 @@
 package com.example.fitup;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MessageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class MessageFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public MessageFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MessageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MessageFragment newInstance(String param1, String param2) {
-        MessageFragment fragment = new MessageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private RecyclerView recyclerView;
+    private MessagesAdapter adapter;
+    private List<ChatSummary> chatList = new ArrayList<>();
+    private String currentUserId;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_message, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        recyclerView = view.findViewById(R.id.rvMessages);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter = new MessagesAdapter(getContext(), chatList, currentUserId, chat -> {
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra("CHAT_ID", chat.chatId);
+            intent.putExtra("RECEIVER_NAME", chat.getOtherUserName(currentUserId));
+            intent.putExtra("RECEIVER_ID", chat.getOtherUserId(currentUserId));
+            startActivity(intent);
+        });
+        recyclerView.setAdapter(adapter);
+
+        loadChats();
+    }
+
+    private void loadChats() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        try {
+            db.useEmulator("10.0.2.2", 9000);
+        } catch (Exception e) {
+
+        }
+        DatabaseReference ref = db.getReference("chats");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                chatList.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    try {
+                        if (data.child("members").hasChild(currentUserId)) {
+                            ChatSummary chat = data.getValue(ChatSummary.class);
+                            if (chat != null) {
+                                chat.chatId = data.getKey();
+                                if (chat.lastMessage != null && !chat.lastMessage.isEmpty()) {
+                                    chatList.add(chat);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {}
+                }
+                Collections.sort(chatList, (a, b) -> Long.compare(b.lastTimestamp, a.lastTimestamp));
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 }

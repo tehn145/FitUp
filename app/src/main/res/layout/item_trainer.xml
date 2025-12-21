@@ -25,11 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user" />
+                android:src="@drawable/defaultavt" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="150dp"
                 android:background="@drawable/gradient_black_bottom"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -40,22 +40,14 @@
                 android:padding="16dp"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtTrainerName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/txtTrainerName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Trainer Name"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                    android:text="Trainer Name"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtSpecialty"
@@ -88,8 +80,9 @@
         app:layout_constraintTop_toBottomOf="@id/cardImage">
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:id="@+id/btnAddfriend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_circle_orange"
             android:backgroundTint="#333333"
             android:src="@drawable/ic_addfriend"
@@ -99,7 +92,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnConnect"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/bg_button_white"
@@ -110,8 +103,9 @@
             android:textSize="16sp"/>
 
         <LinearLayout
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:id="@+id/layoutGem"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_circle_orange"
             android:gravity="center">
 
@@ -124,6 +118,35 @@
                 android:textStyle="bold"
                 android:textSize="16sp"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvYouLabel"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:text="(You)"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMessage"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="Message"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:cornerRadius="22dp"
+            app:strokeColor="@android:color/white"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

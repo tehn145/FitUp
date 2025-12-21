@@ -1,6 +1,8 @@
 package com.example.fitup;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ public class ConnectionsActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager2 viewPager = findViewById(R.id.view_pager);
+        ImageView btnBack = findViewById(R.id.imgbtn_Back);
+        btnBack.setOnClickListener(v -> finish());
 
         ConnectionsPagerAdapter pagerAdapter = new ConnectionsPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);

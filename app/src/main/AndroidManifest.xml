@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".TrainerProfileActivity"
             android:exported="false" />
         <activity

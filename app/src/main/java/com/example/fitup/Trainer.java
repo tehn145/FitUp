@@ -7,6 +7,7 @@ public class Trainer {
     private String primaryGoal;
     private long gem;
     private boolean requestSent = false;
+    private boolean connected = false;
 
     public Trainer() {}
 
@@ -29,4 +30,6 @@ public class Trainer {
 
     public boolean isRequestSent() { return requestSent; }
     public void setRequestSent(boolean requestSent) { this.requestSent = requestSent; }
+    public boolean isConnected() { return connected; }
+    public void setConnected(boolean connected) { this.connected = connected; }
 }

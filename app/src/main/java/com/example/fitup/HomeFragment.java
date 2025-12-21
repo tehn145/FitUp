@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private FirebaseAuth.AuthStateListener authStateListener;
     private ListenerRegistration userListener;
     private ListenerRegistration trainersListener;
+    private ListenerRegistration requestsListener;
 
     private ImageView btnUser;
     private ImageView btnSearch;
@@ -60,7 +61,9 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private RecyclerView recyclerTopTrainers;
     private TrainerAdapter trainerAdapter;
     private List<Trainer> trainerList;
+
     private Set<String> sentRequestIds = new HashSet<>();
+    private Set<String> connectedIds = new HashSet<>();
 
     private LinearLayout textTodayChallenge;
     private TextView tvChallenge1, tvChallenge2, tvChallenge3;
@@ -166,6 +169,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         }
         if (userListener != null) userListener.remove();
         if (trainersListener != null) trainersListener.remove();
+        if (requestsListener != null) requestsListener.remove();
     }
 
 
@@ -201,15 +205,25 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private void loadSentRequestsAndThenTrainers() {
         if (mAuth.getCurrentUser() == null) return;
 
-        db.collection("connect_requests")
+        requestsListener = db.collection("connect_requests")
                 .whereEqualTo("fromUid", mAuth.getCurrentUser().getUid())
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) return;
                     if (snapshots != null) {
                         sentRequestIds.clear();
+                        connectedIds.clear();
+
                         for (DocumentSnapshot doc : snapshots.getDocuments()) {
                             String toUid = doc.getString("toUid");
-                            if (toUid != null) sentRequestIds.add(toUid);
+                            String status = doc.getString("status");
+
+                            if (toUid != null) {
+                                if ("accepted".equals(status)) {
+                                    connectedIds.add(toUid);
+                                } else {
+                                    sentRequestIds.add(toUid);
+                                }
+                            }
                         }
                         loadTopTrainers();
                     }
@@ -229,6 +243,13 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                             Trainer trainer = doc.toObject(Trainer.class);
                             if (trainer != null) {
                                 trainer.setUid(doc.getId());
+
+                                if (connectedIds.contains(trainer.getUid())) {
+                                    trainer.setConnected(true);
+                                } else {
+                                    trainer.setConnected(false);
+                                }
+
                                 if (sentRequestIds.contains(trainer.getUid())) {
                                     trainer.setRequestSent(true);
                                 } else {
@@ -244,7 +265,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                     }
                 });
     }
-
 
     @Override
     public void onProfileClick(Trainer trainer) {
@@ -396,5 +416,13 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 progressDocRef.update("all_tasks_completed", true);
             }
         });
+    }
+
+    @Override
+    public void onMessageClick(Trainer trainer) {
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra("RECEIVER_ID", trainer.getUid());
+        intent.putExtra("RECEIVER_NAME", trainer.getName());
+        startActivity(intent);
     }
 }

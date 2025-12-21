@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.util.List;
@@ -38,9 +41,8 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         ConnectionRequest connection = connectionList.get(position);
 
         holder.tvName.setText(connection.getSenderName());
-
         String role = connection.getSenderRole();
-        holder.tvDescription.setText((role != null ? role : "Member") + "\nHo Chi Minh"); // Location demo
+        holder.tvDescription.setText((role != null ? role : "Member"));
 
         if (connection.getSenderAvatar() != null) {
             Glide.with(context).load(connection.getSenderAvatar()).into(holder.imgAvatar);
@@ -53,13 +55,23 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         }
 
         holder.btnMessage.setOnClickListener(v -> {
-            // Mở màn hình chat (sẽ làm sau)
-            Toast.makeText(context, "Chat with " + connection.getSenderName(), Toast.LENGTH_SHORT).show();
+            String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String partnerUid;
+
+            if (connection.getFromUid().equals(myUid)) {
+                partnerUid = connection.getToUid();
+            } else {
+                partnerUid = connection.getFromUid();
+            }
+
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra("RECEIVER_ID", partnerUid);
+            intent.putExtra("RECEIVER_NAME", connection.getSenderName());
+            context.startActivity(intent);
         });
 
-        // Sự kiện Book Session (Chỉ cho Trainer, sẽ làm sau)
         holder.btnBook.setOnClickListener(v -> {
-            Toast.makeText(context, "Booking " + connection.getSenderName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Booking feature coming soon!", Toast.LENGTH_SHORT).show();
         });
     }
 

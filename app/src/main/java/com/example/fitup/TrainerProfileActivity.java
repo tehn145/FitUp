@@ -72,7 +72,14 @@ public class TrainerProfileActivity extends AppCompatActivity {
         targetUserId = getIntent().getStringExtra("targetUserId");
         isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
 
-        updateButtonUI();
+        if (currentUserId != null && targetUserId != null && currentUserId.equals(targetUserId)) {
+            btnConnect.setVisibility(View.GONE); // Ẩn hoàn toàn nút
+        } else {
+            btnConnect.setVisibility(View.VISIBLE);
+            // Chỉ chạy logic update UI nếu không phải là chính mình
+            isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
+            updateButtonUI();
+        }
 
         btnBack.setOnClickListener(v -> finish());
 
