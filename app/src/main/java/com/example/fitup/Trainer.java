@@ -1,10 +1,12 @@
 package com.example.fitup;
 
 public class Trainer {
+    private String uid;
     private String name;
     private String avatar;
     private String primaryGoal;
     private long gem;
+    private boolean requestSent = false;
 
     public Trainer() {}
 
@@ -15,23 +17,16 @@ public class Trainer {
         this.gem = gem;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getUid() { return uid; }
+    public void setUid(String uid) { this.uid = uid; }
 
-    public String getAvatar() {
-        return avatar;
-    }
+    public String getName() { return name; }
+    public String getAvatar() { return avatar; }
+    public void setAvatarUrl(String avatar) { this.avatar = avatar; }
 
-    public String getPrimaryGoal() {
-        return primaryGoal;
-    }
+    public String getPrimaryGoal() { return primaryGoal; }
+    public long getGem() { return gem; }
 
-    public void setAvatarUrl(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public long getGem() {
-        return gem;
-    }
+    public boolean isRequestSent() { return requestSent; }
+    public void setRequestSent(boolean requestSent) { this.requestSent = requestSent; }
 }

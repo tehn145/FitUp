@@ -23,6 +23,8 @@ public class termsofservice extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("https://fitsohub.com/en/term-policy");
+        //se viet lai sau
+        //Fitup term
 
         btn_back_terms.setOnClickListener(v -> finish());
     }

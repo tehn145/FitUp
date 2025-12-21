@@ -1,7 +1,7 @@
 package com.example.fitup;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,26 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
 import java.util.List;
-import java.util.Locale;
 
 public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerViewHolder> {
 
     private final List<Trainer> trainerList;
     private final Context context;
+    private final OnTrainerItemClickListener listener;
 
-    public TrainerAdapter(Context context, List<Trainer> trainerList) {
+    public interface OnTrainerItemClickListener {
+        void onProfileClick(Trainer trainer);
+        void onConnectClick(Trainer trainer);
+    }
+
+    public TrainerAdapter(Context context, List<Trainer> trainerList, OnTrainerItemClickListener listener) {
         this.context = context;
         this.trainerList = trainerList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,35 +44,28 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
         Trainer trainer = trainerList.get(position);
 
         holder.tvTrainerName.setText(trainer.getName());
-        holder.tvTrainerGem.setText(String.format(Locale.getDefault(), "%d Gem", trainer.getGem()));
-
-        if (trainer.getPrimaryGoal() != null && !trainer.getPrimaryGoal().isEmpty()) {
-            String goal = trainer.getPrimaryGoal();
-            String formattedGoal = goal.substring(0, 1).toUpperCase() + goal.substring(1).replace('_', ' ');
-            holder.tvTrainerSpecialty.setText(formattedGoal);
-        } else {
-            holder.tvTrainerSpecialty.setText("General Fitness");
-        }
+        holder.tvTrainerGem.setText(String.valueOf(trainer.getGem()));
+        holder.tvLocation.setText("Ho Chi Minh, Vietnam");
 
         Glide.with(context)
                 .load(trainer.getAvatar())
                 .placeholder(R.drawable.user)
                 .error(R.drawable.user)
-                .circleCrop()
-                .listener(new RequestListener<Drawable>() {
-
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.ivTrainerAvatar.setImageTintList(null);
-                        return false;
-                    }
-                })
+                .centerCrop()
                 .into(holder.ivTrainerAvatar);
+
+        if (trainer.isRequestSent()) {
+            holder.btnConnect.setText("Requested");
+            holder.btnConnect.setEnabled(false);
+            holder.btnConnect.setAlpha(0.6f);
+        } else {
+            holder.btnConnect.setText("Connect");
+            holder.btnConnect.setEnabled(true);
+            holder.btnConnect.setAlpha(1.0f);
+        }
+
+        holder.itemView.setOnClickListener(v -> listener.onProfileClick(trainer));
+        holder.btnConnect.setOnClickListener(v -> listener.onConnectClick(trainer));
     }
 
     @Override
@@ -81,14 +75,17 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
 
     public static class TrainerViewHolder extends RecyclerView.ViewHolder {
         ImageView ivTrainerAvatar;
-        TextView tvTrainerName, tvTrainerSpecialty, tvTrainerGem;
+        TextView tvTrainerName, tvLocation, tvTrainerGem, tvSpecialty;
+        AppCompatButton btnConnect;
 
         public TrainerViewHolder(@NonNull View itemView) {
             super(itemView);
             ivTrainerAvatar = itemView.findViewById(R.id.imgTrainer);
             tvTrainerName = itemView.findViewById(R.id.txtTrainerName);
-            tvTrainerSpecialty = itemView.findViewById(R.id.txtRank);
+            tvSpecialty = itemView.findViewById(R.id.txtSpecialty);
+            tvLocation = itemView.findViewById(R.id.txtLocation);
             tvTrainerGem = itemView.findViewById(R.id.tvTrainerGem);
+            btnConnect = itemView.findViewById(R.id.btnConnect);
         }
     }
 }
