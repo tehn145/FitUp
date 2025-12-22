@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".feature.match.ui.MatchActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
@@ -53,12 +56,6 @@
             android:theme="@style/Base.Theme.FitUp" />
         <activity
             android:name=".MainView"
-            android:exported="false" />
-        <activity
-            android:name=".PostsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".OnePostActivity"
             android:exported="false" />
         <activity
             android:name=".congrats"

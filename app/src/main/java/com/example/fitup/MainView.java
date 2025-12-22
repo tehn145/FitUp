@@ -1,11 +1,15 @@
 package com.example.fitup;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.fitup.feature.match.ui.MatchActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainView extends AppCompatActivity {
@@ -19,6 +23,15 @@ public class MainView extends AppCompatActivity {
         setContentView(R.layout.main_view);
 
         bottomNavigationView = findViewById(R.id.bottomNav);
+
+        // ✅ CLICK NÚT GIỮA (AI MATCH) -> MỞ MatchActivity
+        View fabMatch = findViewById(R.id.fab_match);
+        if (fabMatch != null) {
+            fabMatch.setOnClickListener(v -> {
+                Intent intent = new Intent(MainView.this, MatchActivity.class);
+                startActivity(intent);
+            });
+        }
 
         if (savedInstanceState == null) {
             currentFragment = new HomeFragment();
@@ -38,9 +51,10 @@ public class MainView extends AppCompatActivity {
                     isComingFromRight = true;
                 }
             } else if (itemId == R.id.nav_discover) {
-                selectedFragment = new DiscoveryFragment();
-                isComingFromRight = false;
-
+                if (!(currentFragment instanceof DiscoveryFragment)) {
+                    selectedFragment = new DiscoveryFragment();
+                    isComingFromRight = false;
+                }
             } else if (itemId == R.id.nav_profile) {
                 if (!(currentFragment instanceof ProfileFragment)) {
                     selectedFragment = new ProfileFragment();
@@ -60,7 +74,6 @@ public class MainView extends AppCompatActivity {
 
             return true;
         });
-
     }
 
     private void loadFragment(Fragment fragment, boolean isComingFromRight) {
