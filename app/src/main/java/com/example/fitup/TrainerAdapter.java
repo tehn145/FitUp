@@ -54,6 +54,24 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
         holder.tvTrainerGem.setText(String.valueOf(trainer.getGem()));
         holder.tvLocation.setText(trainer.getLocationName());
 
+        String level = trainer.getFitnessLevel();
+        String levelText = "Fitness Trainer";
+
+        if (level != null) {
+            switch (level.toLowerCase().trim()) {
+                case "advanced":
+                    levelText = "Master Trainer (10+ years)";
+                    break;
+                case "intermediate":
+                    levelText = "Senior Trainer (5-10 years)";
+                    break;
+                case "beginner":
+                    levelText = "Junior Trainer (< 5 years)";
+                    break;
+            }
+        }
+        holder.tvSpecialty.setText(levelText);
+
         Glide.with(context)
                 .load(trainer.getAvatar())
                 .placeholder(R.drawable.defaultavt)
@@ -69,22 +87,17 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
             holder.btnConnect.setVisibility(View.GONE);
             holder.layoutGem.setVisibility(View.GONE);
             holder.btnMessage.setVisibility(View.GONE);
-
             holder.tvYouLabel.setVisibility(View.VISIBLE);
-
         } else if (isConnected) {
             holder.btnAddFriend.setVisibility(View.GONE);
             holder.btnConnect.setVisibility(View.GONE);
             holder.layoutGem.setVisibility(View.GONE);
             holder.tvYouLabel.setVisibility(View.GONE);
-
             holder.btnMessage.setVisibility(View.VISIBLE);
-
         } else {
             holder.btnAddFriend.setVisibility(View.VISIBLE);
             holder.btnConnect.setVisibility(View.VISIBLE);
             holder.layoutGem.setVisibility(View.VISIBLE);
-
             holder.tvYouLabel.setVisibility(View.GONE);
             holder.btnMessage.setVisibility(View.GONE);
 
@@ -119,7 +132,7 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
             super(itemView);
             ivTrainerAvatar = itemView.findViewById(R.id.imgTrainer);
             tvTrainerName = itemView.findViewById(R.id.txtTrainerName);
-            tvSpecialty = itemView.findViewById(R.id.txtSpecialty);
+            tvSpecialty = itemView.findViewById(R.id.txtSpecialty); // Đã có sẵn trong XML
             tvLocation = itemView.findViewById(R.id.txtLocation);
 
             btnAddFriend = itemView.findViewById(R.id.btnAddfriend);

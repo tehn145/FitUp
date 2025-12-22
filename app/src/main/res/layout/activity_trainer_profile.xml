@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".TrainerProfileActivity">
+    tools:context=".TrainerProfileActivity"
+    android:layout_marginTop="50dp">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -96,6 +97,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tvSpecialty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Master Trainer (10+ years)"

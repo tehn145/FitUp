@@ -1,8 +1,11 @@
 package com.example.fitup;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.LinearLayoutManager; // Horizontal layout
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +29,7 @@ import java.util.Map;
 public class TrainerProfileActivity extends AppCompatActivity {
 
     private ImageView imgCover, btnBack;
-    private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout;
+    private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout, tvSpecialty; // Thêm tvSpecialty
     private AppCompatButton btnConnect;
     private RecyclerView rvTrainerPosts;
     private PostGridAdapter postAdapter;
@@ -36,7 +39,9 @@ public class TrainerProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String targetUserId;
     private String currentUserId;
+
     private boolean isRequestSent = false;
+    private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         tvName = findViewById(R.id.tvTrainerName);
         tvTitle = findViewById(R.id.tvTrainerTitle);
+        tvSpecialty = findViewById(R.id.tvSpecialty);
         tvUsername = findViewById(R.id.tvTrainerUsername);
         tvLocation = findViewById(R.id.tvTrainerLocation);
         tvAbout = findViewById(R.id.tvAbout);
@@ -70,15 +76,11 @@ public class TrainerProfileActivity extends AppCompatActivity {
         rvTrainerPosts.setAdapter(postAdapter);
 
         targetUserId = getIntent().getStringExtra("targetUserId");
-        isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
 
         if (currentUserId != null && targetUserId != null && currentUserId.equals(targetUserId)) {
-            btnConnect.setVisibility(View.GONE); // Ẩn hoàn toàn nút
+            btnConnect.setVisibility(View.GONE);
         } else {
             btnConnect.setVisibility(View.VISIBLE);
-            // Chỉ chạy logic update UI nếu không phải là chính mình
-            isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
-            updateButtonUI();
         }
 
         btnBack.setOnClickListener(v -> finish());
@@ -86,13 +88,19 @@ public class TrainerProfileActivity extends AppCompatActivity {
         if (targetUserId != null) {
             loadTrainerData(targetUserId);
             loadTrainerPosts(targetUserId);
-            if (currentUserId != null) {
+
+            if (currentUserId != null && !currentUserId.equals(targetUserId)) {
                 checkRequestStatus();
             }
         }
 
         btnConnect.setOnClickListener(v -> {
-            if (!isRequestSent) {
+            if (isConnected) {
+                Intent intent = new Intent(TrainerProfileActivity.this, ChatActivity.class);
+                intent.putExtra("RECEIVER_ID", targetUserId);
+                intent.putExtra("RECEIVER_NAME", tvName.getText().toString());
+                startActivity(intent);
+            } else if (!isRequestSent) {
                 sendConnectRequestToDatabase();
             }
         });
@@ -104,9 +112,19 @@ public class TrainerProfileActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        isRequestSent = true;
-                        updateButtonUI();
+                        String status = documentSnapshot.getString("status");
+                        if ("accepted".equals(status)) {
+                            isConnected = true;
+                            isRequestSent = false;
+                        } else {
+                            isConnected = false;
+                            isRequestSent = true;
+                        }
+                    } else {
+                        isConnected = false;
+                        isRequestSent = false;
                     }
+                    updateButtonUI();
                 });
     }
 
@@ -125,6 +143,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
                 .set(request)
                 .addOnSuccessListener(aVoid -> {
                     isRequestSent = true;
+                    isConnected = false;
                     updateButtonUI();
                     Toast.makeText(this, "Request Sent!", Toast.LENGTH_SHORT).show();
 
@@ -132,18 +151,46 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     returnIntent.putExtra("trainerId", targetUserId);
                     returnIntent.putExtra("isRequestSent", true);
                     setResult(RESULT_OK, returnIntent);
+                })
+                .addOnFailureListener(e -> {
+                    btnConnect.setEnabled(true);
+                    Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void updateButtonUI() {
-        if (isRequestSent) {
-            btnConnect.setText("Request Sent ✓");
-            btnConnect.setEnabled(false);
-            btnConnect.setAlpha(0.7f);
-        } else {
-            btnConnect.setText("Connect Now");
+        if (isConnected) {
+            btnConnect.setText("Message");
             btnConnect.setEnabled(true);
             btnConnect.setAlpha(1.0f);
+
+            btnConnect.setTextColor(Color.WHITE);
+            btnConnect.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            btnConnect.setAllCaps(false);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setColor(Color.TRANSPARENT);
+            float density = getResources().getDisplayMetrics().density;
+            drawable.setStroke((int)(1 * density), Color.WHITE);
+            drawable.setCornerRadius(20 * density);
+            btnConnect.setBackground(drawable);
+
+        } else {
+            btnConnect.setBackgroundResource(R.drawable.bg_button_orange_gradient);
+            btnConnect.setTextColor(Color.WHITE);
+            btnConnect.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            btnConnect.setAllCaps(false);
+
+            if (isRequestSent) {
+                btnConnect.setText("Request Sent ✓");
+                btnConnect.setEnabled(false);
+                btnConnect.setAlpha(0.7f);
+            } else {
+                btnConnect.setText("Connect Now");
+                btnConnect.setEnabled(true);
+                btnConnect.setAlpha(1.0f);
+            }
         }
     }
 
@@ -151,16 +198,14 @@ public class TrainerProfileActivity extends AppCompatActivity {
         db.collection("users").document(uid).get().addOnSuccessListener(document -> {
             if (isFinishing()) return;
             if (document.exists()) {
-                // Name
                 String name = document.getString("name");
                 tvName.setText(name != null ? name : "Unknown Trainer");
 
-                // Avatar
                 String avatar = document.getString("avatar");
                 if (avatar != null && !avatar.isEmpty()) {
                     Glide.with(this)
                             .load(avatar)
-                            .placeholder(R.drawable.defaultavt) // Ensure you have a placeholder
+                            .placeholder(R.drawable.defaultavt)
                             .error(R.drawable.defaultavt)
                             .centerCrop()
                             .into(imgCover);
@@ -168,47 +213,45 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     imgCover.setImageResource(R.drawable.defaultavt);
                 }
 
-                String username = targetUserId;
-                if (username != null && !username.isEmpty()) {
-                    tvUsername.setText("@" + username);
-                } else {
-                    // Fallback if no username set
-                    tvUsername.setText("@trainer");
-                }
+                String username = document.getString("username");
+                tvUsername.setText(username != null ? "@" + username : "@" + uid.substring(0, Math.min(uid.length(), 6)));
 
-                // Title / Fitness Goal (e.g., "Bodybuilding Coach" or primary goal)
                 String primaryGoal = document.getString("primaryGoal");
                 if (primaryGoal != null && !primaryGoal.isEmpty()) {
-                    // Capitalize first letter
                     String formattedGoal = primaryGoal.substring(0, 1).toUpperCase() + primaryGoal.substring(1);
                     tvTitle.setText(formattedGoal + " Coach");
                 } else {
                     tvTitle.setText("Fitness Trainer");
                 }
 
-                // Location
-                String locationName = document.getString("locationName");
-                if (locationName != null && !locationName.isEmpty()) {
-                    tvLocation.setText(locationName);
-                } else {
-                    // If no name is saved, check for coordinates or default
-                    tvLocation.setText("Location not specified");
-                }
+                String level = document.getString("fitnessLevel");
+                String levelText = "Junior Trainer (< 5 years)";
 
-                // About / Bio
-                String aboutMe = document.getString("aboutMe");
-                if (aboutMe != null && !aboutMe.isEmpty()) {
-                    tvAbout.setText(aboutMe);
-                } else {
-                    tvAbout.setText("No bio available for this trainer.");
+                if (level != null) {
+                    switch (level.toLowerCase().trim()) {
+                        case "advanced":
+                            levelText = "Master Trainer (10+ years)";
+                            break;
+                        case "intermediate":
+                            levelText = "Senior Trainer (5-10 years)";
+                            break;
+                        case "beginner":
+                            levelText = "Junior Trainer (< 5 years)";
+                            break;
+                    }
                 }
+                tvSpecialty.setText(levelText);
+
+                String locationName = document.getString("locationName");
+                tvLocation.setText(locationName != null ? locationName : "Location Unknown");
+
+                String aboutMe = document.getString("aboutMe");
+                tvAbout.setText(aboutMe != null ? aboutMe : "No bio available.");
             }
         }).addOnFailureListener(e -> {
             Log.e("TrainerProfile", "Error loading trainer data", e);
-            Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
         });
     }
-
 
     private void loadTrainerPosts(String uid) {
         db.collection("posts")

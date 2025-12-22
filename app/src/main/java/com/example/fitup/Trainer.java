@@ -6,6 +6,7 @@ public class Trainer {
     private String avatar;
     private String primaryGoal;
     private String locationName;
+    private String fitnessLevel;
     private long gem;
     private boolean requestSent = false;
     private boolean connected = false;
@@ -33,6 +34,8 @@ public class Trainer {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
+    public String getFitnessLevel() { return fitnessLevel; }
+    public void setFitnessLevel(String fitnessLevel) { this.fitnessLevel = fitnessLevel; }
 
     public boolean isRequestSent() { return requestSent; }
     public void setRequestSent(boolean requestSent) { this.requestSent = requestSent; }

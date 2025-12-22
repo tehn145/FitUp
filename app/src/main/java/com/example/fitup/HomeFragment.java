@@ -276,6 +276,11 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                                     trainer.setAvatarUrl(doc.getString("avatar"));
                                 }
 
+                                // --- LẤY FITNESS LEVEL TỪ DB ---
+                                String fitnessLevel = doc.getString("fitnessLevel");
+                                trainer.setFitnessLevel(fitnessLevel);
+                                // -------------------------------
+
                                 // Fetch location name and set default if missing
                                 String locationName = doc.getString("locationName");
                                 trainer.setLocationName(locationName != null && !locationName.isEmpty() ? locationName : "Unspecified Location");
