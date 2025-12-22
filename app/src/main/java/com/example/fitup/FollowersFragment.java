@@ -74,9 +74,9 @@ public class FollowersFragment extends Fragment {
 
         // Data giả
         List<User> list = new ArrayList<>();
-        list.add(new User("User A", "Trainer", "", "HCM", true));
-        list.add(new User("User B", "Gymmer", "", "Hanoi", true));
-        list.add(new User("User C", "Yoga", "", "Danang", true));
+        //list.add(new User("User A", "Trainer", "", "HCM", true));
+        //list.add(new User("User B", "Gymmer", "", "Hanoi", true));
+        //list.add(new User("User C", "Yoga", "", "Danang", true));
 
         FollowAdapter adapter = new FollowAdapter(list);
         rcv.setAdapter(adapter);

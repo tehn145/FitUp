@@ -32,6 +32,8 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
 
+    private ImageView ivSeeMore;
+    private TextView tvSeeMoreBtn;
     private ImageView ivProfileAvatar;
     private TextView tvProfileName, tvProfileId;
     private TextView tvGemsCount, tvConnectionsCount, tvFollowersCount, tvFollowingCount;
@@ -78,6 +80,8 @@ public class ProfileFragment extends Fragment {
         tvFollowingCount = view.findViewById(R.id.followingCount);
         labelConnections = view.findViewById(R.id.textView14);
         txtRequestCount = view.findViewById(R.id.txtRequestCount);
+        ivSeeMore = view.findViewById(R.id.ivSeeMore);
+        tvSeeMoreBtn = view.findViewById(R.id.tvSeeMoreBtn);
 
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnSettings = view.findViewById(R.id.btnSettings);
@@ -94,6 +98,47 @@ public class ProfileFragment extends Fragment {
         };
         tvConnectionsCount.setOnClickListener(openConnections);
         if(labelConnections != null) labelConnections.setOnClickListener(openConnections);
+
+        View.OnClickListener openFollowers = v -> {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                Intent intent = new Intent(getActivity(), FollowActivity.class);
+                intent.putExtra("userId", user.getUid());
+                intent.putExtra("initialTab", "followers");
+                startActivity(intent);
+            }
+        };
+
+        View.OnClickListener openFollowing = v -> {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                Intent intent = new Intent(getActivity(), FollowActivity.class);
+                intent.putExtra("userId", user.getUid());
+                intent.putExtra("initialTab", "following");
+                startActivity(intent);
+            }
+        };
+
+        if (tvFollowersCount != null) tvFollowersCount.setOnClickListener(openFollowers);
+        if (tvFollowingCount != null) tvFollowingCount.setOnClickListener(openFollowing);
+
+        View.OnClickListener openMyPosts = v -> {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                Intent intent = new Intent(getActivity(), PostsActivity.class);
+                intent.putExtra("userId", currentUser.getUid());
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "You need to be logged in.", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        if (ivSeeMore != null) {
+            ivSeeMore.setOnClickListener(openMyPosts);
+        }
+        if (tvSeeMoreBtn != null) {
+            tvSeeMoreBtn.setOnClickListener(openMyPosts);
+        }
 
         rvMyPosts = view.findViewById(R.id.rvMyPosts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -266,6 +311,21 @@ public class ProfileFragment extends Fragment {
 
         Long gems = snapshot.getLong("gem");
         if(tvGemsCount != null) tvGemsCount.setText(String.valueOf(gems != null ? gems : 0L));
+
+        Long connectionCount = snapshot.getLong("connectionCount");
+        if (tvConnectionsCount != null) {
+            tvConnectionsCount.setText(String.valueOf(connectionCount != null ? connectionCount : 0));
+        }
+
+        Long followerCount = snapshot.getLong("followerCount");
+        if (tvFollowersCount != null) {
+            tvFollowersCount.setText(String.valueOf(followerCount != null ? followerCount : 0));
+        }
+
+        Long followingCount = snapshot.getLong("followingCount");
+        if (tvFollowingCount != null) {
+            tvFollowingCount.setText(String.valueOf(followingCount != null ? followingCount : 0));
+        }
     }
 
     private void loadMyPosts() {
@@ -274,6 +334,7 @@ public class ProfileFragment extends Fragment {
 
         db.collection("posts")
                 .whereEqualTo("userId", currentUser.getUid())
+                .limit(3)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     postList.clear();

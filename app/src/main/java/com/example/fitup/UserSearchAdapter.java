@@ -48,9 +48,20 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
             holder.ivAvatar.setImageResource(R.drawable.user);
         }
 
-        // You can set an OnClickListener here to navigate to the user's profile
         holder.itemView.setOnClickListener(v -> {
-            // Intent to view user profile, passing user.getUid() for example
+            String clickedUserId = user.getUserId();
+            String userRole = user.getRole();
+
+            android.content.Intent intent;
+
+            if ("trainer".equalsIgnoreCase(userRole)) {
+                intent = new android.content.Intent(context, TrainerProfileActivity.class);
+            } else {
+                intent = new android.content.Intent(context, UserProfileActivity.class);
+            }
+
+            intent.putExtra("targetUserId", clickedUserId);
+            context.startActivity(intent);
         });
     }
 

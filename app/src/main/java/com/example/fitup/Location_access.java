@@ -153,7 +153,6 @@ public class Location_access extends AppCompatActivity {
                 Log.e(TAG, "Geocoder failed: " + e.getMessage());
             }
 
-            // Switch back to Main Thread to save to Firestore and update UI
             String finalName = foundLocationName;
             runOnUiThread(() -> saveToFirestore(userId, geoPoint, finalName));
 

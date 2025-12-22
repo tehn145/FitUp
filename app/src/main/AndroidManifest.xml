@@ -95,9 +95,13 @@
             android:exported="false" />
         <activity
             android:name=".PostActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".Register" -->
-        <!-- android:exported="false" /> -->
+            android:exported="false" />
+        <activity
+            android:name=".OnePostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostsActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />

@@ -80,12 +80,12 @@
         app:layout_constraintTop_toBottomOf="@id/cardImage">
 
         <ImageView
-            android:id="@+id/btnAddfriend"
+            android:id="@+id/btn_follow"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_circle_orange"
             android:backgroundTint="#333333"
-            android:src="@drawable/ic_addfriend"
+            android:src="@drawable/ic_addfriend2"
             android:padding="10dp"
             app:tint="@color/white"/>
 

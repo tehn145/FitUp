@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CreateAccount extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -87,7 +88,6 @@ public class CreateAccount extends AppCompatActivity {
                         if (selectedImageUri != null) {
                             uploadImageAndSaveUser(uid, email, name, phone);
                         } else {
-                            // No image was selected, just save the user data without an avatar URL.
                             saveUserData(uid, email, name, phone, "");
                         }
                     })
@@ -104,23 +104,23 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void uploadImageAndSaveUser(String uid, String email, String name, String phone) {
-        StorageReference avatarRef = storage.getReference().child("avatars/" + uid);
+        String filename = UUID.randomUUID().toString();
+        StorageReference avatarRef = storage.getReference().child("avatars/" + uid + "/" + filename);
 
         avatarRef.putFile(selectedImageUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     avatarRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        saveUserData(uid, email, name, phone, uri.toString());  // ✔ LƯU URL
+                        saveUserData(uid, email, name, phone, uri.toString());
                     }).addOnFailureListener(e -> {
                         Log.e(TAG, "Failed to get download URL", e);
-                        saveUserData(uid, email, name, phone, ""); // ✔ LƯU RỖNG
+                        saveUserData(uid, email, name, phone, "");
                     });
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to upload image", e);
-                    saveUserData(uid, email, name, phone, ""); // ✔ LƯU RỖNG
+                    saveUserData(uid, email, name, phone, "");
                 });
     }
-
 
     private void saveUserData(String uid, String email, String name, String phone, String avatarUrl) {
         Map<String, Object> userData = new HashMap<>();
@@ -128,7 +128,7 @@ public class CreateAccount extends AppCompatActivity {
         userData.put("name", name);
         userData.put("phone", phone);
         userData.put("gem", 5);
-        userData.put("avatar", avatarUrl);   // 👈 THÊM VÀO ĐÂY
+        userData.put("avatar", avatarUrl);
 
         db.collection("users").document(uid)
                 .set(userData)

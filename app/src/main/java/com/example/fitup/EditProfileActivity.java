@@ -182,15 +182,33 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show();
 
-        // Create a unique path for the image in Firebase Storage
         String filename = UUID.randomUUID().toString();
         StorageReference storageRef = storage.getReference().child("avatars/" + user.getUid() + "/" + filename);
+        StorageReference storageAvRef = storage.getReference().child("avatars/" + user.getUid());
 
-        storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(this::updateAvatarUrlInFirestore))
+        storageAvRef.listAll()
+                .addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getItems()) {
+                        item.delete().addOnFailureListener(e ->
+                                Log.e(TAG, "Failed to delete old avatar: " + item.getName(), e));
+                    }
+
+                    storageRef.putFile(imageUri)
+                            .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(this::updateAvatarUrlInFirestore))
+                            .addOnFailureListener(e -> {
+                                //Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Image upload failed", e);
+                            });
+                })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Image upload failed", e);
+                    Log.w(TAG, "Could not list old files (first upload?), proceeding...", e);
+
+                    storageRef.putFile(imageUri)
+                            .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(this::updateAvatarUrlInFirestore))
+                            .addOnFailureListener(e2 -> {
+                                //Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Image upload failed", e);
+                            });
                 });
     }
 

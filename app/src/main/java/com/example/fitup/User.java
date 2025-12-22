@@ -1,64 +1,31 @@
 package com.example.fitup;
 
-public class User {
-    private String uid;
-    private String name;
-    private String role;
-    private String avatar;
+import com.google.firebase.firestore.GeoPoint;
 
-    private String location;
-    private boolean isFollowing;
+public class User {
+    private String userId; // Or uid
+    private String name;
+    private String avatar;
+    private String role;
+    private String locationName;
 
     public User() {}
 
-    public User(String name, String role, String avatar, String location, boolean isFollowing) {
-        this.name = name;
-        this.role = role;
-        this.avatar = avatar;
-        this.location = location;
-        this.isFollowing = isFollowing;
-    }
+    public String getUid() { return userId; }
+    public void setUid(String userId) { this.userId = userId; }
 
-    public String getUid() { return uid; }
-    public void setUid(String uid) { this.uid = uid; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getLocationName() { return locationName; }
+    public void setLocationName(String locationName) { this.locationName = locationName; }
 
-    public String getRole() {
-        return role;
-    }
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public boolean isFollowing() {
-        return isFollowing;
-    }
-
-    public void setFollowing(boolean following) {
-        isFollowing = following;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

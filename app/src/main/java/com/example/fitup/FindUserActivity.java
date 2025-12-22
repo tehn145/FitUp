@@ -100,10 +100,13 @@ public class FindUserActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 userList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    User user = document.toObject(User.class);
-                    // You might want to add the document ID to your user model if needed later
-                    // user.setUid(document.getId());
-                    userList.add(user);
+                    try {
+                        User user = document.toObject(User.class);
+                        user.setUserId(document.getId());
+                        userList.add(user);
+                    } catch (Exception e) {
+                        android.util.Log.e(TAG, "Error converting document: " + document.getId(), e);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 updateNoResultsView();
