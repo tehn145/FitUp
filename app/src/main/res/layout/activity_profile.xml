@@ -396,7 +396,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView18"
+                    android:id="@+id/tvSeeMoreBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -406,7 +406,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/imageView20"
+                    android:id="@+id/ivSeeMore"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"

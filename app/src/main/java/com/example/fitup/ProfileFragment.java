@@ -32,6 +32,8 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
 
+    private ImageView ivSeeMore;
+    private TextView tvSeeMoreBtn;
     private ImageView ivProfileAvatar;
     private TextView tvProfileName, tvProfileId;
     private TextView tvGemsCount, tvConnectionsCount, tvFollowersCount, tvFollowingCount;
@@ -78,6 +80,8 @@ public class ProfileFragment extends Fragment {
         tvFollowingCount = view.findViewById(R.id.followingCount);
         labelConnections = view.findViewById(R.id.textView14);
         txtRequestCount = view.findViewById(R.id.txtRequestCount);
+        ivSeeMore = view.findViewById(R.id.ivSeeMore);
+        tvSeeMoreBtn = view.findViewById(R.id.tvSeeMoreBtn);
 
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnSettings = view.findViewById(R.id.btnSettings);
@@ -117,6 +121,24 @@ public class ProfileFragment extends Fragment {
 
         if (tvFollowersCount != null) tvFollowersCount.setOnClickListener(openFollowers);
         if (tvFollowingCount != null) tvFollowingCount.setOnClickListener(openFollowing);
+
+        View.OnClickListener openMyPosts = v -> {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                Intent intent = new Intent(getActivity(), PostsActivity.class);
+                intent.putExtra("userId", currentUser.getUid());
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "You need to be logged in.", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        if (ivSeeMore != null) {
+            ivSeeMore.setOnClickListener(openMyPosts);
+        }
+        if (tvSeeMoreBtn != null) {
+            tvSeeMoreBtn.setOnClickListener(openMyPosts);
+        }
 
         rvMyPosts = view.findViewById(R.id.rvMyPosts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -312,6 +334,7 @@ public class ProfileFragment extends Fragment {
 
         db.collection("posts")
                 .whereEqualTo("userId", currentUser.getUid())
+                .limit(3)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     postList.clear();

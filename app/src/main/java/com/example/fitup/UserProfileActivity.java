@@ -1,5 +1,6 @@
 package com.example.fitup;
 
+import android.content.Intent; // Import Intent
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,10 +30,11 @@ import java.util.Locale;
 public class UserProfileActivity extends AppCompatActivity {
     private ImageView imgCover;
     private TextView tvName, tvUsername, tvLocation, tvGoals, tvLevel, tvAvailability;
+    private TextView tvSeeMorePosts; // 1. Add Variable
     private RecyclerView rvUserPosts;
     private AppCompatButton btnFollow;
-    private FirebaseAuth mAuth; // Add this
-    private String currentUserId; // Add this
+    private FirebaseAuth mAuth;
+    private String currentUserId;
     private FirebaseFirestore db;
     private String targetUserId;
     private PostGridAdapter postAdapter;
@@ -52,6 +54,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tvGoals = findViewById(R.id.tvFitnessGoals);
         tvLevel = findViewById(R.id.tvFitnessLevel);
         tvAvailability = findViewById(R.id.tvAvailability);
+        tvSeeMorePosts = findViewById(R.id.tv_see_more); // 2. Initialize View
         rvUserPosts = findViewById(R.id.rvUserPosts);
         btnFollow = findViewById(R.id.btn_follow);
 
@@ -66,6 +69,15 @@ public class UserProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         targetUserId = getIntent().getStringExtra("targetUserId");
+
+        // 3. Add Click Listener
+        tvSeeMorePosts.setOnClickListener(v -> {
+            if (targetUserId != null) {
+                Intent intent = new Intent(UserProfileActivity.this, PostsActivity.class);
+                intent.putExtra("userId", targetUserId);
+                startActivity(intent);
+            }
+        });
 
         if (targetUserId != null) {
             loadUserProfile(targetUserId);
@@ -181,6 +193,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         db.collection("posts")
                 .whereEqualTo("userId", uid)
+                .limit(3)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     postList.clear();

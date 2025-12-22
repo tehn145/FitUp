@@ -55,7 +55,10 @@
             android:name=".MainView"
             android:exported="false" />
         <activity
-            android:name=".activity_profile"
+            android:name=".PostsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OnePostActivity"
             android:exported="false" />
         <activity
             android:name=".congrats"

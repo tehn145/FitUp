@@ -1,6 +1,7 @@
 package com.example.fitup;
 
 import android.content.Context;
+import android.content.Intent; // Import Intent
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +18,24 @@ public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.PostVi
 
     private Context context;
     private List<Post> postList;
+    private int layoutId;
 
     public PostGridAdapter(Context context, List<Post> postList) {
         this.context = context;
         this.postList = postList;
+        this.layoutId = R.layout.item_profile_post;
+    }
+
+    public PostGridAdapter(Context context, List<Post> postList, int layoutId) {
+        this.context = context;
+        this.postList = postList;
+        this.layoutId = layoutId;
     }
 
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Liên kết với file xml vừa sửa ở trên
-        View view = LayoutInflater.from(context).inflate(R.layout.item_profile_post, parent, false);
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         return new PostViewHolder(view);
     }
 
@@ -35,14 +43,19 @@ public class PostGridAdapter extends RecyclerView.Adapter<PostGridAdapter.PostVi
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
 
-        // Load ảnh từ URL
         if (post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
             Glide.with(context)
                     .load(post.getImageUrl())
                     .centerCrop()
-                    .placeholder(R.drawable.banner_fitness1) // Ảnh chờ
+                    .placeholder(R.drawable.banner_fitness1)
                     .into(holder.imgThumbnail);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, OnePostActivity.class);
+            intent.putExtra("postId", post.getPostId());
+            context.startActivity(intent);
+        });
     }
 
     @Override

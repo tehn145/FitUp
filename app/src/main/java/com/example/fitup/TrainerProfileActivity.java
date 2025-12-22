@@ -26,7 +26,7 @@ import java.util.Map;
 public class TrainerProfileActivity extends AppCompatActivity {
 
     private ImageView imgCover, btnBack, btnFollow;
-    private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout;
+    private TextView tvSeeMorePosts, tvName, tvTitle, tvUsername, tvLocation, tvAbout;
     private AppCompatButton btnConnect;
     private RecyclerView rvTrainerPosts;
     private PostGridAdapter postAdapter;
@@ -60,6 +60,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
         tvLocation = findViewById(R.id.tvTrainerLocation);
         tvAbout = findViewById(R.id.tvAbout);
         btnConnect = findViewById(R.id.btnConnect);
+        tvSeeMorePosts = findViewById(R.id.tv_see_more);
 
         rvTrainerPosts = findViewById(R.id.rvTrainerPosts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -82,6 +83,12 @@ public class TrainerProfileActivity extends AppCompatActivity {
         }
 
         btnBack.setOnClickListener(v -> finish());
+
+        tvSeeMorePosts.setOnClickListener(v -> {
+            Intent intent = new Intent(TrainerProfileActivity.this, PostsActivity.class);
+            intent.putExtra("userId", targetUserId);
+            startActivity(intent);
+        });
 
         if (targetUserId != null) {
             loadTrainerData(targetUserId);
@@ -247,6 +254,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
     private void loadTrainerPosts(String uid) {
         db.collection("posts")
                 .whereEqualTo("userId", uid)
+                .limit(3)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     postList.clear();
@@ -258,6 +266,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
                                 postList.add(post);
                             }
                         }
+
                         postAdapter.notifyDataSetChanged();
                     }
                 })
