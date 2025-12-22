@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class TrainerProfileActivity extends AppCompatActivity {
 
-    private ImageView imgCover, btnBack;
+    private ImageView imgCover, btnBack, btnFollow;
     private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout;
     private AppCompatButton btnConnect;
     private RecyclerView rvTrainerPosts;
@@ -53,6 +53,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
 
         imgCover = findViewById(R.id.imgTrainerCover);
         btnBack = findViewById(R.id.btnBack);
+        btnFollow = findViewById(R.id.btn_follow);
         tvName = findViewById(R.id.tvTrainerName);
         tvTitle = findViewById(R.id.tvTrainerTitle);
         tvUsername = findViewById(R.id.tvTrainerUsername);
@@ -73,10 +74,9 @@ public class TrainerProfileActivity extends AppCompatActivity {
         isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
 
         if (currentUserId != null && targetUserId != null && currentUserId.equals(targetUserId)) {
-            btnConnect.setVisibility(View.GONE); // Ẩn hoàn toàn nút
+            btnConnect.setVisibility(View.GONE);
         } else {
             btnConnect.setVisibility(View.VISIBLE);
-            // Chỉ chạy logic update UI nếu không phải là chính mình
             isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
             updateButtonUI();
         }
@@ -91,11 +91,49 @@ public class TrainerProfileActivity extends AppCompatActivity {
             }
         }
 
+        if (currentUserId != null && targetUserId != null && !currentUserId.equals(targetUserId)) {
+            FirestoreHelper.checkIsFollowing(targetUserId, isFollowing -> {
+                updateFollowButtonUI(isFollowing);
+                btnFollow.setTag(isFollowing); // Store state in the view tag
+            });
+
+            btnFollow.setOnClickListener(v -> {
+                if (btnFollow.getTag() == null) return; // Wait for initial load
+
+                boolean isCurrentlyFollowing = (boolean) btnFollow.getTag();
+
+                updateFollowButtonUI(!isCurrentlyFollowing);
+                btnFollow.setTag(!isCurrentlyFollowing);
+
+                FirestoreHelper.toggleFollow(targetUserId, isCurrentlyFollowing, success -> {
+                    if (!success) {
+                        updateFollowButtonUI(isCurrentlyFollowing);
+                        btnFollow.setTag(isCurrentlyFollowing);
+                        Toast.makeText(TrainerProfileActivity.this, "Action failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        } else {
+            btnFollow.setVisibility(View.GONE);
+        }
+
         btnConnect.setOnClickListener(v -> {
             if (!isRequestSent) {
                 sendConnectRequestToDatabase();
             }
         });
+    }
+
+    private void updateFollowButtonUI(boolean isFollowing) {
+        if (isFollowing) {
+            btnFollow.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#FF9800")));
+            btnFollow.setImageResource(R.drawable.ic_followed);
+            btnFollow.setImageTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+        } else {
+            btnFollow.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#333333")));
+            btnFollow.setImageResource(R.drawable.ic_addfriend2);
+            btnFollow.setImageTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE));
+        }
     }
 
     private void checkRequestStatus() {
@@ -176,22 +214,18 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     tvUsername.setText("@trainer");
                 }
 
-                // Title / Fitness Goal (e.g., "Bodybuilding Coach" or primary goal)
                 String primaryGoal = document.getString("primaryGoal");
                 if (primaryGoal != null && !primaryGoal.isEmpty()) {
-                    // Capitalize first letter
                     String formattedGoal = primaryGoal.substring(0, 1).toUpperCase() + primaryGoal.substring(1);
                     tvTitle.setText(formattedGoal + " Coach");
                 } else {
                     tvTitle.setText("Fitness Trainer");
                 }
 
-                // Location
                 String locationName = document.getString("locationName");
                 if (locationName != null && !locationName.isEmpty()) {
                     tvLocation.setText(locationName);
                 } else {
-                    // If no name is saved, check for coordinates or default
                     tvLocation.setText("Location not specified");
                 }
 

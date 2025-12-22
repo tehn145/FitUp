@@ -76,13 +76,13 @@ public class FollowingFragment extends Fragment {
         List<User> list = new ArrayList<>();
 
         // Duy: chưa follow (false) -> Sẽ hiện nút Cam "Follow"
-        list.add(new User("Duy", "Fitness Personal Trainer","", "", false));
+        //list.add(new User("Duy", "Fitness Personal Trainer","", "", false));
 
         // TOBI: đã follow (true) -> Sẽ hiện nút Xám "Unfollow"
-        list.add(new User("TOBI FITNESS", "Fitness Personal Trainer", "", "TP. Thủ Đức, Hồ Chí Minh...", true));
+        //list.add(new User("TOBI FITNESS", "Fitness Personal Trainer", "", "TP. Thủ Đức, Hồ Chí Minh...", true));
 
         // MINE: đã follow (true) -> Sẽ hiện nút Xám "Unfollow"
-        list.add(new User("MINE BLOWTM", "Client","", "Dĩ An, Bình Dương", true));
+        //list.add(new User("MINE BLOWTM", "Client","", "Dĩ An, Bình Dương", true));
 
         FollowAdapter adapter = new FollowAdapter(list);
         rcv.setAdapter(adapter);

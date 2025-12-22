@@ -115,7 +115,7 @@
                         android:id="@+id/tvProfileUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@CsGVyX4979"
+                        android:text="/CsGVyX4979"
                         android:textColor="#B0B0B0"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -251,6 +251,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:nestedScrollingEnabled="false" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_follow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button_gray_gradient"
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@null"
+                android:text="Follow Now"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_marginTop="32dp"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"

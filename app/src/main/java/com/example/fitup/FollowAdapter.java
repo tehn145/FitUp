@@ -31,23 +31,23 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowView
         holder.tvRole.setText(user.getRole());
 
         // Ẩn hiện địa điểm nếu không có
-        if (user.getLocation().isEmpty()) {
-            holder.tvLocation.setVisibility(View.GONE);
-        } else {
-            holder.tvLocation.setText(user.getLocation());
-            holder.tvLocation.setVisibility(View.VISIBLE);
-        }
-
-        // --- QUAN TRỌNG: XỬ LÝ MÀU NÚT ---
-        if (user.isFollowing()) {
-            // Đang follow -> Nút Xám "Unfollow"
-            holder.btnAction.setText("Unfollow");
-            holder.btnAction.setBackgroundResource(R.drawable.bg_button_gray_rounded);
-        } else {
-            // Chưa follow -> Nút Cam "Follow"
-            holder.btnAction.setText("Follow");
-            holder.btnAction.setBackgroundResource(R.drawable.bg_button_orange_rounded);
-        }
+//        if (user.getLocation().isEmpty()) {
+//            holder.tvLocation.setVisibility(View.GONE);
+//        } else {
+//            holder.tvLocation.setText(user.getLocation());
+//            holder.tvLocation.setVisibility(View.VISIBLE);
+//        }
+//
+//        // --- QUAN TRỌNG: XỬ LÝ MÀU NÚT ---
+//        if (user.isFollowing()) {
+//            // Đang follow -> Nút Xám "Unfollow"
+//            holder.btnAction.setText("Unfollow");
+//            holder.btnAction.setBackgroundResource(R.drawable.bg_button_gray_rounded);
+//        } else {
+//            // Chưa follow -> Nút Cam "Follow"
+//            holder.btnAction.setText("Follow");
+//            holder.btnAction.setBackgroundResource(R.drawable.bg_button_orange_rounded);
+//        }
     }
 
     @Override
