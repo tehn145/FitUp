@@ -222,7 +222,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     if (!doc.exists()) return;
 
                     tvName.setText(doc.getString("name"));
-                    tvUsername.setText("@" + doc.getString("username"));
+                    tvUsername.setText(uid);
                     tvAbout.setText(doc.getString("aboutMe"));
 
                     String goal = doc.getString("primaryGoal");

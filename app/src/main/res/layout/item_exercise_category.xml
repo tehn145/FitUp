@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="#1A1A1A"
+    app:cardElevation="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/ivCategoryIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_dumbbell"
+            app:tint="@color/orange"
+            android:scaleType="centerInside"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/tvCategoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chest"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Build powerful upper body"
+                android:textColor="@color/gray_light"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/tvExerciseCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 exercises"
+                android:textColor="@color/orange"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivArrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/gray"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

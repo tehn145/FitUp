@@ -17,6 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".ExerciseDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExerciseListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExerciseCategoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".feature.match.ui.MatchActivity"
             android:exported="false" />
         <activity

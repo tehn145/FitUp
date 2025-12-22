@@ -95,14 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     if (document.exists()) {
                         String name = document.getString("name");
                         tvName.setText(name != null ? name : "Unknown");
-
-                        String username = targetUserId;
-                        if (username != null && !username.isEmpty()) {
-                            tvUsername.setText("@" + username);
-                        } else {
-                            // Fallback if no username set
-                            tvUsername.setText("@trainer");
-                        }
+                        tvUsername.setText(uid);
 
                         String avatar = document.getString("avatar");
                         if (avatar != null && !avatar.isEmpty()) {

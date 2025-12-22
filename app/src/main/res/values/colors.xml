@@ -37,4 +37,10 @@
     <color name="indigo">#3F51B5</color>
     <color name="brown">#795548</color>
 
+
+    <color name="gray1">#808080</color>
+    <color name="gray_light1">#B0B0B0</color>
+    <color name="gray_dark1">#404040</color>
+    <color name="black_translucent1">#CC000000</color>
+
 </resources>

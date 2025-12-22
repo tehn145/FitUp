@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private String todayDateString;
 
     private ActivityResultLauncher<Intent> profileLauncher;
+    private LinearLayout btnExerciseLibrary;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,6 +168,15 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 tvUserGemCount.setText("0 FitGem");
             }
         };
+
+        btnExerciseLibrary = view.findViewById(R.id.btn_exercise_library);
+        btnExerciseLibrary.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ExerciseCategoryActivity.class);
+            startActivity(intent);
+            if (getActivity() != null) {
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
     }
 
     @Override

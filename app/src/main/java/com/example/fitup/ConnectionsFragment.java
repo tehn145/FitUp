@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +28,9 @@ public class ConnectionsFragment extends Fragment {
     private List<ConnectionRequest> connectionList;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private Set<String> addedIds = new HashSet<>();
+    private Set<String> loadedUserIds = new HashSet<>();
+    private ListenerRegistration incomingListener;
+    private ListenerRegistration outgoingListener;
 
     public ConnectionsFragment() {}
 
@@ -50,48 +53,59 @@ public class ConnectionsFragment extends Fragment {
         adapter = new ConnectionsAdapter(getContext(), connectionList);
         recyclerView.setAdapter(adapter);
 
-        loadConnections();
+        startListening();
     }
 
-    private void loadConnections() {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (incomingListener != null) incomingListener.remove();
+        if (outgoingListener != null) outgoingListener.remove();
+    }
+
+    private void startListening() {
         if (mAuth.getCurrentUser() == null) return;
         String myUid = mAuth.getCurrentUser().getUid();
 
         connectionList.clear();
-        addedIds.clear();
+        loadedUserIds.clear();
         adapter.notifyDataSetChanged();
 
-        db.collection("connect_requests")
+        incomingListener = db.collection("connect_requests")
                 .whereEqualTo("toUid", myUid)
                 .whereEqualTo("status", "accepted")
-                .get()
-                .addOnSuccessListener(snapshots -> {
-                    for (DocumentSnapshot doc : snapshots) {
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null || snapshots == null) return;
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         ConnectionRequest req = doc.toObject(ConnectionRequest.class);
-                        if (req != null && !addedIds.contains(doc.getId())) {
-                            addedIds.add(doc.getId());
-                            fetchUserInfo(req, req.getFromUid());
+                        if (req != null) {
+                            processConnection(req, req.getFromUid());
                         }
                     }
                 });
 
-        db.collection("connect_requests")
+        outgoingListener = db.collection("connect_requests")
                 .whereEqualTo("fromUid", myUid)
                 .whereEqualTo("status", "accepted")
-                .get()
-                .addOnSuccessListener(snapshots -> {
-                    for (DocumentSnapshot doc : snapshots) {
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null || snapshots == null) return;
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         ConnectionRequest req = doc.toObject(ConnectionRequest.class);
-                        if (req != null && !addedIds.contains(doc.getId())) {
-                            addedIds.add(doc.getId());
-                            fetchUserInfo(req, req.getToUid());
+                        if (req != null) {
+                            processConnection(req, req.getToUid());
                         }
                     }
                 });
     }
 
-    private void fetchUserInfo(ConnectionRequest req, String targetUid) {
-        db.collection("users").document(targetUid).get()
+    private void processConnection(ConnectionRequest req, String partnerUid) {
+        if (loadedUserIds.contains(partnerUid)) {
+            return;
+        }
+
+        loadedUserIds.add(partnerUid);
+
+        db.collection("users").document(partnerUid).get()
                 .addOnSuccessListener(document -> {
                     if (document.exists()) {
                         req.setSenderName(document.getString("name"));
@@ -100,7 +114,10 @@ public class ConnectionsFragment extends Fragment {
 
                         connectionList.add(req);
                         adapter.notifyDataSetChanged();
+                    } else {
+                        loadedUserIds.remove(partnerUid);
                     }
-                });
+                })
+                .addOnFailureListener(e -> loadedUserIds.remove(partnerUid));
     }
 }
