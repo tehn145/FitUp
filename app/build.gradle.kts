@@ -67,5 +67,6 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.6.1")
 
+    implementation("com.firebaseui:firebase-ui-storage:8.0.2")
 
 }

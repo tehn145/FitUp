@@ -48,6 +48,33 @@ public class ExerciseCategoryActivity extends AppCompatActivity {
         loadCategories();
     }
 
+//    private void loadCategories() {
+//        db.collection("exercise_categories")
+//                .get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    categoryList.clear();
+//                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+//                        String id = document.getString("id");
+//                        String name = document.getString("name");
+//                        String description = document.getString("description");
+//                        Long exerciseCount = document.getLong("exerciseCount");
+//
+//                        ExerciseCategory category = new ExerciseCategory(
+//                                id,
+//                                name,
+//                                description,
+//                                R.drawable.ic_dumbbell,
+//                                exerciseCount != null ? exerciseCount.intValue() : 0
+//                        );
+//                        categoryList.add(category);
+//                    }
+//                    categoryAdapter.notifyDataSetChanged();
+//                })
+//                .addOnFailureListener(e -> {
+//                    loadSampleCategories();
+//                });
+//    }
+
     private void loadCategories() {
         db.collection("exercise_categories")
                 .get()
@@ -55,15 +82,18 @@ public class ExerciseCategoryActivity extends AppCompatActivity {
                     categoryList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String id = document.getString("id");
+                        if (id == null) id = document.getId();
+
                         String name = document.getString("name");
                         String description = document.getString("description");
-                        Long exerciseCount = document.getLong("exerciseCount");
+                        String imageUrl = document.getString("imageUrl");
 
+                        Long exerciseCount = document.getLong("exerciseCount");
                         ExerciseCategory category = new ExerciseCategory(
                                 id,
                                 name,
                                 description,
-                                R.drawable.ic_dumbbell,
+                                imageUrl,
                                 exerciseCount != null ? exerciseCount.intValue() : 0
                         );
                         categoryList.add(category);

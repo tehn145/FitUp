@@ -24,9 +24,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_dumbbell"
-            app:tint="@color/orange"
             android:scaleType="centerInside"/>
-
+<!--Them tint sau neu loi-->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"

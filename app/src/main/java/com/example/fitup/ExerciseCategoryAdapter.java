@@ -13,7 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
+import com.bumptech.glide.Glide;
 public class ExerciseCategoryAdapter extends RecyclerView.Adapter<ExerciseCategoryAdapter.ViewHolder> {
 
     private Context context;
@@ -37,6 +37,25 @@ public class ExerciseCategoryAdapter extends RecyclerView.Adapter<ExerciseCatego
         return new ViewHolder(view);
     }
 
+//    @Override
+//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        ExerciseCategory category = categories.get(position);
+//
+//        holder.tvName.setText(category.getName());
+//        holder.tvDescription.setText(category.getDescription());
+//        holder.tvCount.setText(category.getExerciseCount() + " exercises");
+//        holder.ivIcon.setImageResource(category.getIconResId());
+//
+//        // Animation
+//        holder.cardView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_scale_in));
+//
+//        holder.itemView.setOnClickListener(v -> {
+//            if (listener != null) {
+//                listener.onCategoryClick(category);
+//            }
+//        });
+//    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseCategory category = categories.get(position);
@@ -44,11 +63,22 @@ public class ExerciseCategoryAdapter extends RecyclerView.Adapter<ExerciseCatego
         holder.tvName.setText(category.getName());
         holder.tvDescription.setText(category.getDescription());
         holder.tvCount.setText(category.getExerciseCount() + " exercises");
-        holder.ivIcon.setImageResource(category.getIconResId());
 
-        // Animation
+
+        if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) {
+            holder.ivIcon.clearColorFilter();
+
+            Glide.with(context)
+                    .load(category.getImageUrl())
+                    .placeholder(R.drawable.ic_dumbbell)
+                    .error(R.drawable.ic_dumbbell)
+                    .centerCrop()
+                    .into(holder.ivIcon);
+        } else {
+            holder.ivIcon.setImageResource(category.getIconResId());
+            holder.ivIcon.setColorFilter(context.getResources().getColor(R.color.orange));
+        }
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_scale_in));
-
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCategoryClick(category);

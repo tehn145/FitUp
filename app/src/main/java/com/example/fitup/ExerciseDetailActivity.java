@@ -28,7 +28,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
     private TextView tvSets, tvReps, tvInstructions, tvTips;
     private CardView cardTips;
     private CollapsingToolbarLayout collapsingToolbar;
-    private Button btnWatchVideo; // Khai báo nút Video
+    private Button btnWatchVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
 
-        // Ánh xạ các View
         ivGif = findViewById(R.id.ivExerciseGif);
         collapsingToolbar = findViewById(R.id.collapsingToolbar);
         tvName = findViewById(R.id.tvExerciseName);
@@ -55,7 +54,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         tvInstructions = findViewById(R.id.tvInstructions);
         tvTips = findViewById(R.id.tvTips);
         cardTips = findViewById(R.id.cardTips);
-        btnWatchVideo = findViewById(R.id.btnWatchVideo); // Ánh xạ nút Video
+        btnWatchVideo = findViewById(R.id.btnWatchVideo);
 
         collapsingToolbar.setTitle(exerciseName);
 
@@ -75,7 +74,6 @@ public class ExerciseDetailActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Fallback nếu không có mạng
                     Exercise exercise = getSampleExercise(exerciseId);
                     displayExercise(exercise);
                 });
@@ -85,7 +83,6 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         tvName.setText(exercise.getName());
 
         String difficulty = exercise.getDifficulty();
-        // Check null để tránh crash
         if (difficulty != null && !difficulty.isEmpty()) {
             tvDifficulty.setText(difficulty.substring(0, 1).toUpperCase() + difficulty.substring(1));
         }
@@ -129,7 +126,7 @@ public class ExerciseDetailActivity extends AppCompatActivity {
         } else {
             cardTips.setVisibility(View.GONE);
         }
-
+    
         String videoUrl = exercise.getVideoUrl();
         if (videoUrl != null && !videoUrl.isEmpty()) {
             btnWatchVideo.setVisibility(View.VISIBLE);
