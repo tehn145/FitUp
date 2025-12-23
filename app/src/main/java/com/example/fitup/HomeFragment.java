@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,6 +74,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
     private ActivityResultLauncher<Intent> profileLauncher;
     private LinearLayout btnExerciseLibrary;
+    private CardView btnAssistant;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,13 +119,67 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         tvChallenge2 = view.findViewById(R.id.tvChallenge2);
         tvChallenge3 = view.findViewById(R.id.tvChallenge3);
         recyclerTopTrainers = view.findViewById(R.id.recyclerTopTrainers);
-
         if (textTodayChallenge != null) textTodayChallenge.setVisibility(View.GONE);
 
         recyclerTopTrainers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         trainerList = new ArrayList<>();
         trainerAdapter = new TrainerAdapter(getContext(), trainerList, this);
         recyclerTopTrainers.setAdapter(trainerAdapter);
+
+        btnAssistant = view.findViewById(R.id.btn_virtual_assistant);
+
+
+        btnAssistant.setOnTouchListener(new View.OnTouchListener() {
+            float dX, dY;
+            float startX, startY;
+            private static final int CLICK_ACTION_THRESHOLD = 10; // Ngưỡng để phân biệt giữa click và drag
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        // Lưu vị trí ban đầu khi ngón tay chạm vào
+                        startX = event.getRawX();
+                        startY = event.getRawY();
+
+                        // Tính khoảng cách lệch giữa toạ độ View và ngón tay
+                        dX = view.getX() - startX;
+                        dY = view.getY() - startY;
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        // Cập nhật vị trí View theo ngón tay khi di chuyển
+                        view.animate()
+                                .x(event.getRawX() + dX)
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        // Khi nhấc ngón tay lên, kiểm tra xem người dùng muốn KÉO hay muốn CLICK
+                        float endX = event.getRawX();
+                        float endY = event.getRawY();
+
+                        // Nếu khoảng cách di chuyển rất nhỏ (< 10px) thì coi là Click
+                        if (Math.abs(endX - startX) < CLICK_ACTION_THRESHOLD &&
+                                Math.abs(endY - startY) < CLICK_ACTION_THRESHOLD) {
+                            view.performClick(); // Gọi sự kiện onClick
+                        }
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        btnAssistant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Sửa 'this' thành 'v.getContext()'
+                startActivity(new Intent(v.getContext(), AssistantChatActivity.class));
+            }
+        });
 
         btnUser.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();

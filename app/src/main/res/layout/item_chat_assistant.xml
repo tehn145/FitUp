@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- BOT MESSAGE -->
+    <LinearLayout
+        android:id="@+id/layout_bot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:layout_marginBottom="6dp">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_fitty"
+            android:background="@drawable/bg_circle"
+            android:clipToOutline="true"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/tv_bot_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bot_message"
+            android:textColor="#FFFFFF"
+            android:padding="14dp"
+            android:maxWidth="280dp"
+            android:text="Bot message"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <!-- USER MESSAGE -->
+    <LinearLayout
+        android:id="@+id/layout_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_user_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_user_message"
+            android:textColor="#FFFFFF"
+            android:padding="14dp"
+            android:maxWidth="280dp"
+            android:text="User message"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</LinearLayout>

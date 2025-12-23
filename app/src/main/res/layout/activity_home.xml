@@ -406,4 +406,27 @@
         </ScrollView>
     </LinearLayout>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_virtual_assistant"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="10dp"
+        app:cardBackgroundColor="@color/transparent"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_fitty"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_circle"/>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

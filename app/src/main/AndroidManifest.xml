@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".AssistantChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".ExerciseDetailActivity"
             android:exported="false" />
         <activity
