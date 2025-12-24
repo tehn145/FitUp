@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:fitsSystemWindows="true"
-    tools:context=".UserProfileActivity"
-    android:layout_marginTop="50dp">
+    tools:context=".UserProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

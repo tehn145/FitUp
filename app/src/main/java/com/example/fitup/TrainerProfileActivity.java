@@ -30,6 +30,10 @@ public class TrainerProfileActivity extends AppCompatActivity {
 
     private ImageView imgCover, btnBack, btnFollow;
     private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout, tvSpecialty, tvSeeMorePosts;
+    // Added new UI components
+    private TextView tvAvgRating, tvSessionCount;
+    private View btnSeeReviews;
+
     private AppCompatButton btnConnect;
     private RecyclerView rvTrainerPosts;
     private PostGridAdapter postAdapter;
@@ -68,6 +72,11 @@ public class TrainerProfileActivity extends AppCompatActivity {
         tvAbout = findViewById(R.id.tvAbout);
         tvSeeMorePosts = findViewById(R.id.tv_see_more);
 
+        // Initialize new views
+        tvAvgRating = findViewById(R.id.tvAvgRating);
+        tvSessionCount = findViewById(R.id.tvSessionCount);
+        btnSeeReviews = findViewById(R.id.btnSeeReviews);
+
         btnConnect = findViewById(R.id.btnConnect);
 
         rvTrainerPosts = findViewById(R.id.rvTrainerPosts);
@@ -80,6 +89,20 @@ public class TrainerProfileActivity extends AppCompatActivity {
         rvTrainerPosts.setAdapter(postAdapter);
 
         targetUserId = getIntent().getStringExtra("targetUserId");
+
+        // Logic for "See Reviews" button
+        btnSeeReviews.setOnClickListener(v -> {
+            if (targetUserId != null) {
+                TrainerReviewsFragment fragment = TrainerReviewsFragment.newInstance(targetUserId);
+
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                                android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(android.R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         if (currentUserId != null && targetUserId != null && currentUserId.equals(targetUserId)) {
             btnConnect.setVisibility(View.GONE);
@@ -224,6 +247,20 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     tvName.setText(doc.getString("name"));
                     tvUsername.setText(uid);
                     tvAbout.setText(doc.getString("aboutMe"));
+
+                    double rating = 0.0;
+                    if (doc.contains("rating")) {
+                        rating = doc.getDouble("rating");
+                    }
+                    tvAvgRating.setText(String.format("%.1f", rating));
+
+                    long sessions = 0;
+                    if (doc.contains("reviewCount")) {
+                        sessions = doc.getLong("reviewCount");
+                    }
+
+                    tvSessionCount.setText(String.valueOf(sessions));
+                    // -------------------------------------------
 
                     String goal = doc.getString("primaryGoal");
                     tvTitle.setText(goal != null ? goal + " Coach" : "Fitness Trainer");
