@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,10 +23,13 @@ public class AssistantChatActivity extends AppCompatActivity {
     ImageButton btnSend;
     ChatAssistantAdapter adapter;
     List<GeminiModels.ChatMessage> chatList;
-    GeminiApiService apiService;
 
-    String API_KEY = "AIzaSyD_uQaU73h-nt2bw_T1QI1l2BK2xkMy4NA";
-    String BASE_URL = "https://generativelanguage.googleapis.com/";
+    GroqApiService apiService;
+
+    String GROQ_API_KEY = BuildConfig.GROQ_API_KEY;
+    String BASE_URL = "https://api.groq.com/openai/v1/";
+    String MODEL_ID = "llama-3.3-70b-versatile";
+    //hoac nhanh chong String MODEL_ID = "llama-3.1-8b-instant";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,7 @@ public class AssistantChatActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         chatList = new ArrayList<>();
-        chatList.add(new GeminiModels.ChatMessage("Chào bạn! Mình là Fitty. Bạn cần mình tư vấn bài tập hay dinh dưỡng không? Mình rất sẵn lòng giải đáp thắc mắc của bạn!", false));
+        chatList.add(new GeminiModels.ChatMessage("Chào bạn! Mình là Fitty. Bạn cần mình tư vấn bài tập hay dinh dưỡng không?", false));
 
         adapter = new ChatAssistantAdapter(chatList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,9 +54,9 @@ public class AssistantChatActivity extends AppCompatActivity {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            apiService = retrofit.create(GeminiApiService.class);
+            apiService = retrofit.create(GroqApiService.class);
         } catch (Exception e) {
-            Toast.makeText(this, "Lỗi khởi tạo API: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Lỗi Retrofit: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         btnSend.setOnClickListener(v -> {
@@ -70,66 +72,50 @@ public class AssistantChatActivity extends AppCompatActivity {
         adapter.notifyItemInserted(chatList.size() - 1);
         recyclerView.scrollToPosition(chatList.size() - 1);
         edtMessage.setText("");
-//        callGemini(msg);
-        callFakeAI(msg);
+
+        callGroq(msg);
     }
 
-    private void callFakeAI(String userMsg) {
-        recyclerView.postDelayed(() -> {
-            String reply = FakeAIService.getReply(userMsg);
-            chatList.add(new GeminiModels.ChatMessage(reply, false));
-            adapter.notifyItemInserted(chatList.size() - 1);
-            recyclerView.scrollToPosition(chatList.size() - 1);
-        }, 800);
-    }
+    private void callGroq(String userMsg) {
+        Log.d("API_TEST", "Đang gửi tin đến Groq...");
+        List<GroqModels.Message> messages = new ArrayList<>();
+        //System Prompt
+        messages.add(new GroqModels.Message("system", "Bạn là Fitty - một HLV Gym cá nhân nhiệt tình và chuyên nghiệp. Hãy trả lời ngắn gọn bằng tiếng Việt."));
+        messages.add(new GroqModels.Message("user", userMsg));
+        GroqModels.Request requestBody = new GroqModels.Request(MODEL_ID, messages);
+        String authHeader = "Bearer " + GROQ_API_KEY;
 
-//    // Thay thế toàn bộ hàm callGemini cũ bằng hàm này
-//    private void callGemini(String userMsg) {
-//        Log.d("API_TEST", "Đang gửi tin nhắn: " + userMsg); // Log kiểm tra bắt đầu gửi
-//
-//        String prompt = "Bạn là Fitty - một HLV Gym cá nhân. Hãy trả lời ngắn gọn: " + userMsg;
-//
-//        GeminiModels.Part part = new GeminiModels.Part(prompt);
-//        GeminiModels.Content content = new GeminiModels.Content("user", Collections.singletonList(part));
-//        GeminiModels.Request request = new GeminiModels.Request(Collections.singletonList(content));
-//
-//        apiService.getResponse(API_KEY, request).enqueue(new Callback<GeminiModels.Response>() {
-//            @Override
-//            public void onResponse(Call<GeminiModels.Response> call, Response<GeminiModels.Response> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    try {
-//                        // Log dữ liệu trả về thành công
-//                        Log.d("API_TEST", "Thành công! Data: " + response.body().toString());
-//
-//                        if (response.body().candidates != null && !response.body().candidates.isEmpty()) {
-//                            String botReply = response.body().candidates.get(0).content.parts.get(0).text;
-//
-//                            // Cập nhật UI
-//                            chatList.add(new GeminiModels.ChatMessage(botReply, false));
-//                            adapter.notifyItemInserted(chatList.size() - 1);
-//                            recyclerView.scrollToPosition(chatList.size() - 1);
-//                        } else {
-//                            Log.e("API_TEST", "Danh sách candidates bị rỗng (Google chặn hoặc không trả lời)");
-//                        }
-//
-//                    } catch (Exception e) {
-//                        Log.e("API_TEST", "Lỗi phân tích JSON: " + e.getMessage());
-//                    }
-//                } else {
-//                    // Log lỗi từ Google (quan trọng)
-//                    try {
-//                        String errorBody = response.errorBody().string();
-//                        Log.e("API_TEST", "Lỗi API (" + response.code() + "): " + errorBody);
-//                    } catch (Exception e) {
-//                        Log.e("API_TEST", "Lỗi API (" + response.code() + ") - Không đọc được chi tiết lỗi");
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GeminiModels.Response> call, Throwable t) {
-//                Log.e("API_TEST", "Lỗi kết nối mạng: " + t.getMessage());
-//                t.printStackTrace();
-//            }
-//        });
+        apiService.getChatCompletion(authHeader, requestBody).enqueue(new Callback<GroqModels.Response>() {
+            @Override
+            public void onResponse(Call<GroqModels.Response> call, Response<GroqModels.Response> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        if (!response.body().choices.isEmpty()) {
+                            String botReply = response.body().choices.get(0).message.content;
+
+                            chatList.add(new GeminiModels.ChatMessage(botReply, false));
+                            adapter.notifyItemInserted(chatList.size() - 1);
+                            recyclerView.scrollToPosition(chatList.size() - 1);
+                        }
+                    } catch (Exception e) {
+                        Log.e("API_TEST", "Lỗi xử lý data: " + e.getMessage());
+                    }
+                } else {
+                    // Logcat
+                    try {
+                        Log.e("API_TEST", "Lỗi API " + response.code() + ": " + response.errorBody().string());
+                        Toast.makeText(AssistantChatActivity.this, "Lỗi API: " + response.code(), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GroqModels.Response> call, Throwable t) {
+                Log.e("API_TEST", "Lỗi mạng: " + t.getMessage());
+                Toast.makeText(AssistantChatActivity.this, "Kiểm tra kết nối mạng!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+}

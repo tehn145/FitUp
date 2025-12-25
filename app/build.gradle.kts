@@ -1,6 +1,20 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.google.gms.google-services")
     alias(libs.plugins.android.application)
+}
+
+val groqApiKey: String = try {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(FileInputStream(localPropertiesFile))
+    }
+    properties.getProperty("GROQ_API_KEY") ?: ""
+} catch (e: Exception) {
+    ""
 }
 
 android {
@@ -13,8 +27,12 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "GROQ_API_KEY", "\"$groqApiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
