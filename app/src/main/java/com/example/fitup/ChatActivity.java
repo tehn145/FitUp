@@ -32,7 +32,6 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ChatAdapter chatAdapter;
     private List<Message> messageList = new ArrayList<>();
-
     private String currentUserId, receiverId, receiverName;
     private String myName = "User";
     private String chatId = null;

@@ -41,7 +41,7 @@ public class NearbyTrainersFragment extends Fragment {
     private static final String TAG = "NearbyTrainers";
     private MapView mapView; // Mapbox MapView
     private ViewAnnotationManager viewAnnotationManager; // To add custom views as markers
-
+    //matching
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
