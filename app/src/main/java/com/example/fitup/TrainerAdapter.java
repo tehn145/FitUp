@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -105,8 +104,12 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
             holder.tvYouLabel.setVisibility(View.GONE);
             holder.btnMessage.setVisibility(View.GONE);
 
-            // Connect Button Logic
-            if (trainer.isRequestSent()) {
+            if (trainer.isIncomingRequest()) {
+                holder.btnConnect.setText("Respond");
+                holder.btnConnect.setEnabled(true);
+                holder.btnConnect.setAlpha(1.0f);
+
+            } else if (trainer.isRequestSent()) {
                 holder.btnConnect.setText("Requested");
                 holder.btnConnect.setEnabled(false);
                 holder.btnConnect.setAlpha(0.6f);
@@ -142,16 +145,13 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
         holder.btnMessage.setOnClickListener(v -> listener.onMessageClick(trainer));
     }
 
-    // Helper method to update UI based on state
     private void updateFollowButtonUI(TrainerViewHolder holder, boolean isFollowing) {
         if (isFollowing) {
-            // Orange Background, Checkmark Icon
-            holder.btnAddFriend.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF9800"))); // Orange
-            holder.btnAddFriend.setImageResource(R.drawable.ic_followed); // Ensure you have this drawable
+            holder.btnAddFriend.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF9800")));
+            holder.btnAddFriend.setImageResource(R.drawable.ic_followed);
             holder.btnAddFriend.setImageTintList(ColorStateList.valueOf(Color.WHITE));
         } else {
-            // Default Dark/Gray Background, Add Icon
-            holder.btnAddFriend.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#333333"))); // Dark Gray
+            holder.btnAddFriend.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#333333")));
             holder.btnAddFriend.setImageResource(R.drawable.ic_addfriend2);
             holder.btnAddFriend.setImageTintList(ColorStateList.valueOf(Color.WHITE));
         }
@@ -172,7 +172,7 @@ public class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.TrainerV
             super(itemView);
             ivTrainerAvatar = itemView.findViewById(R.id.imgTrainer);
             tvTrainerName = itemView.findViewById(R.id.txtTrainerName);
-            tvSpecialty = itemView.findViewById(R.id.txtSpecialty); // Đã có sẵn trong XML
+            tvSpecialty = itemView.findViewById(R.id.txtSpecialty);
             tvLocation = itemView.findViewById(R.id.txtLocation);
 
             btnAddFriend = itemView.findViewById(R.id.btn_follow);

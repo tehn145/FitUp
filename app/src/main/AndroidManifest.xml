@@ -110,6 +110,12 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+        <activity android:name=".AssistantChatActivity"
+            android:exported="false" />
+        <activity android:name=".ExerciseCategoryActivity"
+            android:exported="false" />
+        <activity android:name=".ExerciseListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

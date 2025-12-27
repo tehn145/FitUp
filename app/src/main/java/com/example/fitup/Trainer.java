@@ -11,6 +11,8 @@ public class Trainer {
     private boolean requestSent = false;
     private boolean connected = false;
 
+    private boolean incomingRequest = false;
+
     public Trainer() {}
 
     public Trainer(String name, String avatar, String primaryGoal, long gem) {
@@ -41,4 +43,7 @@ public class Trainer {
     public void setRequestSent(boolean requestSent) { this.requestSent = requestSent; }
     public boolean isConnected() { return connected; }
     public void setConnected(boolean connected) { this.connected = connected; }
+
+    public boolean isIncomingRequest() { return incomingRequest; }
+    public void setIncomingRequest(boolean incomingRequest) { this.incomingRequest = incomingRequest; }
 }

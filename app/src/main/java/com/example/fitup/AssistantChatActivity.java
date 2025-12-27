@@ -36,6 +36,7 @@ public class AssistantChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant_chat);
 
+        Log.d("API_KEY_CHECK", "Key hiện tại: " + GROQ_API_KEY);
         recyclerView = findViewById(R.id.recyclerChat);
         edtMessage = findViewById(R.id.edtMessage);
         btnSend = findViewById(R.id.btnSend);

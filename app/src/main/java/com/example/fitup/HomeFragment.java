@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private ListenerRegistration userListener;
     private ListenerRegistration trainersListener;
     private ListenerRegistration requestsListener;
+    private ListenerRegistration incomingRequestsListener;
+    private ListenerRegistration incomingPendingListener; // [NEW] Listener cho yêu cầu đến (pending)
 
     private ImageView btnUser;
     private ImageView btnSearch;
@@ -66,6 +68,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
     private Set<String> sentRequestIds = new HashSet<>();
     private Set<String> connectedIds = new HashSet<>();
+    private Set<String> incomingPendingIds = new HashSet<>(); // [NEW] Set chứa ID những người gửi request cho mình
 
     private LinearLayout textTodayChallenge;
     private TextView tvChallenge1, tvChallenge2, tvChallenge3;
@@ -128,44 +131,33 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
         btnAssistant = view.findViewById(R.id.btn_virtual_assistant);
 
-
         btnAssistant.setOnTouchListener(new View.OnTouchListener() {
             float dX, dY;
             float startX, startY;
-            private static final int CLICK_ACTION_THRESHOLD = 10; // Ngưỡng để phân biệt giữa click và drag
+            private static final int CLICK_ACTION_THRESHOLD = 10;
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()) {
-
                     case MotionEvent.ACTION_DOWN:
-                        // Lưu vị trí ban đầu khi ngón tay chạm vào
                         startX = event.getRawX();
                         startY = event.getRawY();
-
-                        // Tính khoảng cách lệch giữa toạ độ View và ngón tay
                         dX = view.getX() - startX;
                         dY = view.getY() - startY;
                         return true;
-
                     case MotionEvent.ACTION_MOVE:
-                        // Cập nhật vị trí View theo ngón tay khi di chuyển
                         view.animate()
                                 .x(event.getRawX() + dX)
                                 .y(event.getRawY() + dY)
                                 .setDuration(0)
                                 .start();
                         return true;
-
                     case MotionEvent.ACTION_UP:
-                        // Khi nhấc ngón tay lên, kiểm tra xem người dùng muốn KÉO hay muốn CLICK
                         float endX = event.getRawX();
                         float endY = event.getRawY();
-
-                        // Nếu khoảng cách di chuyển rất nhỏ (< 10px) thì coi là Click
                         if (Math.abs(endX - startX) < CLICK_ACTION_THRESHOLD &&
                                 Math.abs(endY - startY) < CLICK_ACTION_THRESHOLD) {
-                            view.performClick(); // Gọi sự kiện onClick
+                            view.performClick();
                         }
                         return true;
                 }
@@ -173,13 +165,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
             }
         });
 
-        btnAssistant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Sửa 'this' thành 'v.getContext()'
-                startActivity(new Intent(v.getContext(), AssistantChatActivity.class));
-            }
-        });
+        btnAssistant.setOnClickListener(v -> startActivity(new Intent(v.getContext(), AssistantChatActivity.class)));
 
         btnUser.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -189,25 +175,20 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                             if (documentSnapshot.exists()) {
                                 String role = documentSnapshot.getString("role");
                                 Intent intent;
-
                                 if ("trainer".equalsIgnoreCase(role)) {
                                     intent = new Intent(getActivity(), TrainerProfileActivity.class);
                                 } else {
                                     intent = new Intent(getActivity(), UserProfileActivity.class);
                                 }
-
                                 intent.putExtra("targetUserId", currentUser.getUid());
                                 startActivity(intent);
                             }
                         })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show();
-                        });
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show());
             } else {
                 Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         btnSearch.setOnClickListener(v -> startActivity(new Intent(getActivity(), FindUserActivity.class)));
         btnAdd.setOnClickListener(v -> startActivity(new Intent(getActivity(), PostActivity.class)));
@@ -218,6 +199,9 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 loadAndListenForUserData();
+                // Load song song cả 2 chiều kết nối
+                loadIncomingConnections();
+                loadIncomingPendingRequests(); // [NEW] Load request pending gửi đến mình
                 loadSentRequestsAndThenTrainers();
                 fetchDailyChallenge();
             } else {
@@ -253,8 +237,9 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         if (userListener != null) userListener.remove();
         if (trainersListener != null) trainersListener.remove();
         if (requestsListener != null) requestsListener.remove();
+        if (incomingRequestsListener != null) incomingRequestsListener.remove();
+        if (incomingPendingListener != null) incomingPendingListener.remove(); // [NEW] Cleanup
     }
-
 
     private void loadAndListenForUserData() {
         if (mAuth.getCurrentUser() == null) return;
@@ -285,6 +270,62 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 });
     }
 
+    private void loadIncomingConnections() {
+        if (mAuth.getCurrentUser() == null) return;
+        incomingRequestsListener = db.collection("connect_requests")
+                .whereEqualTo("toUid", mAuth.getCurrentUser().getUid())
+                .whereEqualTo("status", "accepted")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null || snapshots == null) return;
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        String fromUid = doc.getString("fromUid");
+                        if (fromUid != null) {
+                            connectedIds.add(fromUid);
+                        }
+                    }
+                    // Cập nhật lại UI nếu danh sách trainer đã load xong
+                    if (trainerList != null && !trainerList.isEmpty()) {
+                        for (Trainer trainer : trainerList) {
+                            if (connectedIds.contains(trainer.getUid())) {
+                                trainer.setConnected(true);
+                            }
+                        }
+                        trainerAdapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    // [NEW] Hàm lắng nghe những request gửi đến mình (pending)
+    private void loadIncomingPendingRequests() {
+        if (mAuth.getCurrentUser() == null) return;
+        incomingPendingListener = db.collection("connect_requests")
+                .whereEqualTo("toUid", mAuth.getCurrentUser().getUid())
+                .whereEqualTo("status", "pending")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null || snapshots == null) return;
+
+                    incomingPendingIds.clear();
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        String fromUid = doc.getString("fromUid");
+                        if (fromUid != null) {
+                            incomingPendingIds.add(fromUid);
+                        }
+                    }
+
+                    // Cập nhật lại list trainer
+                    if (trainerList != null && !trainerList.isEmpty()) {
+                        for (Trainer trainer : trainerList) {
+                            if (incomingPendingIds.contains(trainer.getUid())) {
+                                trainer.setIncomingRequest(true);
+                            } else {
+                                trainer.setIncomingRequest(false);
+                            }
+                        }
+                        trainerAdapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
     private void loadSentRequestsAndThenTrainers() {
         if (mAuth.getCurrentUser() == null) return;
 
@@ -294,8 +335,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                     if (e != null) return;
                     if (snapshots != null) {
                         sentRequestIds.clear();
-                        connectedIds.clear();
-
                         for (DocumentSnapshot doc : snapshots.getDocuments()) {
                             String toUid = doc.getString("toUid");
                             String status = doc.getString("status");
@@ -321,41 +360,45 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) return;
                     if (snapshots != null) {
-
                         trainerList.clear();
                         for (DocumentSnapshot doc : snapshots.getDocuments()) {
                             Trainer trainer = doc.toObject(Trainer.class);
                             if (trainer != null) {
                                 trainer.setUid(doc.getId());
 
+                                // Check connected
                                 if (connectedIds.contains(trainer.getUid())) {
                                     trainer.setConnected(true);
                                 } else {
                                     trainer.setConnected(false);
                                 }
 
+                                // Check request sent (outgoing)
                                 if (sentRequestIds.contains(trainer.getUid())) {
                                     trainer.setRequestSent(true);
                                 } else {
                                     trainer.setRequestSent(false);
                                 }
+
+                                if (incomingPendingIds.contains(trainer.getUid())) {
+                                    trainer.setIncomingRequest(true);
+                                } else {
+                                    trainer.setIncomingRequest(false);
+                                }
+
                                 if (doc.contains("avatar")) {
                                     trainer.setAvatarUrl(doc.getString("avatar"));
                                 }
 
-                                // --- LẤY FITNESS LEVEL TỪ DB ---
                                 String fitnessLevel = doc.getString("fitnessLevel");
                                 trainer.setFitnessLevel(fitnessLevel);
-                                // -------------------------------
 
-                                // Fetch location name and set default if missing
                                 String locationName = doc.getString("locationName");
                                 trainer.setLocationName(locationName != null && !locationName.isEmpty() ? locationName : "Unspecified Location");
 
                                 trainerList.add(trainer);
                             }
                         }
-
                         trainerAdapter.notifyDataSetChanged();
                     }
                 });
@@ -372,6 +415,12 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     public void onConnectClick(Trainer trainer) {
         if (mAuth.getCurrentUser() == null) {
             Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (trainer.isIncomingRequest()) {
+            Intent intent = new Intent(getContext(), ConnectionsActivity.class);
+            startActivity(intent);
             return;
         }
 

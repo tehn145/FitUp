@@ -26,7 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProfileFragment extends Fragment {
 
@@ -52,8 +54,12 @@ public class ProfileFragment extends Fragment {
 
     private ListenerRegistration userListener;
     private ListenerRegistration requestCountListener;
+
     private ListenerRegistration connOutListener;
     private ListenerRegistration connInListener;
+
+    private Set<String> outgoingConnectionIds = new HashSet<>();
+    private Set<String> incomingConnectionIds = new HashSet<>();
 
     private ConstraintLayout cardConnection;
 
@@ -133,12 +139,8 @@ public class ProfileFragment extends Fragment {
             }
         };
 
-        if (ivSeeMore != null) {
-            ivSeeMore.setOnClickListener(openMyPosts);
-        }
-        if (tvSeeMoreBtn != null) {
-            tvSeeMoreBtn.setOnClickListener(openMyPosts);
-        }
+        if (ivSeeMore != null) ivSeeMore.setOnClickListener(openMyPosts);
+        if (tvSeeMoreBtn != null) tvSeeMoreBtn.setOnClickListener(openMyPosts);
 
         rvMyPosts = view.findViewById(R.id.rvMyPosts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -162,26 +164,19 @@ public class ProfileFragment extends Fragment {
         ivProfileAvatar.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
-                // Fetch the user's role from Firestore before redirecting
                 db.collection("users").document(currentUser.getUid()).get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
                                 String role = documentSnapshot.getString("role");
                                 Intent intent;
-
-                                // Check if the user is a trainer
                                 if ("trainer".equalsIgnoreCase(role)) {
                                     intent = new Intent(getActivity(), TrainerProfileActivity.class);
                                 } else {
                                     intent = new Intent(getActivity(), UserProfileActivity.class);
                                 }
-
                                 intent.putExtra("targetUserId", currentUser.getUid());
                                 startActivity(intent);
                             }
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "Error fetching profile", Toast.LENGTH_SHORT).show();
                         });
             } else {
                 Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
@@ -212,30 +207,51 @@ public class ProfileFragment extends Fragment {
         if (currentUser == null) return;
         String uid = currentUser.getUid();
 
+        outgoingConnectionIds.clear();
+        incomingConnectionIds.clear();
+
+        if (connOutListener != null) connOutListener.remove();
         connOutListener = db.collection("connect_requests")
                 .whereEqualTo("fromUid", uid)
                 .whereEqualTo("status", "accepted")
-                .addSnapshotListener((snapshots1, e1) -> {
-                    if (e1 != null) return;
-                    int count1 = (snapshots1 != null) ? snapshots1.size() : 0;
-
-                    connInListener = db.collection("connect_requests")
-                            .whereEqualTo("toUid", uid)
-                            .whereEqualTo("status", "accepted")
-                            .addSnapshotListener((snapshots2, e2) -> {
-                                if (e2 != null) return;
-                                int count2 = (snapshots2 != null) ? snapshots2.size() : 0;
-
-                                int total = count1 + count2;
-                                if (tvConnectionsCount != null) {
-                                    tvConnectionsCount.setText(String.valueOf(total));
-                                }
-                            });
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    outgoingConnectionIds.clear();
+                    if (snapshots != null) {
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            String partnerId = doc.getString("toUid");
+                            if (partnerId != null) outgoingConnectionIds.add(partnerId);
+                        }
+                    }
+                    updateTotalConnectionCount();
                 });
 
-        if (tvFollowersCount != null) tvFollowersCount.setText("0");
-        if (tvFollowingCount != null) tvFollowingCount.setText("0");
+        if (connInListener != null) connInListener.remove();
+        connInListener = db.collection("connect_requests")
+                .whereEqualTo("toUid", uid)
+                .whereEqualTo("status", "accepted")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    incomingConnectionIds.clear();
+                    if (snapshots != null) {
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            String partnerId = doc.getString("fromUid");
+                            if (partnerId != null) incomingConnectionIds.add(partnerId);
+                        }
+                    }
+                    updateTotalConnectionCount();
+                });
     }
+
+    private void updateTotalConnectionCount() {
+        if (tvConnectionsCount == null) return;
+        Set<String> uniqueConnections = new HashSet<>();
+        uniqueConnections.addAll(outgoingConnectionIds);
+        uniqueConnections.addAll(incomingConnectionIds);
+
+        tvConnectionsCount.setText(String.valueOf(uniqueConnections.size()));
+    }
+
 
     private void listenForPendingRequests() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -258,11 +274,10 @@ public class ProfileFragment extends Fragment {
                     }
                 });
     }
-//commit
+
     private void loadAndListenForUserData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Log.w(TAG, "No user is logged in.");
             if(tvProfileName != null) tvProfileName.setText("Not Logged In");
             return;
         }
@@ -271,15 +286,10 @@ public class ProfileFragment extends Fragment {
 
         userListener = db.collection("users").document(userId)
                 .addSnapshotListener((snapshot, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
+                    if (e != null) return;
 
                     if (snapshot != null && snapshot.exists()) {
                         populateUiWithData(snapshot);
-                    } else {
-                        if(tvProfileName != null) tvProfileName.setText("Profile not found");
                     }
                 });
     }
@@ -312,11 +322,6 @@ public class ProfileFragment extends Fragment {
         Long gems = snapshot.getLong("gem");
         if(tvGemsCount != null) tvGemsCount.setText(String.valueOf(gems != null ? gems : 0L));
 
-        Long connectionCount = snapshot.getLong("connectionCount");
-        if (tvConnectionsCount != null) {
-            tvConnectionsCount.setText(String.valueOf(connectionCount != null ? connectionCount : 0));
-        }
-
         Long followerCount = snapshot.getLong("followerCount");
         if (tvFollowersCount != null) {
             tvFollowersCount.setText(String.valueOf(followerCount != null ? followerCount : 0));
@@ -348,7 +353,6 @@ public class ProfileFragment extends Fragment {
                         }
                         postAdapter.notifyDataSetChanged();
                     }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error loading posts", e));
+                });
     }
 }

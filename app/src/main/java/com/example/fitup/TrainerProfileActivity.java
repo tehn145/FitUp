@@ -30,7 +30,6 @@ public class TrainerProfileActivity extends AppCompatActivity {
 
     private ImageView imgCover, btnBack, btnFollow;
     private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout, tvSpecialty, tvSeeMorePosts;
-    // Added new UI components
     private TextView tvAvgRating, tvSessionCount;
     private View btnSeeReviews;
 
@@ -46,6 +45,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
 
     private boolean isRequestSent = false;
     private boolean isConnected = false;
+    private boolean isIncomingRequest = false; // [NEW] Biến này để check request từ họ -> mình
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class TrainerProfileActivity extends AppCompatActivity {
         tvAbout = findViewById(R.id.tvAbout);
         tvSeeMorePosts = findViewById(R.id.tv_see_more);
 
-        // Initialize new views
         tvAvgRating = findViewById(R.id.tvAvgRating);
         tvSessionCount = findViewById(R.id.tvSessionCount);
         btnSeeReviews = findViewById(R.id.btnSeeReviews);
@@ -90,7 +89,6 @@ public class TrainerProfileActivity extends AppCompatActivity {
 
         targetUserId = getIntent().getStringExtra("targetUserId");
 
-        // Logic for "See Reviews" button
         btnSeeReviews.setOnClickListener(v -> {
             if (targetUserId != null) {
                 TrainerReviewsFragment fragment = TrainerReviewsFragment.newInstance(targetUserId);
@@ -109,6 +107,7 @@ public class TrainerProfileActivity extends AppCompatActivity {
             btnFollow.setVisibility(View.GONE);
         } else {
             btnConnect.setVisibility(View.VISIBLE);
+            // Mặc định set false, checkRequestStatus sẽ cập nhật lại
             isRequestSent = getIntent().getBooleanExtra("isAlreadySent", false);
             updateButtonUI();
         }
@@ -159,6 +158,10 @@ public class TrainerProfileActivity extends AppCompatActivity {
                 intent.putExtra("RECEIVER_ID", targetUserId);
                 intent.putExtra("RECEIVER_NAME", tvName.getText().toString());
                 startActivity(intent);
+            } else if (isIncomingRequest) {
+                // [UPDATE] Có incoming request -> Mở ConnectionsActivity
+                Intent intent = new Intent(this, ConnectionsActivity.class);
+                startActivity(intent);
             } else if (!isRequestSent) {
                 sendConnectRequestToDatabase();
             }
@@ -175,23 +178,50 @@ public class TrainerProfileActivity extends AppCompatActivity {
                 android.content.res.ColorStateList.valueOf(Color.WHITE));
     }
 
+    // Đã chỉnh sửa logic để kiểm tra 2 chiều
     private void checkRequestStatus() {
-        String requestId = currentUserId + "_" + targetUserId;
-        db.collection("connect_requests").document(requestId)
+        String requestId1 = currentUserId + "_" + targetUserId; // Mình gửi
+        String requestId2 = targetUserId + "_" + currentUserId; // Họ gửi
+
+        // Reset
+        isConnected = false;
+        isRequestSent = false;
+        isIncomingRequest = false;
+
+        // Check chiều mình gửi trước
+        db.collection("connect_requests").document(requestId1)
                 .get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists() && "accepted".equals(doc.getString("status"))) {
-                        isConnected = true;
-                        isRequestSent = false;
-                    } else if (doc.exists()) {
-                        isConnected = false;
-                        isRequestSent = true;
+                .addOnSuccessListener(doc1 -> {
+                    if (doc1.exists()) {
+                        handleRequestDoc(doc1, true); // true = outgoing
                     } else {
-                        isConnected = false;
-                        isRequestSent = false;
+                        // Nếu không thấy, check chiều họ gửi
+                        db.collection("connect_requests").document(requestId2)
+                                .get()
+                                .addOnSuccessListener(doc2 -> {
+                                    if (doc2.exists()) {
+                                        handleRequestDoc(doc2, false); // false = incoming
+                                    } else {
+                                        // Không có quan hệ gì
+                                        updateButtonUI();
+                                    }
+                                });
                     }
-                    updateButtonUI();
                 });
+    }
+
+    private void handleRequestDoc(DocumentSnapshot doc, boolean isOutgoing) {
+        String status = doc.getString("status");
+        if ("accepted".equals(status)) {
+            isConnected = true;
+        } else if ("pending".equals(status)) {
+            if (isOutgoing) {
+                isRequestSent = true;
+            } else {
+                isIncomingRequest = true; // [UPDATE] Họ gửi mình -> incoming
+            }
+        }
+        updateButtonUI();
     }
 
     private void sendConnectRequestToDatabase() {
@@ -230,6 +260,12 @@ public class TrainerProfileActivity extends AppCompatActivity {
             drawable.setStroke(2, Color.WHITE);
             drawable.setCornerRadius(40);
             btnConnect.setBackground(drawable);
+        } else if (isIncomingRequest) {
+            btnConnect.setText("Respond");
+            btnConnect.setEnabled(true);
+            btnConnect.setTextColor(Color.WHITE);
+            btnConnect.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            btnConnect.setBackgroundResource(R.drawable.bg_user_message);
         } else {
             btnConnect.setBackgroundResource(R.drawable.bg_button_orange_gradient);
             btnConnect.setTextColor(Color.WHITE);
@@ -260,7 +296,6 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     }
 
                     tvSessionCount.setText(String.valueOf(sessions));
-                    // -------------------------------------------
 
                     String goal = doc.getString("primaryGoal");
                     tvTitle.setText(goal != null ? goal + " Coach" : "Fitness Trainer");
