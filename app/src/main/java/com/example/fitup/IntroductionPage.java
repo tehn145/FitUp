@@ -124,8 +124,6 @@ public class IntroductionPage extends AppCompatActivity {
             }
         });
 
-
-
         btnJoinUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

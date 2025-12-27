@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <com.mapbox.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/ivCenterMarker"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_location2"
+        app:tint="#FF5722"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp"
+        android:visibility="visible" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="48dp"
+        android:paddingHorizontal="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/back1"
+            android:background="@drawable/bg_chat_input"
+            android:padding="8dp"
+            app:tint="@color/white"
+            android:elevation="4dp"/>
+    </FrameLayout>
+
+    <!-- Bottom Sheet for Location Info -->
+    <!-- This sits at the bottom over the map -->
+    <LinearLayout
+        android:id="@+id/bottomSheetContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_sheet_rounded_top"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:elevation="8dp">
+
+        <!-- Drag Handle (Visual indicator) -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:background="#40FFFFFF"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#808080"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmLocation"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Confirm"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:backgroundTint="@color/white"
+            app:cornerRadius="12dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
