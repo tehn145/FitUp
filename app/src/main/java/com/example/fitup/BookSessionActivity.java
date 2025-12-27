@@ -1,5 +1,6 @@
 package com.example.fitup;
 
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class BookSessionActivity extends AppCompatActivity {
@@ -35,14 +37,18 @@ public class BookSessionActivity extends AppCompatActivity {
     private AutoCompleteTextView etLocationType;
     private CalendarView calendarView;
     private String receiverId, receiverName, chatId;
+    TextView tvStartTime, tvEndTime;
 
     // To store the final selected location data
     private double selectedLat = 0.0;
     private double selectedLng = 0.0;
     private GeoPoint selectedPos;
     private String finalLocationString = "";
+    private int startHour = 8;
+    private int startMinute = 0;
+    private int endHour = 9;
+    private int endMinute = 0;
 
-    // To store selected date (default to current time)
     private long selectedTimestamp;
 
     @Override
@@ -72,9 +78,41 @@ public class BookSessionActivity extends AppCompatActivity {
         etLocationType = findViewById(R.id.etLocation);
         etLocationDis = findViewById(R.id.et_location_dis);
         calendarView = findViewById(R.id.calendarView);
+        tvStartTime = findViewById(R.id.tvStartTime);
+        tvEndTime = findViewById(R.id.tvEndTime);
 
         MaterialButton btnSubmit = findViewById(R.id.btnSubmitSession);
 
+        tvStartTime.setOnClickListener(v -> {
+            TimePickerDialog mTimePicker = new TimePickerDialog(BookSessionActivity.this,
+                    (timePicker, selectedHour, selectedMinute) -> {
+                        startHour = selectedHour;
+                        startMinute = selectedMinute;
+
+                        String time = formatTime(selectedHour, selectedMinute);
+                        tvStartTime.setText(time);
+
+                        endHour = selectedHour + 1;
+                        endMinute = selectedMinute;
+                        String endTime = formatTime(endHour, endMinute);
+                        tvEndTime.setText(endTime);
+                    }, startHour, startMinute, false);
+            mTimePicker.setTitle("Select Start Time");
+            mTimePicker.show();
+        });
+
+        tvEndTime.setOnClickListener(v -> {
+            TimePickerDialog mTimePicker = new TimePickerDialog(BookSessionActivity.this,
+                    (timePicker, selectedHour, selectedMinute) -> {
+                        endHour = selectedHour;
+                        endMinute = selectedMinute;
+
+                        String time = formatTime(selectedHour, selectedMinute);
+                        tvEndTime.setText(time);
+                    }, endHour, endMinute, false);
+            mTimePicker.setTitle("Select End Time");
+            mTimePicker.show();
+        });
         selectedTimestamp = System.currentTimeMillis();
 
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
@@ -117,6 +155,18 @@ public class BookSessionActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnSubmit.setOnClickListener(v -> submitSession());
+    }
+
+    private String formatTime(int hour, int minute) {
+        String amPm;
+        if (hour >= 12) {
+            amPm = "PM";
+            if (hour > 12) hour -= 12;
+        } else {
+            amPm = "AM";
+            if (hour == 0) hour = 12;
+        }
+        return String.format(Locale.getDefault(), "%02d:%02d %s", hour, minute, amPm);
     }
 
     private void fetchCurrentUserLocation() {
@@ -193,7 +243,13 @@ public class BookSessionActivity extends AppCompatActivity {
         sessionData.put("price", price);
         sessionData.put("location", selectedPos);
         sessionData.put("note", etNote.getText().toString());
+
         sessionData.put("scheduledTimestamp", selectedTimestamp);
+        sessionData.put("startHour", startHour);
+        sessionData.put("startMinute", startMinute);
+        sessionData.put("endHour", endHour);
+        sessionData.put("endMinute", endMinute);
+
         sessionData.put("senderId", currentUserId);
         sessionData.put("clientId", receiverId);
         sessionData.put("trainerId", currentUserId);
@@ -236,6 +292,12 @@ public class BookSessionActivity extends AppCompatActivity {
         messageMap.put("receiverId", receiverId);
         messageMap.put("content", sessionName);
         messageMap.put("sessionId", sessionId);
+
+        messageMap.put("startHour", startHour);
+        messageMap.put("startMinute", startMinute);
+        messageMap.put("endHour", endHour);
+        messageMap.put("endMinute", endMinute);
+
         messageMap.put("timestamp", timestamp);
         messageMap.put("type", "session");
 

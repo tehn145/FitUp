@@ -51,10 +51,11 @@ public class ChatActivity extends AppCompatActivity {
 
     private DatabaseReference rtdbRef;
     private FirebaseFirestore firestore;
-    private StorageReference storageRef;
+    private StorageReference storageRef; // Added Storage
     private DatabaseReference chatInfoRef;
     private ValueEventListener seenListener;
 
+    // Launcher for Image Picker
     private final ActivityResultLauncher<String> pickImage = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
@@ -74,9 +75,11 @@ public class ChatActivity extends AppCompatActivity {
         }
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        // --- FIREBASE INITIALIZATION WITH EMULATOR ---
         try {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             try {
+                // Keep your emulator settings!
                 database.useEmulator("10.0.2.2", 9000);
             } catch (Exception e) {}
             rtdbRef = database.getReference();
@@ -90,14 +93,18 @@ public class ChatActivity extends AppCompatActivity {
                 firestore.setFirestoreSettings(settings);
             } catch (Exception e) {}
 
+            // Storage setup
             FirebaseStorage storage = FirebaseStorage.getInstance();
             try {
+                // Uncomment if you use Storage emulator, otherwise it uses Live Storage
+                // storage.useEmulator("10.0.2.2", 9199);
             } catch (Exception e) {}
             storageRef = storage.getReference();
 
         } catch (Exception e) {
             Toast.makeText(this, "Firebase Init Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        // ---------------------------------------------
 
         receiverId = getIntent().getStringExtra("RECEIVER_ID");
         receiverName = getIntent().getStringExtra("RECEIVER_NAME");
@@ -106,13 +113,14 @@ public class ChatActivity extends AppCompatActivity {
             chatId = getIntent().getStringExtra("CHAT_ID");
         }
 
+        boolean shouldTriggerBooking = getIntent().getBooleanExtra("TRIGGER_BOOKING", false);
         TextView tvTitle = findViewById(R.id.tvUserMess);
         tvTitle.setText(receiverName);
         messageEditText = findViewById(R.id.message_edit_text);
 
         recyclerView = findViewById(R.id.chat_recycler_view);
         LinearLayoutManager lm = new LinearLayoutManager(this);
-        lm.setStackFromEnd(false);
+        lm.setStackFromEnd(true); // Pushes messages up when keyboard opens
         recyclerView.setLayoutManager(lm);
 
         chatAdapter = new ChatAdapter(this, messageList, currentUserId);
@@ -120,12 +128,15 @@ public class ChatActivity extends AppCompatActivity {
 
         findViewById(R.id.imgbtn_Back).setOnClickListener(v -> finish());
 
+        // Session Button
         isTrainer = false;
 
         firestore.collection("users").document(currentUserId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String role = documentSnapshot.getString("role");
+                        // If user is a trainer, SHOW the button
+                        // If user is a client (or anything else), KEEP IT HIDDEN
                         if ("trainer".equalsIgnoreCase(role)) {
                             isTrainer = true;
                         }
@@ -134,22 +145,29 @@ public class ChatActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_book_session).setOnClickListener(v -> checkAndHandleSession());
 
+        // Send Text Button
         findViewById(R.id.send_button).setOnClickListener(v -> {
             String txt = messageEditText.getText().toString().trim();
             if (!TextUtils.isEmpty(txt)) sendMessage(txt, "text");
         });
 
+        // Send Image Button (Make sure this ID exists in your XML)
         findViewById(R.id.btn_send_image).setOnClickListener(v -> {
             pickImage.launch("image/*");
         });
 
         fetchMyName();
 
+        // Chat Loading Logic
         if (chatId != null) {
+            if (shouldTriggerBooking) {
+                checkAndHandleSession();
+                return;
+            }
             listenForMessages();
             attachSeenListener();
         } else {
-            findExistingChat();
+            findExistingChat(shouldTriggerBooking);
         }
     }
 
@@ -204,6 +222,7 @@ public class ChatActivity extends AppCompatActivity {
                 );
     }
 
+    // --- CORE CHAT LOGIC ---
 
     private void fetchMyName() {
         firestore.collection("users").document(currentUserId).get()
@@ -214,7 +233,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
-    private void findExistingChat() {
+    private void findExistingChat(boolean forceBooking) {
         rtdbRef.child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -223,13 +242,21 @@ public class ChatActivity extends AppCompatActivity {
                     if (chat.child("members").hasChild(currentUserId) &&
                             chat.child("members").hasChild(receiverId)) {
                         chatId = chat.getKey();
+
+                        if (forceBooking) {
+                            checkAndHandleSession();
+                            return;
+                        }
+
                         listenForMessages();
                         attachSeenListener();
                         found = true;
                         return;
                     }
                 }
+
                 if (!found) {
+
                 }
             }
             @Override
@@ -268,12 +295,13 @@ public class ChatActivity extends AppCompatActivity {
         long timestamp = System.currentTimeMillis();
         DatabaseReference msgRef = rtdbRef.child("messages").child(chatId).push();
 
+        // Pass type to Constructor
         Message msg = new Message(currentUserId, receiverId, content, timestamp, type);
 
         msgRef.setValue(msg).addOnFailureListener(e ->
                 Toast.makeText(ChatActivity.this, "Error sending: " + e.getMessage(), Toast.LENGTH_SHORT).show()
         );
-    
+
         DatabaseReference chatRef = rtdbRef.child("chats").child(chatId);
         Map<String, Object> updates = new HashMap<>();
 

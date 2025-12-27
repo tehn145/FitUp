@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.Filter;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,38 +45,96 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         ConnectionRequest connection = connectionList.get(position);
 
         holder.tvName.setText(connection.getSenderName());
+
+        // Fix 1: Uppercase first letter of role
         String role = connection.getSenderRole();
-        holder.tvDescription.setText((role != null ? role : "Member"));
+        String displayRole = "Member";
+        if (role != null && !role.isEmpty()) {
+            displayRole = role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase();
+        }
+        holder.tvDescription.setText(displayRole);
 
         if (connection.getSenderAvatar() != null) {
             Glide.with(context).load(connection.getSenderAvatar()).into(holder.imgAvatar);
         }
 
-        if ("trainer".equalsIgnoreCase(role)) {
-            holder.btnBook.setVisibility(View.VISIBLE);
-        } else {
-            holder.btnBook.setVisibility(View.GONE);
-        }
+        String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String partnerUid = connection.getFromUid().equals(myUid) ? connection.getToUid() : connection.getFromUid();
+
+        checkSessionStatus(myUid, partnerUid, holder.btnBook, connection.getSenderName());
 
         holder.btnMessage.setOnClickListener(v -> {
-            String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            String partnerUid;
-
-            if (connection.getFromUid().equals(myUid)) {
-                partnerUid = connection.getToUid();
-            } else {
-                partnerUid = connection.getFromUid();
-            }
-
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("RECEIVER_ID", partnerUid);
             intent.putExtra("RECEIVER_NAME", connection.getSenderName());
             context.startActivity(intent);
         });
+    }
 
-        holder.btnBook.setOnClickListener(v -> {
-            Toast.makeText(context, "Booking feature coming soon!", Toast.LENGTH_SHORT).show();
-        });
+    private void checkSessionStatus(String myUid, String partnerUid, Button btnBook, String partnerName) {
+        btnBook.setVisibility(View.GONE);
+
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        db.collection("sessions")
+                .where(Filter.or(
+                        Filter.and(
+                                Filter.equalTo("trainerId", myUid),
+                                Filter.equalTo("clientId", partnerUid)
+                        ),
+                        Filter.and(
+                                Filter.equalTo("trainerId", partnerUid),
+                                Filter.equalTo("clientId", myUid)
+                        )
+                ))
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    boolean hasActiveSession = false;
+                    String activeSessionId = null;
+
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot) {
+                        String status = doc.getString("status");
+                        if ("active".equals(status) || "pending".equals(status)) {
+                            hasActiveSession = true;
+                            activeSessionId = doc.getId();
+                            break;
+                        }
+                    }
+
+                    final boolean sessionExists = hasActiveSession;
+                    final String sessionId = activeSessionId;
+
+                    db.collection("users").document(myUid).get().addOnSuccessListener(userDoc -> {
+                        String myRole = userDoc.getString("role");
+                        boolean amITrainer = "trainer".equalsIgnoreCase(myRole);
+
+                        if (sessionExists) {
+                            btnBook.setVisibility(View.VISIBLE);
+                            btnBook.setText("View Session");
+                            btnBook.setOnClickListener(v -> {
+                                if (context instanceof androidx.fragment.app.FragmentActivity) {
+                                    SessionDetailsFragment fragment = SessionDetailsFragment.newInstance(sessionId);
+                                    fragment.show(((androidx.fragment.app.FragmentActivity) context).getSupportFragmentManager(), "SessionDetails");
+                                }
+                            });
+                        } else {
+                            if (amITrainer) {
+                                btnBook.setVisibility(View.VISIBLE);
+                                btnBook.setText("Book A Session");
+                                btnBook.setOnClickListener(v -> {
+                                    Intent intent = new Intent(context, BookSessionActivity.class);
+                                    intent.putExtra("RECEIVER_ID", partnerUid);
+                                    intent.putExtra("RECEIVER_NAME", partnerName);
+                                    intent.putExtra("TRIGGER_BOOKING", true); // Pass flag to trigger booking dialog in Chat
+                                    context.startActivity(intent);
+
+
+                                });
+                            } else {
+                                btnBook.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                });
     }
 
     @Override
