@@ -1,25 +1,53 @@
-import { onSchedule } from "firebase-functions/v2/scheduler";
-import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
-import { onDocumentUpdated } from "firebase-functions/v2/firestore";
+import * as logger from "firebase-functions/logger";
 
-const app = admin.initializeApp();
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { onRequest } from "firebase-functions/v2/https";
+
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import type { Request, Response } from "express";
+
+// -------------------- INIT --------------------
+const app = admin.apps.length ? admin.app() : admin.initializeApp();
 const db = getFirestore(app);
 
+// -------------------- TYPES --------------------
 interface Workout {
   name: string;
   reps: number;
   sets: number;
 }
 
-interface Challenge {
-  id: string;
-  createdAt?: FirebaseFirestore.FieldValue;
-  updatedAt?: FirebaseFirestore.FieldValue;
-  workouts: Workout[];
-}
+type UserDoc = {
+  name?: string;
+  role?: string;
+  location?: string;
+  time?: string;
+  goal?: string;
+  experience?: number;
+  rating?: number;
+  bio?: string;
+  email?: string;
+  phone?: string | number;
 
+  gender?: string;
+  age?: number;
+  level?: number;
+  height?: number;
+  weight?: number;
+
+  gem?: number;
+};
+
+type ChallengeDoc = {
+  id: string;
+  workouts: Workout[];
+  createdAt?: FirebaseFirestore.Timestamp | FirebaseFirestore.FieldValue;
+  updatedAt?: FirebaseFirestore.Timestamp | FirebaseFirestore.FieldValue;
+};
+
+// -------------------- HELPERS --------------------
 function generateRandomWorkouts(): Workout[] {
   const workouts = [
     "Push Ups",
@@ -32,7 +60,9 @@ function generateRandomWorkouts(): Workout[] {
     "Mountain Climbers",
     "Jumping Jacks",
   ];
-  const getRandom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+  const getRandom = <T,>(arr: T[]): T =>
+    arr[Math.floor(Math.random() * arr.length)];
 
   return Array.from({ length: 3 }, () => ({
     name: getRandom(workouts),
@@ -51,7 +81,7 @@ async function updateDailyChallenges(): Promise<void> {
 
     if (!snap.exists) {
       logger.info(`Creating ${id}...`);
-      const challengeData: Challenge = {
+      const challengeData: ChallengeDoc = {
         id,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         workouts: newWorkouts,
@@ -69,6 +99,7 @@ async function updateDailyChallenges(): Promise<void> {
   logger.info("Daily challenges updated successfully");
 }
 
+// -------------------- CRON JOB --------------------
 export const dailyChallengeUpdater = onSchedule(
   { schedule: "every 24 hours", timeZone: "Asia/Bangkok" },
   async () => {
@@ -76,10 +107,10 @@ export const dailyChallengeUpdater = onSchedule(
   }
 );
 
+// -------------------- FIRESTORE TRIGGER --------------------
 export const onDailyChallengeComplete = onDocumentUpdated(
   "users/{userId}/daily_progress/{date}",
   async (event) => {
-    // ✅ Add guards for TypeScript safety
     if (!event.data) {
       logger.warn("No event data provided. Exiting.");
       return;
@@ -93,10 +124,13 @@ export const onDailyChallengeComplete = onDocumentUpdated(
       return;
     }
 
-    const newData = afterSnap.data();
-    const oldData = beforeSnap.data();
+    const newData = afterSnap.data() as any;
+    const oldData = beforeSnap.data() as any;
 
-    if (newData.all_tasks_completed !== true || oldData.all_tasks_completed === true) {
+    if (
+      newData.all_tasks_completed !== true ||
+      oldData.all_tasks_completed === true
+    ) {
       logger.info("Not a new completion event.");
       return;
     }
@@ -128,12 +162,97 @@ export const onDailyChallengeComplete = onDocumentUpdated(
   }
 );
 
-
-
-(async () => {
-  if (process.env.FUNCTIONS_EMULATOR || process.env.GCLOUD_PROJECT) {
+// -------------------- HTTP API: MATCH COACHES --------------------
+export const matchCoaches = onRequest(
+  { cors: true, region: "asia-southeast1" },
+  async (req: Request, res: Response) => {
     try {
-      logger.info("Running initial daily challenge update after deploy...");
+      const uid = String(req.query.uid ?? "").trim();
+      const q = String(req.query.q ?? "").trim().toLowerCase();
+
+      if (!uid) {
+        res.status(400).json({ ok: false, message: "Missing uid" });
+        return;
+      }
+
+      // 1) Load ME
+      const meSnap = await db.collection("users").doc(uid).get();
+      if (!meSnap.exists) {
+        res
+          .status(404)
+          .json({ ok: false, message: `User not found: ${uid}` });
+        return;
+      }
+      const me = (meSnap.data() ?? {}) as UserDoc;
+
+      // 2) Load COACHES
+      const coachSnap = await db
+        .collection("users")
+        .where("role", "==", "coach")
+        .limit(50)
+        .get();
+
+      const coaches: Array<{ id: string; data: UserDoc }> = coachSnap.docs
+        .filter((d) => d.id !== uid)
+        .map((d) => ({ id: d.id, data: (d.data() ?? {}) as UserDoc }));
+
+      // 3) Score
+      const score = (c: UserDoc) => {
+        let s = 0;
+
+        if (me.goal && c.goal && me.goal === c.goal) s += 40;
+        if (me.location && c.location && me.location === c.location) s += 25;
+        if (me.time && c.time && me.time === c.time) s += 15;
+
+        const rating = Number(c.rating ?? 0);
+        const exp = Number(c.experience ?? 0);
+        s += Math.min(20, rating * 4);
+        s += Math.min(10, exp);
+
+        if (q) {
+          const name = String(c.name ?? "").toLowerCase();
+          const bio = String(c.bio ?? "").toLowerCase();
+          if (name.includes(q) || bio.includes(q)) s += 10;
+        }
+
+        return s;
+      };
+
+      const results = coaches
+        .map(({ id, data }) => ({
+          userId: id,
+          name: data.name ?? "Unknown",
+          role: data.role ?? "coach",
+          location: data.location ?? "",
+          time: data.time ?? "",
+          goal: data.goal ?? "",
+          experience: data.experience ?? null,
+          rating: data.rating ?? null,
+          bio: data.bio ?? "",
+          score: score(data),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+
+      res.json({ ok: true, uid, results });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ ok: false, message: msg });
+    }
+  }
+);
+
+// -------------------- OPTIONAL: RUN ON START (EMULATOR/DEPLOY) --------------------
+(async () => {
+  // Chỉ chạy khi emulator hoặc đang deploy/serve thật
+  const isEmulator =
+    !!process.env.FUNCTIONS_EMULATOR ||
+    process.env.FUNCTIONS_EMULATOR === "true";
+  const hasProject = !!process.env.GCLOUD_PROJECT;
+
+  if (isEmulator || hasProject) {
+    try {
+      logger.info("Running initial daily challenge update...");
       await updateDailyChallenges();
     } catch (err) {
       logger.error("Initial daily challenge run failed:", err);

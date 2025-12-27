@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,8 +25,14 @@ public class MainActivity extends AppCompatActivity {
     Button btnContinue;
     EditText email, pwd;
     LinearLayout pwdEdt;
+
     FirebaseAuth auth;
     FirebaseFirestore db;
+
+    // ✅ Emulator config (Android Emulator host)
+    private static final String EMU_HOST = "10.0.2.2";
+    private static final int AUTH_PORT = 9099;
+    private static final int FIRESTORE_PORT = 8080;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +46,16 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.editEmail);
         pwd = findViewById(R.id.editPwd);
         pwdEdt = findViewById(R.id.edtPassword);
+
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // ✅ MUST: trỏ emulator trước khi signIn / query Firestore
+        setupEmulators();
+
+        // ✅ (Khuyến nghị) nếu bạn vừa chuyển prod -> emulator, signOut để tránh token cũ
+        // Chỉ cần bật 1 lần khi debug, sau đó có thể comment lại.
+        // auth.signOut();
 
         btnContinue.setOnClickListener(v -> {
             String emailText = email.getText().toString().trim();
@@ -49,18 +64,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Please enter your email", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
                 Toast.makeText(MainActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Sẽ hiển thị ô password nếu như đã có
-            // tài khoản trên DB, không thì sẽ
-            // chuyển hướng tới activity register
+            // Nếu đã hiện ô password thì login
             if (pwdEdt.getVisibility() == View.VISIBLE) {
                 String passwordText = pwd.getText().toString().trim();
-
                 if (passwordText.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Please enter your password", Toast.LENGTH_SHORT).show();
                     return;
@@ -70,19 +81,19 @@ public class MainActivity extends AppCompatActivity {
                         .addOnCompleteListener(loginTask -> {
                             if (loginTask.isSuccessful()) {
                                 Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(MainActivity.this, MainView.class);
-                                startActivity(intent);
+                                startActivity(new Intent(MainActivity.this, MainView.class));
                                 finish();
                             } else {
-                                String errorMsg = loginTask.getException() != null ?
-                                        loginTask.getException().getMessage() : "Login failed";
+                                String errorMsg = loginTask.getException() != null
+                                        ? loginTask.getException().getMessage()
+                                        : "Login failed";
                                 Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                             }
                         });
                 return;
             }
 
+            // Chưa hiện password -> check user trên Firestore emulator
             db.collection("users")
                     .whereEqualTo("email", emailText)
                     .get()
@@ -98,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "Error checking Firestore.", Toast.LENGTH_SHORT).show();
+                            String msg = task.getException() != null ? task.getException().getMessage() : "Error checking Firestore.";
+                            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
                     });
         });
@@ -109,22 +121,28 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        LinkPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://fitsohub.com/en/privacy-policy"));
-                startActivity(intent);
-            }
+        LinkPrivacyPolicy.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://fitsohub.com/en/privacy-policy"));
+            startActivity(intent);
         });
 
         LinkTermsOfService.setPaintFlags(LinkTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         LinkPrivacyPolicy.setPaintFlags(LinkPrivacyPolicy.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    }
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
+    private void setupEmulators() {
+        try {
+            auth.useEmulator(EMU_HOST, AUTH_PORT);
+        } catch (Exception ignored) {}
+
+        try {
+            db.useEmulator(EMU_HOST, FIRESTORE_PORT);
+
+            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                    .setPersistenceEnabled(false)
+                    .build();
+            db.setFirestoreSettings(settings);
+        } catch (Exception ignored) {}
     }
 }

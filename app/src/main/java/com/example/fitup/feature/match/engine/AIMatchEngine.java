@@ -26,7 +26,7 @@ public class AIMatchEngine {
                 reason.append("Similar level. ");
             }
 
-            if (me.availability != null && me.availability.equals(other.availability)) {
+            if (me.time != null && me.time.equals(other.time)) {
                 score += 20;
                 reason.append("Same schedule. ");
             }
