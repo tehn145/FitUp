@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.chat_recycler_view);
         LinearLayoutManager lm = new LinearLayoutManager(this);
-        lm.setStackFromEnd(true); // Pushes messages up when keyboard opens
+        lm.setStackFromEnd(false); // Pushes messages up when keyboard opens
         recyclerView.setLayoutManager(lm);
 
         chatAdapter = new ChatAdapter(this, messageList, currentUserId);

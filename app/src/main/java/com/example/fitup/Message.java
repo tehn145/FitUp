@@ -10,8 +10,6 @@ public class Message {
     private long timestamp;
     private boolean showDateHeader = false;
     private String content;
-    private String type;
-    private String sessionId;
 
     public Message() {}
 
@@ -42,18 +40,17 @@ public class Message {
         this.sessionId = sessionId;
     }
 
-    public Message(String senderId, String receiverId, String content, long timestamp, String type) {
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.content = content;
-        this.timestamp = timestamp;
-        this.type = type;
-    }
+//    public Message(String senderId, String receiverId, String content, long timestamp, String type) {
+//        this.senderId = senderId;
+//        this.receiverId = receiverId;
+//        this.content = content;
+//        this.timestamp = timestamp;
+//        this.type = type;
+//    }
 
     public String getSenderId() { return senderId; }
     public String getText() { return text; }
-    public String getSessionId() { return sessionId; }
-    public String getType() { return type; }
+
     public long getTimestamp() { return timestamp; }
     public boolean isShowDateHeader() { return showDateHeader; }
     public void setShowDateHeader(boolean showDateHeader) { this.showDateHeader = showDateHeader; }
