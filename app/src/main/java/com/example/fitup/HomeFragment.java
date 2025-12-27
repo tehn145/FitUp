@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private ListenerRegistration trainersListener;
     private ListenerRegistration requestsListener;
     private ListenerRegistration incomingRequestsListener;
-    private ListenerRegistration incomingPendingListener; // [NEW] Listener cho yêu cầu đến (pending)
+    private ListenerRegistration incomingPendingListener;
 
     private ImageView btnUser;
     private ImageView btnSearch;
@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
     private Set<String> sentRequestIds = new HashSet<>();
     private Set<String> connectedIds = new HashSet<>();
-    private Set<String> incomingPendingIds = new HashSet<>(); // [NEW] Set chứa ID những người gửi request cho mình
+    private Set<String> incomingPendingIds = new HashSet<>();
 
     private LinearLayout textTodayChallenge;
     private TextView tvChallenge1, tvChallenge2, tvChallenge3;
@@ -199,9 +199,8 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 loadAndListenForUserData();
-                // Load song song cả 2 chiều kết nối
                 loadIncomingConnections();
-                loadIncomingPendingRequests(); // [NEW] Load request pending gửi đến mình
+                loadIncomingPendingRequests();
                 loadSentRequestsAndThenTrainers();
                 fetchDailyChallenge();
             } else {
@@ -283,7 +282,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                             connectedIds.add(fromUid);
                         }
                     }
-                    // Cập nhật lại UI nếu danh sách trainer đã load xong
                     if (trainerList != null && !trainerList.isEmpty()) {
                         for (Trainer trainer : trainerList) {
                             if (connectedIds.contains(trainer.getUid())) {
@@ -295,7 +293,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                 });
     }
 
-    // [NEW] Hàm lắng nghe những request gửi đến mình (pending)
     private void loadIncomingPendingRequests() {
         if (mAuth.getCurrentUser() == null) return;
         incomingPendingListener = db.collection("connect_requests")
@@ -312,7 +309,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                         }
                     }
 
-                    // Cập nhật lại list trainer
                     if (trainerList != null && !trainerList.isEmpty()) {
                         for (Trainer trainer : trainerList) {
                             if (incomingPendingIds.contains(trainer.getUid())) {

@@ -71,7 +71,8 @@
             android:src="@drawable/ic_sendmessage"
             android:background="@color/transparent"
             android:scaleType="centerCrop"
-            app:tint="#FF9800"
             android:layout_marginStart="15dp"
-            /> </LinearLayout>
+            app:tint="@color/white"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

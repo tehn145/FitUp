@@ -424,9 +424,10 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_fitty"
+            android:src="@drawable/ic_fitty_rmbg"
             android:scaleType="centerCrop"
-            android:background="@drawable/bg_circle"/>
+            android:background="@drawable/circle"
+            />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
