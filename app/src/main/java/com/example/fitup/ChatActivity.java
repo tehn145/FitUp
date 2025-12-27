@@ -113,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
             chatId = getIntent().getStringExtra("CHAT_ID");
         }
 
+        boolean shouldTriggerBooking = getIntent().getBooleanExtra("TRIGGER_BOOKING", false);
         TextView tvTitle = findViewById(R.id.tvUserMess);
         tvTitle.setText(receiverName);
         messageEditText = findViewById(R.id.message_edit_text);
@@ -159,14 +160,17 @@ public class ChatActivity extends AppCompatActivity {
 
         // Chat Loading Logic
         if (chatId != null) {
+            if (shouldTriggerBooking) {
+                checkAndHandleSession();
+                return;
+            }
             listenForMessages();
             attachSeenListener();
         } else {
-            findExistingChat();
+            findExistingChat(shouldTriggerBooking);
         }
     }
 
-    // --- SESSION LOGIC ---
     private void checkAndHandleSession() {
         firestore.collection("sessions")
                 .where(Filter.or(
@@ -229,7 +233,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
-    private void findExistingChat() {
+    private void findExistingChat(boolean forceBooking) {
         rtdbRef.child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -238,14 +242,21 @@ public class ChatActivity extends AppCompatActivity {
                     if (chat.child("members").hasChild(currentUserId) &&
                             chat.child("members").hasChild(receiverId)) {
                         chatId = chat.getKey();
+
+                        if (forceBooking) {
+                            checkAndHandleSession();
+                            return;
+                        }
+
                         listenForMessages();
                         attachSeenListener();
                         found = true;
                         return;
                     }
                 }
+
                 if (!found) {
-                    // Chat doesn't exist yet, wait for first message
+
                 }
             }
             @Override

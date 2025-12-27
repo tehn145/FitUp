@@ -148,9 +148,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         Double price = doc.getDouble("price");
                         Long scheduledTime = doc.getLong("scheduledTimestamp");
 
+                        long sHour = (doc.getLong("startHour") != null) ? doc.getLong("startHour") : -1;
+                        long sMin = (doc.getLong("startMinute") != null) ? doc.getLong("startMinute") : 0;
+                        long eHour = (doc.getLong("endHour") != null) ? doc.getLong("endHour") : -1;
+                        long eMin = (doc.getLong("endMinute") != null) ? doc.getLong("endMinute") : 0;
+
                         GeoPoint pos = doc.getGeoPoint("location");
-                        Double lat = pos.getLatitude();
-                        Double lng = pos.getLongitude();
+                        Double lat = (pos != null) ? pos.getLatitude() : null;
+                        Double lng = (pos != null) ? pos.getLongitude() : null;
 
                         String formattedStatus = (status != null) ? status.toUpperCase() : "UNKNOWN";
 
@@ -160,9 +165,32 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             SimpleDateFormat sdfDate = new SimpleDateFormat(" • MMM dd", Locale.getDefault());
                             detailsText += sdfDate.format(new Date(scheduledTime));
 
-                            SimpleDateFormat sdfTime = new SimpleDateFormat("h:mm a", Locale.getDefault());
-                            String timeStr = sdfTime.format(new Date(scheduledTime));
-                            holder.tvDetailsTime.setText(timeStr + " - (1h)");
+                            String timeRangeStr;
+                            if (sHour != -1 && eHour != -1) {
+                                String startTime = formatTimeSimple((int) sHour, (int) sMin);
+                                String endTime = formatTimeSimple((int) eHour, (int) eMin);
+
+                                int startTotalMins = (int) (sHour * 60 + sMin);
+                                int endTotalMins = (int) (eHour * 60 + eMin);
+                                if (endTotalMins < startTotalMins) endTotalMins += 24 * 60; // Handle overnight wrap
+
+                                int diffMins = endTotalMins - startTotalMins;
+                                String durationStr = "";
+                                if (diffMins > 0) {
+                                    int h = diffMins / 60;
+                                    int m = diffMins % 60;
+                                    if (h > 0) durationStr += h + "h";
+                                    if (m > 0) durationStr += " " + m + "m";
+                                    durationStr = " (" + durationStr.trim() + ")";
+                                }
+
+                                timeRangeStr = startTime + " - " + endTime + durationStr;
+                            } else {
+                                SimpleDateFormat sdfTime = new SimpleDateFormat("h:mm a", Locale.getDefault());
+                                timeRangeStr = sdfTime.format(new Date(scheduledTime)) + " - (1h)";
+                            }
+
+                            holder.tvDetailsTime.setText(timeRangeStr);
                         }
                         holder.tvDetails.setText(detailsText);
 
@@ -203,6 +231,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         // Card Click can still open details
         holder.itemView.setOnClickListener(v -> openSessionDetails(sessionId));
+    }
+
+    private String formatTimeSimple(int hour, int minute) {
+        String amPm = "AM";
+        if (hour >= 12) {
+            amPm = "PM";
+            if (hour > 12) hour -= 12;
+        }
+        if (hour == 0) hour = 12;
+        return String.format(Locale.getDefault(), "%d:%02d %s", hour, minute, amPm);
     }
 
     private void openMapLocation(double lat, double lng) {

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".FitUpApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -92,6 +93,9 @@
             android:exported="false" />
         <activity
             android:name=".FindUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookSessionActivity"
             android:exported="false" />
         <activity
             android:name=".PostActivity"
