@@ -23,8 +23,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2; // Import ViewPager2
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout; // Import TabLayout
+import com.google.android.material.tabs.TabLayoutMediator; // Import Mediator
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -61,6 +64,12 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private ImageView btnSearch;
     private ImageView btnAdd;
     private TextView tvUserName, tvUserGemCount;
+
+    // --- Banner Variables ---
+    private ViewPager2 bannerViewPager;
+    private TabLayout bannerTabLayout;
+    private BannerAdapter bannerAdapter;
+
 
     private RecyclerView recyclerTopTrainers;
     private TrainerAdapter trainerAdapter;
@@ -123,6 +132,36 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         tvChallenge3 = view.findViewById(R.id.tvChallenge3);
         recyclerTopTrainers = view.findViewById(R.id.recyclerTopTrainers);
         if (textTodayChallenge != null) textTodayChallenge.setVisibility(View.GONE);
+
+        bannerViewPager = view.findViewById(R.id.bannerViewPager);
+        bannerTabLayout = view.findViewById(R.id.bannerTabLayout);
+
+        List<Integer> bannerList = new ArrayList<>();
+        bannerList.add(R.drawable.banner_fitness1);
+        bannerList.add(R.drawable.banner_fitness2);
+        bannerList.add(R.drawable.banner_fitness3);
+
+        bannerAdapter = new BannerAdapter(bannerList);
+        bannerViewPager.setAdapter(bannerAdapter);
+
+        new TabLayoutMediator(bannerTabLayout, bannerViewPager, (tab, position) -> {
+            View tabView = LayoutInflater.from(getContext()).inflate(R.layout.custom_tab_dot2, null);
+            tab.setCustomView(tabView);
+        }).attach();
+
+        bannerTabLayout.post(() -> {
+            ViewGroup tabs = (ViewGroup) bannerTabLayout.getChildAt(0);
+            int marginInDp = 1;
+            float scale = getResources().getDisplayMetrics().density;
+            int marginInPx = (int) (marginInDp * scale + 0.5f);
+
+            for (int i = 0; i < tabs.getChildCount(); i++) {
+                View tab = tabs.getChildAt(i);
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                params.setMargins(marginInPx, 0, marginInPx, 0);
+                tab.requestLayout();
+            }
+        });
 
         recyclerTopTrainers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         trainerList = new ArrayList<>();
