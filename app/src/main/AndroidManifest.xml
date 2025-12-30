@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".InviteFriendsActivity"
+            android:exported="false" />
+        <activity
             android:name=".feature.match.ui.MatchActivity"
             android:exported="false" />
         <activity
@@ -114,11 +117,14 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity android:name=".AssistantChatActivity"
+        <activity
+            android:name=".AssistantChatActivity"
             android:exported="false" />
-        <activity android:name=".ExerciseCategoryActivity"
+        <activity
+            android:name=".ExerciseCategoryActivity"
             android:exported="false" />
-        <activity android:name=".ExerciseListActivity"
+        <activity
+            android:name=".ExerciseListActivity"
             android:exported="false" />
     </application>
 

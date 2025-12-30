@@ -1,18 +1,25 @@
 package com.example.fitup;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.animation.AnimatorSet;
+import android.animation.PropertyValuesHolder;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,11 +30,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2; // Import ViewPager2
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.tabs.TabLayout; // Import TabLayout
-import com.google.android.material.tabs.TabLayoutMediator; // Import Mediator
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -65,7 +72,6 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
     private ImageView btnAdd;
     private TextView tvUserName, tvUserGemCount;
 
-    // --- Banner Variables ---
     private ViewPager2 bannerViewPager;
     private TabLayout bannerTabLayout;
     private BannerAdapter bannerAdapter;
@@ -86,7 +92,22 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
     private ActivityResultLauncher<Intent> profileLauncher;
     private LinearLayout btnExerciseLibrary;
-    private CardView btnAssistant;
+    private ImageView btnAssistant;
+    private TextView tvMascotBubble;
+    private Handler mascotHandler = new Handler(Looper.getMainLooper());
+    private Runnable mascotRunnable;
+//    private ObjectAnimator mascotAnimator;
+    private android.animation.Animator mascotAnimator;
+    private View mascotContainer;
+    private String[] mascotMessages = {
+            "Hi! I'm Fitty. Need help?",
+            "Don't forget to hydrate! 💧",
+            "Ready for a workout? 💪",
+            "Check today's challenge! 🔥",
+            "Keep pushing! You got this!",
+            "I'm here to assist you! 🤖"
+    };
+    private View cardInvite;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,7 +172,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
 
         bannerTabLayout.post(() -> {
             ViewGroup tabs = (ViewGroup) bannerTabLayout.getChildAt(0);
-            int marginInDp = 1;
+            int marginInDp = 5;
             float scale = getResources().getDisplayMetrics().density;
             int marginInPx = (int) (marginInDp * scale + 0.5f);
 
@@ -169,6 +190,17 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         recyclerTopTrainers.setAdapter(trainerAdapter);
 
         btnAssistant = view.findViewById(R.id.btn_virtual_assistant);
+        btnAssistant = view.findViewById(R.id.btn_virtual_assistant);
+        tvMascotBubble = view.findViewById(R.id.tv_mascot_bubble);
+        mascotContainer = view.findViewById(R.id.layout_mascot_container);
+        cardInvite = view.findViewById(R.id.card_invite);
+
+        if (cardInvite != null) {
+            cardInvite.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), InviteFriendsActivity.class);
+                startActivity(intent);
+            });
+        }
 
         btnAssistant.setOnTouchListener(new View.OnTouchListener() {
             float dX, dY;
@@ -176,27 +208,35 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
             private static final int CLICK_ACTION_THRESHOLD = 10;
 
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
+            public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getRawX();
                         startY = event.getRawY();
-                        dX = view.getX() - startX;
-                        dY = view.getY() - startY;
+
+                        if (mascotContainer != null) {
+                            dX = mascotContainer.getX() - startX;
+                            dY = mascotContainer.getY() - startY;
+                        }
                         return true;
+
                     case MotionEvent.ACTION_MOVE:
-                        view.animate()
-                                .x(event.getRawX() + dX)
-                                .y(event.getRawY() + dY)
-                                .setDuration(0)
-                                .start();
+                        if (mascotContainer != null) {
+                            mascotContainer.animate()
+                                    .x(event.getRawX() + dX)
+                                    .y(event.getRawY() + dY)
+                                    .setDuration(0)
+                                    .start();
+                        }
                         return true;
+
                     case MotionEvent.ACTION_UP:
                         float endX = event.getRawX();
                         float endY = event.getRawY();
+                        // Xử lý click (nếu ngón tay không di chuyển quá nhiều)
                         if (Math.abs(endX - startX) < CLICK_ACTION_THRESHOLD &&
                                 Math.abs(endY - startY) < CLICK_ACTION_THRESHOLD) {
-                            view.performClick();
+                            v.performClick();
                         }
                         return true;
                 }
@@ -205,6 +245,8 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         });
 
         btnAssistant.setOnClickListener(v -> startActivity(new Intent(v.getContext(), AssistantChatActivity.class)));
+        startMascotAnimation();
+        startMascotTalkLoop();
 
         btnUser.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -276,7 +318,7 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         if (trainersListener != null) trainersListener.remove();
         if (requestsListener != null) requestsListener.remove();
         if (incomingRequestsListener != null) incomingRequestsListener.remove();
-        if (incomingPendingListener != null) incomingPendingListener.remove(); // [NEW] Cleanup
+        if (incomingPendingListener != null) incomingPendingListener.remove();
     }
 
     private void loadAndListenForUserData() {
@@ -401,14 +443,12 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
                             if (trainer != null) {
                                 trainer.setUid(doc.getId());
 
-                                // Check connected
                                 if (connectedIds.contains(trainer.getUid())) {
                                     trainer.setConnected(true);
                                 } else {
                                     trainer.setConnected(false);
                                 }
 
-                                // Check request sent (outgoing)
                                 if (sentRequestIds.contains(trainer.getUid())) {
                                     trainer.setRequestSent(true);
                                 } else {
@@ -603,5 +643,68 @@ public class HomeFragment extends Fragment implements TrainerAdapter.OnTrainerIt
         intent.putExtra("RECEIVER_ID", trainer.getUid());
         intent.putExtra("RECEIVER_NAME", trainer.getName());
         startActivity(intent);
+    }
+
+    private void startMascotAnimation() {
+        ObjectAnimator floatAnim = ObjectAnimator.ofFloat(btnAssistant, "translationY", 0f, -15f, 0f);
+        floatAnim.setDuration(2500);
+        floatAnim.setRepeatCount(ValueAnimator.INFINITE);
+        floatAnim.setRepeatMode(ValueAnimator.RESTART);
+        floatAnim.setInterpolator(new android.view.animation.OvershootInterpolator(0.8f));
+
+        PropertyValuesHolder pvhScaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.05f, 1f);
+        PropertyValuesHolder pvhScaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.05f, 1f);
+
+        ObjectAnimator breathAnim = ObjectAnimator.ofPropertyValuesHolder(btnAssistant, pvhScaleX, pvhScaleY);
+        breathAnim.setDuration(2500);
+        breathAnim.setRepeatCount(ValueAnimator.INFINITE);
+        breathAnim.setRepeatMode(ValueAnimator.RESTART);
+        breathAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(floatAnim, breathAnim);
+
+        mascotAnimator = animatorSet;
+        mascotAnimator.start();
+    }
+
+    private void startMascotTalkLoop() {
+        mascotRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int randomIndex = new Random().nextInt(mascotMessages.length);
+                String randomMessage = mascotMessages[randomIndex];
+
+                if (tvMascotBubble != null) {
+                    tvMascotBubble.setText(randomMessage);
+
+                    tvMascotBubble.setVisibility(View.VISIBLE);
+                    tvMascotBubble.setAlpha(0f);
+                    tvMascotBubble.animate().alpha(1f).setDuration(500).start();
+                }
+
+                mascotHandler.postDelayed(() -> {
+                    if (tvMascotBubble != null) {
+                        tvMascotBubble.animate().alpha(0f).setDuration(500).withEndAction(() ->
+                                tvMascotBubble.setVisibility(View.GONE)
+                        ).start();
+                    }
+                }, 4000);
+
+                mascotHandler.postDelayed(this, 12000);
+            }
+        };
+        mascotHandler.postDelayed(mascotRunnable, 2000);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mascotHandler != null && mascotRunnable != null) {
+            mascotHandler.removeCallbacks(mascotRunnable);
+        }
+        if (mascotAnimator != null) {
+            mascotAnimator.cancel();
+        }
     }
 }

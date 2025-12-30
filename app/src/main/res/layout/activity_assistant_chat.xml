@@ -20,20 +20,31 @@
 
         <ImageView
             android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/back1"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            />
+
+        <ImageView
+            android:id="@+id/ic_Fitty"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_fitty"
             android:background="@drawable/bg_circle_white"
             android:scaleType="centerCrop"
             android:clipToOutline="true"
-            /> <TextView
+            android:layout_marginStart="70dp" />
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Fitty Assistant"
         android:textColor="#FFF"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginStart="16dp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

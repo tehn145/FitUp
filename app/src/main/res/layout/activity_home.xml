@@ -244,7 +244,19 @@
                     android:textSize="16sp"
                     android:textAllCaps="false"
                     android:visibility="visible"
+                    android:layout_marginEnd="20dp"
                     />
+
+                <ImageView
+                    android:id="@+id/btn_see_more_arrow"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/back1"
+                    app:tint="@android:color/white"
+                    android:rotation="180"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/trainer_see_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/trainer_see_more" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -481,28 +493,45 @@
         </ScrollView>
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btn_virtual_assistant"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="10dp"
-        app:cardBackgroundColor="@color/transparent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_mascot_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/tv_mascot_bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_speech_bubble"
+            android:text="Hi! I'm Fitty. Need help?"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:elevation="6dp"
+            android:maxWidth="200dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/btn_virtual_assistant"
+            app:layout_constraintEnd_toEndOf="@+id/btn_virtual_assistant"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#2D3436"/>
+
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
+            android:id="@+id/btn_virtual_assistant"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="5dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_fitty_rmbg"
-            android:scaleType="centerCrop"
-            android:background="@drawable/circle"
-            />
-    </androidx.cardview.widget.CardView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
