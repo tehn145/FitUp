@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.FitUp">
         <activity
+            android:name=".DailyQuizActivity"
+            android:exported="false" />
+        <activity
             android:name=".InviteFriendsActivity"
             android:exported="false" />
         <activity

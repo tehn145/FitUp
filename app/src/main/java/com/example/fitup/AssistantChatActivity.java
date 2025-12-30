@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -34,6 +35,7 @@ public class AssistantChatActivity extends AppCompatActivity {
 
     GroqApiService apiService;
     FirebaseFirestore db; //RAG
+    FirebaseAuth mAuth; //RAG
 
     String GROQ_API_KEY = BuildConfig.GROQ_API_KEY;
     String BASE_URL = "https://api.groq.com/openai/v1/";
@@ -43,12 +45,21 @@ public class AssistantChatActivity extends AppCompatActivity {
         void onContextReady(String contextData);
     }
 
+    interface OnContextReady {
+        void onResult(String context);
+    }
+
+//    interface OnDataReady {
+//        void onDataReady(String userContext, String ragContext);
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant_chat);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         recyclerView = findViewById(R.id.recyclerChat);
         edtMessage = findViewById(R.id.edtMessage);
@@ -81,16 +92,54 @@ public class AssistantChatActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchUserDailyStatus(OnContextReady callback) {
+        if (mAuth.getCurrentUser() == null) {
+            callback.onResult("");
+            return;
+        }
+
+        String uid = mAuth.getCurrentUser().getUid();
+
+        db.collection("users").document(uid)
+                .collection("daily_checkins")
+                .orderBy("date", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        QueryDocumentSnapshot doc = querySnapshot.iterator().next();
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("Tình trạng sức khỏe gần đây của người dùng (Daily Check-in):\n");
+
+                        if(doc.contains("q_sleep_hours")) sb.append("- Giấc ngủ: ").append(doc.getString("q_sleep_hours")).append("\n");
+                        if(doc.contains("q_sleep_quality")) sb.append("- Chất lượng ngủ: ").append(doc.getString("q_sleep_quality")).append("\n");
+                        if(doc.contains("q_water")) sb.append("- Uống nước: ").append(doc.getString("q_water")).append("\n");
+                        if(doc.contains("q_energy")) sb.append("- Mức năng lượng: ").append(doc.getString("q_energy")).append("\n");
+                        if(doc.contains("q_training")) sb.append("- Tập luyện hôm qua: ").append(doc.getString("q_training")).append("\n");
+
+                        callback.onResult(sb.toString());
+                    } else {
+                        callback.onResult("");
+                    }
+                })
+                .addOnFailureListener(e -> callback.onResult(""));
+    }
+
     private void sendMessage(String msg) {
         chatList.add(new GeminiModels.ChatMessage(msg, true));
         adapter.notifyItemInserted(chatList.size() - 1);
         recyclerView.scrollToPosition(chatList.size() - 1);
         edtMessage.setText("");
 
-        searchKnowledgeBase(msg, new OnRagContextReady() {
+        fetchUserDailyStatus(new OnContextReady() {
             @Override
-            public void onContextReady(String contextData) {
-                callGroq(msg, contextData);
+            public void onResult(String userPersonalContext) {
+                searchKnowledgeBase(msg, new OnRagContextReady() {
+                    @Override
+                    public void onContextReady(String knowledgeBaseContext) {
+                        callGroq(msg, userPersonalContext, knowledgeBaseContext);
+                    }
+                });
             }
         });
     }
@@ -139,21 +188,29 @@ public class AssistantChatActivity extends AppCompatActivity {
                 });
     }
 
-    private void callGroq(String userMsg, String contextData) {
+    private void callGroq(String userMsg, String userPersonalContext, String knowledgeBaseContext) {
         List<GroqModels.Message> messages = new ArrayList<>();
-        String systemPrompt = "Bạn là Fitty - một HLV Gym cá nhân nhiệt tình. ";
 
-        if (!contextData.isEmpty()) {
-            systemPrompt += "Sử dụng thông tin sau để trả lời câu hỏi:\n" +
-                    "--- BẮT ĐẦU THÔNG TIN ---\n" +
-                    contextData +
-                    "--- KẾT THÚC THÔNG TIN ---\n" +
-                    "Hãy ưu tiên dùng thông tin trên. Nếu thông tin không đủ, hãy dùng kiến thức của bạn.";
-        } else {
-            systemPrompt += "Hãy trả lời ngắn gọn, hữu ích bằng tiếng Việt.";
+        StringBuilder systemPrompt = new StringBuilder();
+        systemPrompt.append("Bạn là Fitty - một HLV Gym cá nhân nhiệt tình. ");
+
+        if (!userPersonalContext.isEmpty()) {
+            systemPrompt.append("\n\n[THÔNG TIN SỨC KHỎE NGƯỜI DÙNG HÔM NAY]\n")
+                    .append(userPersonalContext)
+                    .append("=> LƯU Ý QUAN TRỌNG: Hãy điều chỉnh lời khuyên dựa trên tình trạng này (Ví dụ: ngủ ít/mệt -> khuyên tập nhẹ, khuyên ngủ sớm; uống ít nước -> nhắc uống nước).\n");
         }
 
-        messages.add(new GroqModels.Message("system", systemPrompt));
+        if (!knowledgeBaseContext.isEmpty()) {
+            systemPrompt.append("\n\n[KIẾN THỨC CHUYÊN MÔN THAM KHẢO]\n")
+                    .append("--- BẮT ĐẦU ---\n")
+                    .append(knowledgeBaseContext)
+                    .append("--- KẾT THÚC ---\n")
+                    .append("Hãy ưu tiên dùng thông tin trên để trả lời chính xác.");
+        }
+
+        systemPrompt.append("\n\nHãy trả lời ngắn gọn, hữu ích bằng tiếng Việt.");
+
+        messages.add(new GroqModels.Message("system", systemPrompt.toString()));
         messages.add(new GroqModels.Message("user", userMsg));
 
         GroqModels.Request requestBody = new GroqModels.Request(MODEL_ID, messages);
