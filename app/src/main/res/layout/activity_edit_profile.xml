@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
-    tools:context=".activity_profile">
+    android:background="#121212">
 
     <!-- Main content that scrolls -->
     <androidx.core.widget.NestedScrollView
@@ -133,7 +132,6 @@
             <include
                 layout="@layout/include_profile_row"
                 android:id="@+id/rowAvailability"/>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -146,6 +144,24 @@
 
             <include layout="@layout/include_profile_row" android:id="@+id/rowWeight"/>
             <include layout="@layout/include_profile_row" android:id="@+id/rowHeight"/>
+
+            <View
+                android:id="@+id/divider_verification"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="#333333"/>
+
+            <TextView
+                android:id="@+id/tv_verification"
+                style="@style/SectionTitle"
+                android:layout_marginTop="24dp"
+                android:text="Verification" />
+
+            <include
+                layout="@layout/include_profile_row"
+                android:id="@+id/rowVerification"/>
+
 
             <View
                 android:layout_width="match_parent"

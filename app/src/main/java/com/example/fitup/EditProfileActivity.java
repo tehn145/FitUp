@@ -50,7 +50,9 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView ivAvatar;
     private View rowName, rowLocation, rowGender, rowBirthday;
     private View rowFitnessGoal, rowFitnessLevel, rowWeight, rowHeight;
-    private View rowAboutMe, rowAvailability;
+    private View rowAboutMe, rowAvailability, rowVerification;
+    private boolean isVerified = false;
+
     // Bottom Sheet
     private FrameLayout standardBottomSheet;
     private BottomSheetBehavior<FrameLayout> standardBottomSheetBehavior;
@@ -62,6 +64,21 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
                     Uri imageUri = result.getData().getData();
                     uploadImageToFirebaseStorage(imageUri);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> verificationLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    boolean success = result.getData().getBooleanExtra("IS_SUCCESS", false);
+                    if (success) {
+                        isVerified = true;
+                        // Optional: Immediately update UI if the snapshot listener is slow
+                        updateRow(rowVerification, "Verification Status", "Verified");
+                        Toast.makeText(this, "Verification Successful!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
     );
@@ -106,6 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
         rowHeight = findViewById(R.id.rowHeight);
         rowAboutMe = findViewById(R.id.rowAboutMe);
         rowAvailability = findViewById(R.id.rowAvailability);
+        rowVerification = findViewById(R.id.rowVerification);
 
         setRowIcon(rowName, R.drawable.ic_username2);
         setRowIcon(rowLocation, R.drawable.ic_location2);
@@ -115,6 +133,7 @@ public class EditProfileActivity extends AppCompatActivity {
         setRowIcon(rowFitnessLevel, R.drawable.ic_level);
         setRowIcon(rowWeight, R.drawable.ic_person);
         setRowIcon(rowHeight, R.drawable.ic_person);
+        setRowIcon(rowVerification, R.drawable.ic_inforamation);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
@@ -165,6 +184,14 @@ public class EditProfileActivity extends AppCompatActivity {
         rowGender.setOnClickListener(v -> showEditFragment(new EditGenderFragment(), "Edit Gender"));
         rowAboutMe.setOnClickListener(v -> showEditFragment(new EditAboutMeFragment(), "Edit About Me"));
         rowAvailability.setOnClickListener(v -> showEditFragment(new EditAvailabilityFragment(), "Edit Availability"));
+        rowVerification.setOnClickListener(v -> {
+            if (!isVerified) {
+                Intent intent = new Intent(EditProfileActivity.this, StartScanActivity.class);
+                verificationLauncher.launch(intent);
+            } else {
+                Toast.makeText(this, "Your profile is already verified.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openGallery() {
@@ -281,8 +308,14 @@ public class EditProfileActivity extends AppCompatActivity {
         updateRow(rowAboutMe, "About Me", snapshot.getString("aboutMe"));
         updateRow(rowAvailability, "Availability", snapshot.getString("availability"));
 
+        Boolean verifiedStatus = snapshot.getBoolean("isVerified");
+        isVerified = verifiedStatus != null && verifiedStatus;
+
+        String statusText = isVerified ? "Verified" : "Not Verified (Tap to Verify)";
+        updateRow(rowVerification, "Verification Status", statusText);
+
         GeoPoint location = snapshot.getGeoPoint("location");
-        String storedLocationName = snapshot.getString("locationName"); // Check if we already saved the name
+        String storedLocationName = snapshot.getString("locationName");
 
         if (storedLocationName != null && !storedLocationName.isEmpty()) {
             updateRow(rowLocation, "Location", storedLocationName);
@@ -380,7 +413,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void showEditFragment(Fragment fragment, String tag) {
+
+        standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
         if (standardBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+            Log.d(TAG, "LOLOLOLOL");
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.standard_bottom_sheet, fragment, tag)
                     .commit();

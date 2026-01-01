@@ -59,7 +59,7 @@ public class MessageFragment extends Fragment {
     private void loadChats() {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         try {
-            db.useEmulator("10.0.2.2", 9000);
+            db.useEmulator("10.101.25.210", 9000);
         } catch (Exception e) {
 
         }

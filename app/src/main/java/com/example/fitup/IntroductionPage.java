@@ -49,7 +49,7 @@ public class IntroductionPage extends AppCompatActivity {
         Log.w("DebugMode", String.valueOf(BuildConfig.DEBUG));
         if (true) {
             try {
-                String host = "10.0.2.2";
+                String host = "10.101.25.210";
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();

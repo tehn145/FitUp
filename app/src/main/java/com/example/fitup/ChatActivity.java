@@ -80,13 +80,13 @@ public class ChatActivity extends AppCompatActivity {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             try {
                 // Keep your emulator settings!
-                database.useEmulator("10.0.2.2", 9000);
+                database.useEmulator("10.101.25.210", 9000);
             } catch (Exception e) {}
             rtdbRef = database.getReference();
 
             firestore = FirebaseFirestore.getInstance();
             try {
-                firestore.useEmulator("10.0.2.2", 8080);
+                firestore.useEmulator("10.101.25.210", 8080);
                 FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                         .setPersistenceEnabled(false)
                         .build();
@@ -97,7 +97,7 @@ public class ChatActivity extends AppCompatActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             try {
                 // Uncomment if you use Storage emulator, otherwise it uses Live Storage
-                // storage.useEmulator("10.0.2.2", 9199);
+                // storage.useEmulator("10.101.25.210", 9199);
             } catch (Exception e) {}
             storageRef = storage.getReference();
 

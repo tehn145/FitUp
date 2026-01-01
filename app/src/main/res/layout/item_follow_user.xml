@@ -71,7 +71,9 @@
                 android:layout_height="14dp"
                 android:layout_marginStart="4dp"
                 android:src="@drawable/ic_check"
-                app:tint="#448AFF"/> </LinearLayout>
+                android:visibility="invisible"
+                app:tint="@color/green"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvRole"

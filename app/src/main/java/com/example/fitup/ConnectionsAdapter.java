@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,21 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
 
         String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String partnerUid = connection.getFromUid().equals(myUid) ? connection.getToUid() : connection.getFromUid();
+
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(partnerUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Boolean isVerified = documentSnapshot.getBoolean("isVerified");
+                        if (isVerified != null && isVerified) {
+                            holder.ivVerification.setVisibility(View.VISIBLE);
+                        } else {
+                            holder.ivVerification.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
 
         checkSessionStatus(myUid, partnerUid, holder.btnBook, connection.getSenderName());
 
@@ -146,6 +162,7 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         CircleImageView imgAvatar;
         TextView tvName, tvDescription;
         Button btnBook, btnMessage;
+        ImageView ivVerification;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -154,6 +171,7 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
             tvDescription = itemView.findViewById(R.id.description_text);
             btnBook = itemView.findViewById(R.id.book_session_button);
             btnMessage = itemView.findViewById(R.id.message_button);
+            ivVerification = itemView.findViewById(R.id.iv_verification);
         }
     }
 }

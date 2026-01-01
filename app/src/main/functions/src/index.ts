@@ -109,7 +109,7 @@ export function isSessionExpired(sessionDoc : Session) {
 }
 
 
-export const expireSessionsJob = onSchedule("every 5 minutes", async () => {
+export const expireSessionsJob = onSchedule("every 30 minutes", async () => {
   const now = new Date();
 
   const snapshot = await db
@@ -298,7 +298,7 @@ export const matchCoaches = onRequest(
   }
 );
 
-// -------------------- OPTIONAL: RUN ON START (EMULATOR/DEPLOY) --------------------
+// -------------------- RUN ON START (EMULATOR/DEPLOY) --------------------
 (async () => {
   // Chỉ chạy khi emulator hoặc đang deploy/serve thật
   const isEmulator =

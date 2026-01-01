@@ -48,6 +48,7 @@ public class BookSessionActivity extends AppCompatActivity {
     private int startMinute = 0;
     private int endHour = 9;
     private int endMinute = 0;
+    private boolean isVerified = false;
 
     private long selectedTimestamp;
 
@@ -57,7 +58,7 @@ public class BookSessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_session);
 
         try {
-            FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+            FirebaseDatabase.getInstance().useEmulator("10.101.25.210", 9000);
             Log.d("Kutaru", "Connected to RTDB Emulator");
         } catch (Exception e) {
             Log.e("Kutaru", "Emulator connection failed or already set: " + e.getMessage());
@@ -69,6 +70,20 @@ public class BookSessionActivity extends AppCompatActivity {
         if (getIntent().hasExtra("CHAT_ID")) {
             chatId = getIntent().getStringExtra("CHAT_ID");
         }
+
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users").document(currentUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Boolean verified = documentSnapshot.getBoolean("isVerified");
+                        isVerified = verified != null && verified;
+
+                        if (!isVerified) {
+                            etPrice.setHint("0 (Unverified users can only book free sessions)");
+                        }
+                    }
+                });
 
         // Initialize Views
         ImageView btnBack = findViewById(R.id.btnBack);
@@ -217,12 +232,61 @@ public class BookSessionActivity extends AppCompatActivity {
         double price;
         try {
             price = Double.parseDouble(priceStr);
+
+            if (!isVerified && price > 0) {
+                etPrice.setError("Unverified users can only create free sessions.");
+                Toast.makeText(this, "You must be verified to charge for sessions.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             if (price < 10000) { etPrice.setError("Price is too low"); return; }
             if (price > 100000000) { etPrice.setError("Price is too high"); return; }
         } catch (NumberFormatException e) {
             etPrice.setError("Invalid price format");
             return;
         }
+
+        if (!isVerified) {
+            checkDistanceAndProceed(price, sessionName);
+        } else {
+            proceedToBook(price, sessionName);
+        }
+    }
+
+    private void checkDistanceAndProceed(double price, String sessionName) {
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance().collection("users").document(currentUid).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        GeoPoint userHome = documentSnapshot.getGeoPoint("location");
+
+                        if (userHome == null) {
+                            Toast.makeText(this, "Please set your location in your profile first.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        float[] results = new float[1];
+                        android.location.Location.distanceBetween(
+                                userHome.getLatitude(), userHome.getLongitude(),
+                                selectedPos.getLatitude(), selectedPos.getLongitude(),
+                                results
+                        );
+
+                        float distanceInMeters = results[0];
+                        float maxDistanceMeters = 20000;
+
+                        if (distanceInMeters > maxDistanceMeters) {
+                            Toast.makeText(this, "Unverified users cannot book sessions further than 20km.", Toast.LENGTH_LONG).show();
+                        } else {
+                            proceedToBook(price, sessionName);
+                        }
+                    }
+                });
+    }
+
+    private void proceedToBook(double price, String sessionName) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Calendar currentCal = Calendar.getInstance();
         currentCal.set(Calendar.HOUR_OF_DAY, 0); currentCal.set(Calendar.MINUTE, 0);
@@ -260,8 +324,6 @@ public class BookSessionActivity extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("sessions")
                 .add(sessionData)
                 .addOnSuccessListener(documentReference -> {
-                    // Send message immediately, pass session ID and Name
-                    // IMPORTANT: Do NOT finish() here. Finish inside sendSessionMessage success.
                     sendSessionMessage(documentReference.getId(), sessionName);
                 })
                 .addOnFailureListener(e ->

@@ -82,14 +82,31 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_drag_handle"/>
 
-            <TextView
-                android:id="@+id/tvProfileName"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huỳnh Minh Hiếu"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvProfileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NormieZ"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_profile_verification"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/green"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

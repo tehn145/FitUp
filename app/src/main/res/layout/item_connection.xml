@@ -30,6 +30,18 @@
         app:layout_constraintTop_toTopOf="@id/profile_image"
         app:layout_constraintStart_toEndOf="@id/profile_image"/>
 
+    <ImageView
+        android:id="@+id/iv_verification"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="4dp"
+        android:src="@drawable/ic_check"
+        app:tint="@color/green"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/name_text"
+        app:layout_constraintStart_toEndOf="@+id/name_text"
+        app:layout_constraintTop_toTopOf="@+id/name_text" />
+
     <TextView
         android:id="@+id/description_text"
         android:layout_width="0dp"

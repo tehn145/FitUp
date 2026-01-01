@@ -8,8 +8,12 @@ public class User {
     private String avatar;
     private String role;
     private String locationName;
+    private boolean isVerified;
 
     public User() {}
+
+    public boolean getIsVerified() { return isVerified; }
+    public void setIsVerified(boolean isVerified) { this.isVerified = isVerified; }
 
     public String getUid() { return userId; }
     public void setUid(String userId) { this.userId = userId; }

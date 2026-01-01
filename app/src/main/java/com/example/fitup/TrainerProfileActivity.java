@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class TrainerProfileActivity extends AppCompatActivity {
 
-    private ImageView imgCover, btnBack, btnFollow;
+    private ImageView imgCover, btnBack, btnFollow, ivTrainerVerification;
     private TextView tvName, tvTitle, tvUsername, tvLocation, tvAbout, tvSpecialty, tvSeeMorePosts;
     // Added new UI components
     private TextView tvAvgRating, tvSessionCount;
@@ -61,6 +61,8 @@ public class TrainerProfileActivity extends AppCompatActivity {
         }
 
         imgCover = findViewById(R.id.imgTrainerCover);
+        ivTrainerVerification = findViewById(R.id.iv_trainer_verification);
+
         btnBack = findViewById(R.id.btnBack);
         btnFollow = findViewById(R.id.btn_follow);
 
@@ -72,7 +74,6 @@ public class TrainerProfileActivity extends AppCompatActivity {
         tvAbout = findViewById(R.id.tvAbout);
         tvSeeMorePosts = findViewById(R.id.tv_see_more);
 
-        // Initialize new views
         tvAvgRating = findViewById(R.id.tvAvgRating);
         tvSessionCount = findViewById(R.id.tvSessionCount);
         btnSeeReviews = findViewById(R.id.btnSeeReviews);
@@ -247,6 +248,13 @@ public class TrainerProfileActivity extends AppCompatActivity {
                     tvName.setText(doc.getString("name"));
                     tvUsername.setText(uid);
                     tvAbout.setText(doc.getString("aboutMe"));
+
+                    Boolean isVerified = doc.getBoolean("isVerified");
+                    if (isVerified != null && isVerified) {
+                        ivTrainerVerification.setVisibility(View.VISIBLE);
+                    } else {
+                        ivTrainerVerification.setVisibility(View.INVISIBLE); // or View.GONE
+                    }
 
                     double rating = 0.0;
                     if (doc.contains("rating")) {

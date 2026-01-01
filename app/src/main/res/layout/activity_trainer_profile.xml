@@ -76,14 +76,31 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_drag_handle"/>
 
-            <TextView
-                android:id="@+id/tvTrainerName"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trainer Name"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvTrainerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trainer Name"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_trainer_verification"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/green"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvTrainerTitle"

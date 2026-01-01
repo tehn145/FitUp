@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" />
+
+    <!-- Scanning frame -->
+    <View
+        android:id="@+id/scanFrame"
+        android:layout_width="320dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"
+        android:outlineProvider="bounds"
+        android:elevation="2dp" />
+
+    <View
+        android:layout_width="320dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"
+        android:outlineProvider="bounds" />
+
+    <!-- Corner indicators -->
+    <View
+        android:layout_width="20dp"
+        android:layout_height="3dp"
+        android:layout_alignLeft="@id/scanFrame"
+        android:layout_alignTop="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@id/scanFrame"
+        android:layout_alignTop="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="3dp"
+        android:layout_alignRight="@id/scanFrame"
+        android:layout_alignTop="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="20dp"
+        android:layout_alignRight="@id/scanFrame"
+        android:layout_alignTop="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="3dp"
+        android:layout_alignLeft="@id/scanFrame"
+        android:layout_alignBottom="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@id/scanFrame"
+        android:layout_alignBottom="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="3dp"
+        android:layout_alignRight="@id/scanFrame"
+        android:layout_alignBottom="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="20dp"
+        android:layout_alignRight="@id/scanFrame"
+        android:layout_alignBottom="@id/scanFrame"
+        android:background="@color/orange" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/scanFrame"
+        android:layout_marginBottom="16dp"
+        android:text="Position the back of ID card in view"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:padding="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scanFrame"
+        android:layout_marginTop="16dp"
+        android:text="Align the MRZ code within the frame"
+        android:textSize="14sp"
+        android:textColor="#CCCCCC"
+        android:gravity="center"
+        android:padding="16dp" />
+
+</RelativeLayout>

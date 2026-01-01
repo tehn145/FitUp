@@ -20,7 +20,7 @@ public class FirebaseEnv {
 
         if (!USE_PROD) {
             // Emulator Firestore (chỉ khi bạn muốn dev local)
-            db.useEmulator("10.0.2.2", 8080);
+            db.useEmulator("10.101.25.210", 8080);
         }
     }
 }

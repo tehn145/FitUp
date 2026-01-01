@@ -3,6 +3,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,12 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowView
 
         holder.tvName.setText(user.getName());
         holder.tvRole.setText(user.getRole());
+
+        if (user.getIsVerified()) {
+            holder.imgVerified.setVisibility(View.VISIBLE);
+        } else {
+            holder.imgVerified.setVisibility(View.INVISIBLE); // or View.GONE
+        }
 
         // Ẩn hiện địa điểm nếu không có
 //        if (user.getLocation().isEmpty()) {
@@ -58,14 +65,15 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.FollowView
     public class FollowViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvRole, tvLocation;
         Button btnAction;
-
+        ImageView imgVerified;
         public FollowViewHolder(@NonNull View itemView) {
             super(itemView);
             // Ánh xạ đúng ID trong item_follow_user.xml
             tvName = itemView.findViewById(R.id.tvName);
             tvRole = itemView.findViewById(R.id.tvRole);
             tvLocation = itemView.findViewById(R.id.tvLocation);
-            btnAction = itemView.findViewById(R.id.btnUnfollow); // ID nút bấm
+            btnAction = itemView.findViewById(R.id.btnUnfollow);
+            imgVerified = itemView.findViewById(R.id.imgVerified);
         }
     }
 }

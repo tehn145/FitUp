@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class UserProfileActivity extends AppCompatActivity {
-    private ImageView imgCover;
+    private ImageView imgCover, ivProfileVerification;
     private TextView tvName, tvUsername, tvLocation, tvGoals, tvLevel, tvAvailability;
-    private TextView tvSeeMorePosts; // 1. Add Variable
+    private TextView tvSeeMorePosts;
     private RecyclerView rvUserPosts;
     private AppCompatButton btnFollow;
     private FirebaseAuth mAuth;
@@ -47,6 +47,8 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         imgCover = findViewById(R.id.imgCover);
+        ivProfileVerification = findViewById(R.id.iv_profile_verification);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         tvName = findViewById(R.id.tvProfileName);
         tvUsername = findViewById(R.id.tvProfileUsername);
@@ -54,7 +56,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tvGoals = findViewById(R.id.tvFitnessGoals);
         tvLevel = findViewById(R.id.tvFitnessLevel);
         tvAvailability = findViewById(R.id.tvAvailability);
-        tvSeeMorePosts = findViewById(R.id.tv_see_more); // 2. Initialize View
+        tvSeeMorePosts = findViewById(R.id.tv_see_more);
         rvUserPosts = findViewById(R.id.rvUserPosts);
         btnFollow = findViewById(R.id.btn_follow);
 
@@ -106,6 +108,13 @@ public class UserProfileActivity extends AppCompatActivity {
                                     .into(imgCover);
                         } else {
                             imgCover.setImageResource(R.drawable.defaultavt);
+                        }
+
+                        Boolean isVerified = document.getBoolean("isVerified");
+                        if (isVerified != null && isVerified) {
+                            ivProfileVerification.setVisibility(View.VISIBLE);
+                        } else {
+                            ivProfileVerification.setVisibility(View.INVISIBLE);
                         }
 
                         String locationName = document.getString("locationName");

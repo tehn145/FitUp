@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     // ✅ Emulator config (Android Emulator host)
-    private static final String EMU_HOST = "10.0.2.2";
+    private static final String EMU_HOST = "10.101.25.210";
     private static final int AUTH_PORT = 9099;
     private static final int FIRESTORE_PORT = 8080;
 

@@ -38,6 +38,12 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
         holder.tvUserName.setText(user.getName());
         holder.tvUserRole.setText(role);
 
+        if (user.getIsVerified()) {
+            holder.ivUserVerification.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivUserVerification.setVisibility(View.INVISIBLE); // Or GONE
+        }
+
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
             Glide.with(context)
                     .load(user.getAvatar())
@@ -74,12 +80,13 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
         ImageView ivAvatar;
         TextView tvUserName;
         TextView tvUserRole;
-
+        ImageView ivUserVerification;
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             ivAvatar = itemView.findViewById(R.id.iv_avatar);
             tvUserName = itemView.findViewById(R.id.tv_user_name);
             tvUserRole = itemView.findViewById(R.id.tv_user_role);
+            ivUserVerification = itemView.findViewById(R.id.iv_user_verification);
         }
     }
 }

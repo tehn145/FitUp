@@ -52,6 +52,17 @@ android {
 
 dependencies {
 
+    implementation("com.google.guava:guava:31.1-android")
+    implementation("net.sf.scuba:scuba-sc-android:0.0.23")
+    implementation("com.google.mlkit:text-recognition:16.0.0")
+
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("org.jmrtd:jmrtd:0.7.34")
+
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0")
+
     implementation("com.mapbox.maps:android-ndk27:11.17.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
